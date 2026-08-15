@@ -1,0 +1,468 @@
+# Extracted from the workbook's hidden Routes sheet.
+name = heavenly_chip: Bluestonex64 (Fast clicks (15 cps))
+source = dha spreadsheet: heavenly chip row 2
+version = 1.0466
+target = 1000000000000
+click_rate = 15
+purchase_delay = 0.5
+initial_state = fresh
+allow_upgrades = true
+
+buy Cursor
+upgrade Cursor 1
+upgrade Cursor 2
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+upgrade Farm 1
+buy Farm
+upgrade Cursor 3
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+buy Cursor
+buy Farm
+buy Factory
+buy Mine
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+buy Mine
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+buy Mine
+buy Grandma
+buy Factory
+buy Cursor
+buy Farm
+buy Mine
+buy Shipment
+buy Grandma
+buy Factory
+buy Cursor
+buy Mine
+buy Farm
+buy Shipment
+upgrade Mine 1
+buy Mine
+buy Mine
+buy Shipment
+buy Factory
+upgrade Factory 1
+buy Factory
+buy Factory
+buy Grandma
+buy Cursor
+buy Farm
+buy Mine
+buy Factory
+buy Shipment
+buy Alchemy Lab
+buy Grandma
+buy Farm
+buy Cursor
+buy Alchemy Lab
+buy Mine
+buy Shipment
+buy Factory
+buy Alchemy Lab
+buy Grandma
+buy Farm
+buy Cursor
+buy Mine
+buy Shipment
+upgrade Shipment 1
+buy Shipment
+buy Portal
+upgrade Mouse 1
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+upgrade Portal 1
+buy Portal
+buy Portal
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Factory
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+buy Portal
+buy Alchemy Lab
+upgrade Alchemy Lab 1
+buy Alchemy Lab
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+upgrade Cursor 4
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Grandma
+buy Mine
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Time Machine
+buy Factory
+buy Time Machine
+upgrade Mouse 2
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+upgrade Farm 2
+buy Shipment
+buy Portal
+buy Time Machine
+buy Factory
+upgrade Farm 3
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Time Machine
+buy Farm
+buy Cursor
+buy Portal
+buy Shipment
+buy Factory
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+buy Factory
+buy Time Machine
+upgrade Time Machine 1
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Time Machine
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+upgrade Grandma 1
+upgrade Grandma 2
+upgrade Grandma synergy 1
+upgrade Grandma 3
+buy Grandma
+upgrade Grandma synergy 2
+buy Grandma
+buy Grandma
+upgrade Grandma synergy 3
+buy Factory
+upgrade Factory 2
+buy Grandma
+buy Alchemy Lab
+buy Time Machine
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+buy Grandma
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+upgrade Mine 2
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+upgrade Portal 2
+buy Factory
+buy Grandma
+upgrade Mine 3
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+upgrade Factory 3
+upgrade Portal 3
+buy Grandma
+buy Time Machine
+buy Antimatter Condenser
+upgrade Grandma synergy 4
+buy Alchemy Lab
+buy Mine
+buy Antimatter Condenser
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+upgrade Shipment 2
+upgrade Mouse 3
+buy Factory
+buy Antimatter Condenser
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+upgrade Shipment 3
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+upgrade Alchemy Lab 2
+buy Mine
+buy Portal
+buy Farm
+buy Antimatter Condenser
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+upgrade Alchemy Lab 3
+upgrade Antimatter Condenser 1
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Time Machine
+buy Factory
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Prism
+upgrade Grandma synergy 5
+buy Prism
+buy Time Machine
+buy Prism
+buy Factory
+buy Grandma
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Prism
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+buy Prism
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+buy Prism
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Cursor 5
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Cursor 6
+buy Cursor
+buy Cursor

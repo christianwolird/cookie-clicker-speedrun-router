@@ -1,0 +1,133 @@
+# Extracted from the workbook's hidden Routes sheet.
+name = one_million: dha (Fast clicks (15 cps))
+source = dha spreadsheet: one million row 2
+version = 2.031
+target = 1000000
+click_rate = 15
+purchase_delay = 0.5
+initial_state = fresh
+allow_upgrades = true
+
+buy Cursor
+upgrade Cursor 1
+upgrade Cursor 2
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Farm
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Grandma 1
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Farm
+buy Farm
+upgrade Grandma 2
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Cursor 3
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Farm
+upgrade Farm 1
+buy Farm
+buy Farm
+buy Farm
+buy Farm
+buy Mine
+buy Grandma
+buy Grandma
+buy Grandma
+buy Mine
+buy Farm
+buy Farm
+buy Farm
+upgrade Farm 2
+buy Farm
+buy Farm
+buy Farm
+buy Farm
+upgrade Grandma synergy 1
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Grandma 3
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Mouse 1
+buy Farm
+buy Farm
+buy Farm
+buy Mine
+buy Mine
+buy Grandma
+buy Grandma
+buy Grandma
+buy Farm
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Mine
+buy Mine
+upgrade Mine 1
+buy Mine
+buy Mine
+buy Mine
+buy Mine
+buy Mine
+buy Farm
+buy Farm
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor

@@ -1,0 +1,528 @@
+# Extracted from the workbook's hidden Routes sheet.
+name = hardcore: Lookas123 (Left Clicks (10 cps))
+source = dha spreadsheet: hardcore row 2
+version = 1.0466
+target = 1000000000
+click_rate = 10
+purchase_delay = 0.5
+initial_state = fresh
+allow_upgrades = false
+
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Grandma
+buy Farm
+buy Cursor
+buy Grandma
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Cursor
+buy Grandma
+buy Farm
+buy Factory
+buy Cursor
+buy Factory
+buy Mine
+buy Mine
+buy Farm
+buy Grandma
+buy Mine
+buy Factory
+buy Farm
+buy Mine
+buy Cursor
+buy Grandma
+buy Factory
+buy Mine
+buy Farm
+buy Cursor
+buy Shipment
+buy Grandma
+buy Factory
+buy Mine
+buy Shipment
+buy Farm
+buy Cursor
+buy Grandma
+buy Factory
+buy Mine
+buy Shipment
+buy Farm
+buy Shipment
+buy Mine
+buy Cursor
+buy Factory
+buy Grandma
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Farm
+buy Mine
+buy Factory
+buy Alchemy Lab
+buy Cursor
+buy Grandma
+buy Shipment
+buy Farm
+buy Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+buy Portal
+buy Shipment
+buy Shipment
+buy Alchemy Lab
+sell Alchemy Lab
+sell Shipment
+sell Shipment
+buy Portal
+buy Shipment
+buy Shipment
+sell Shipment
+sell Shipment
+buy Portal
+buy Shipment
+buy Shipment
+buy Portal
+buy Alchemy Lab
+buy Shipment
+buy Portal
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Portal
+buy Alchemy Lab
+buy Shipment
+buy Portal
+buy Mine
+buy Alchemy Lab
+buy Factory
+buy Shipment
+buy Cursor
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Shipment
+buy Cursor
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Shipment
+buy Cursor
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Shipment
+buy Cursor
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Shipment
+buy Cursor
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Portal
+sell Portal
+sell Alchemy Lab
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Portal
+sell Portal
+sell Portal
+sell Portal
+sell Portal
+buy Time Machine
+buy Shipment
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+sell Portal
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Portal
+sell Portal
+sell Portal
+sell Portal
+buy Time Machine
+buy Shipment
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+sell Portal
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Portal
+sell Portal
+sell Portal
+buy Time Machine
+buy Shipment
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Portal
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Portal
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Portal
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Portal
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+sell Portal
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Shipment
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Alchemy Lab
+sell Portal
+sell Portal
+buy Time Machine
+buy Shipment
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Shipment
+buy Grandma
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Alchemy Lab
+buy Grandma
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Shipment
+buy Grandma
+buy Mine
+buy Farm
+buy Factory
+buy Cursor
+buy Grandma
+buy Mine
+buy Farm
+buy Factory
+buy Cursor

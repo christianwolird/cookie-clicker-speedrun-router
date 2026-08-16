@@ -265,7 +265,9 @@ class Gamestate:
         if self.building_counts[name] <= 0:
             raise ValueError(f"Cannot sell an unowned building: {name}")
 
-        refund = floor(self.building_price(name) / 4)
+        # The current buy price is 15% above the price of the last building
+        # purchased. Selling returns 25% of that previous purchase price.
+        refund = floor(self.building_price(name) * 0.25 / 1.15)
         self.building_counts[name] -= 1
         self.sale_credit += refund
         self._automatic_cps_cache = None

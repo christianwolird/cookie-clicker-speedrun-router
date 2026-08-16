@@ -3,11 +3,11 @@
 ## Scope and terminology
 
 This case study compares the saved 1.0466 heavenly-chip routes generated with
-`naive_scoring` and `age_scoring`. The category targets one trillion lifetime
+`cookie_scoring` and `age_scoring`. The category targets one trillion lifetime
 cookies and these routes use a click rate of 15.
 
 The source routes are
-[`routes/local/naive_scoring/heavenly_chip_15_cps.route`](../routes/local/naive_scoring/heavenly_chip_15_cps.route)
+[`routes/local/cookie_scoring/heavenly_chip_15_cps.route`](../routes/local/cookie_scoring/heavenly_chip_15_cps.route)
 and
 [`routes/local/age_scoring/heavenly_chip_15_cps.route`](../routes/local/age_scoring/heavenly_chip_15_cps.route).
 
@@ -27,14 +27,14 @@ from its ancestor; it is not one large errand or an atomic purchase.
 
 | Scoring | Final time | Purchases modeled as errands | Final CpS |
 |---|---:|---:|---:|
-| Naive | 309:14.0 | 711 | 248,210,490.3 |
+| Cookie | 309:14.0 | 711 | 248,210,490.3 |
 | Age | 312:48.0 | 699 | 247,959,270.1 |
 | Difference | **+3:34.0** | -12 | -251,220.1 |
 
 Unlike Hardcore, age scoring makes this route 214.0057 seconds, or about 1.15%,
 slower. Most of the loss is established by 5% of the target and then persists:
 
-| Lifetime cookies | Age minus naive |
+| Lifetime cookies | Age minus cookie |
 |---:|---:|
 | 1 billion (0.1%) | +6.9 s |
 | 5 billion (0.5%) | +47.6 s |
@@ -57,19 +57,19 @@ its effective age-scored price includes 30 cookies of forgone hand production:
 27 + 60 * 0.5 = 57
 ```
 
-| Child | Sticker price | Effective price | Naive score | Age score |
+| Child | Sticker price | Effective price | Cookie score | Age score |
 |---|---:|---:|---:|---:|
 | Cursor #5 | 27 | 57 | **4,185** | 8,835 |
 | Farm #1 | 500 | 530 | 8,200 | **8,692** |
 
-Naive scoring chooses Cursor #5; age scoring chooses Farm #1. The routes never
+Cookie scoring chooses Cursor #5; age scoring chooses Farm #1. The routes never
 return to an identical purchase prefix.
 
 Age scoring then prefers a narrow advance through more productive building
 tiers while postponing many cheap buildings. At 10 billion lifetime cookies,
 for example:
 
-| State | Naive route | Age route |
+| State | Cookie route | Age route |
 |---|---:|---:|
 | Purchases so far | 408 | 227 |
 | Grandmas | 85 | 11 |
@@ -115,7 +115,7 @@ has millions of cookies of effective cost because its modeled errand interrupts
 7.55 million hand CpS. Age scoring correctly rejects that isolated child based
 on the information it has. What it cannot see is the option value of buying the
 cheap prerequisite earlier, when an errand was less costly, so it will already
-be owned when the upgrade becomes important. Naive scoring ignores errands and
+be owned when the upgrade becomes important. Cookie scoring ignores errands and
 therefore buys many such prerequisites gradually by accident.
 
 ## How real errands change the diagnosis

@@ -82,6 +82,14 @@ class GamestateTests(unittest.TestCase):
         self.gamestate.building_counts["Cursor"] = 1
         self.assertEqual(self.gamestate.building_price("Cursor"), 18)
 
+    def test_selling_refunds_one_quarter_of_the_purchase_price(self):
+        self.gamestate.purchase_building("Cursor")
+
+        self.gamestate.sell_building("Cursor")
+
+        self.assertEqual(self.gamestate.sale_credit, 3)
+        self.assertEqual(self.gamestate.building_counts["Cursor"], 0)
+
     def test_copy_keeps_only_the_purchase_that_produced_the_state(self):
         self.gamestate.purchase_building("Cursor")
         child = self.gamestate.copy()

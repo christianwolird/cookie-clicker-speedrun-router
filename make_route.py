@@ -34,7 +34,7 @@ DEFAULT_SETTINGS = {
     "click_rate": DEFAULT_CLICK_RATE,
     "errand_duration": DEFAULT_ERRAND_DURATION,
     "purchase_click_rate": DEFAULT_PURCHASE_CLICK_RATE,
-    "price_cutoff_multiplier": 2.0,
+    "price_horizon_multiplier": 2.0,
     "initial_state": "fresh",
     "allow_upgrades": True,
 }
@@ -54,7 +54,7 @@ CATEGORY_VALUE_PARSERS = {
     "version": str,
     "target": int,
     "click_rate": float,
-    "price_cutoff_multiplier": float,
+    "price_horizon_multiplier": float,
     "initial_state": str,
     "allow_upgrades": lambda value: _boolean(value, "allow_upgrades"),
 }
@@ -112,7 +112,7 @@ def calculate_route(
     algorithm_name,
     initial_gamestate,
     target,
-    price_cutoff_multiplier,
+    price_horizon_multiplier,
     on_purchase=None,
 ):
     """Dispatch route calculation to the selected algorithm."""
@@ -121,7 +121,7 @@ def calculate_route(
         initial_gamestate,
         target,
         on_purchase=on_purchase,
-        price_cutoff_multiplier=price_cutoff_multiplier,
+        price_horizon_multiplier=price_horizon_multiplier,
     )
 
 
@@ -282,7 +282,14 @@ def main(argv=None):
             f"(default: {DEFAULT_PURCHASE_CLICK_RATE:g})"
         ),
     )
-    parser.add_argument("--price-cutoff-multiplier", type=float)
+    parser.add_argument(
+        "--price-horizon-multiplier",
+        type=float,
+        help=(
+            "multiply lifetime cookies to set the moving maximum visible "
+            "purchase price (default: 2)"
+        ),
+    )
     parser.add_argument(
         "--save",
         metavar="ROUTE_FILE",
@@ -353,8 +360,8 @@ def main(argv=None):
         parser.error("--errand-duration cannot be negative")
     if settings["purchase_click_rate"] <= 0:
         parser.error("--purchase-click-rate must be greater than zero")
-    if settings["price_cutoff_multiplier"] <= 0:
-        parser.error("--price-cutoff-multiplier must be greater than zero")
+    if settings["price_horizon_multiplier"] <= 0:
+        parser.error("--price-horizon-multiplier must be greater than zero")
     if args.overwrite and not args.save:
         parser.error("--overwrite requires --save")
     save_path = None
@@ -392,7 +399,7 @@ def main(argv=None):
         settings["algorithm"],
         initial_gamestate,
         settings["target"],
-        settings["price_cutoff_multiplier"],
+        settings["price_horizon_multiplier"],
         on_purchase=live_table.print_purchase if live_table else None,
     )
     if live_table and live_table.count:

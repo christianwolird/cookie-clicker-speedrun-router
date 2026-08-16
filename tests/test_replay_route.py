@@ -158,7 +158,7 @@ class RouteFileTests(unittest.TestCase):
         generated = get_algorithm(settings["algorithm"]).find_route(
             initial_gamestate,
             settings["target"],
-            price_cutoff_multiplier=settings["price_cutoff_multiplier"],
+            price_horizon_multiplier=settings["price_horizon_multiplier"],
         )
 
         with tempfile.TemporaryDirectory() as directory:

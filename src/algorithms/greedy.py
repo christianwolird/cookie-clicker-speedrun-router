@@ -55,14 +55,14 @@ def upgrade_descendant(ancestor, name, score, lifetime_cookie_limit=None):
     return CandidateDescendant(descendant, tuple(purchases))
 
 
-def price_cutoff(gamestate, multiplier):
+def price_horizon(gamestate, multiplier):
     return max(1_000, gamestate.lifetime_cookies * multiplier)
 
 
 def candidate_descendants(
     ancestor,
     score,
-    price_cutoff_multiplier=2.0,
+    price_horizon_multiplier=2.0,
     lifetime_cookie_limit=None,
 ):
     """Yield strategically chosen descendants of the current gamestate.
@@ -71,20 +71,20 @@ def candidate_descendants(
     current approximation. An upgrade candidate can be a more distant
     descendant because its prerequisite purchases each count as errands too.
     """
-    cutoff = price_cutoff(ancestor, price_cutoff_multiplier)
+    horizon = price_horizon(ancestor, price_horizon_multiplier)
     for name in ancestor.building_counts:
-        if ancestor.building_price(name) <= cutoff:
+        if ancestor.building_price(name) <= horizon:
             child = ancestor.copy()
             child.purchase_building(name)
             yield CandidateDescendant(child, (child.last_purchase,))
 
-    # The cutoff applies to the upgrade itself. Prerequisite buildings are
+    # The horizon applies to the upgrade itself. Prerequisite buildings are
     # deliberately allowed above it; otherwise locked upgrades can never
     # guide the route toward the state that unlocks them.
     if not ancestor.upgrades_allowed:
         return
     for name, upgrade in ancestor.upgrade_catalog.items():
-        if name in ancestor.purchased_upgrades or upgrade.price > cutoff:
+        if name in ancestor.purchased_upgrades or upgrade.price > horizon:
             continue
         descendant = upgrade_descendant(
             ancestor,
@@ -96,14 +96,14 @@ def candidate_descendants(
             yield descendant
 
 
-def best_descendant(ancestor, target, score, price_cutoff_multiplier):
+def best_descendant(ancestor, target, score, price_horizon_multiplier):
     finish_without_purchase = ancestor.finish(target).age
     candidates = []
 
     for candidate in candidate_descendants(
         ancestor,
         score,
-        price_cutoff_multiplier=price_cutoff_multiplier,
+        price_horizon_multiplier=price_horizon_multiplier,
         lifetime_cookie_limit=target,
     ):
         descendant = candidate.gamestate
@@ -128,7 +128,7 @@ def find_route(
     score,
     target,
     on_purchase=None,
-    price_cutoff_multiplier=2.0,
+    price_horizon_multiplier=2.0,
 ):
     """Greedily recurse on the best-scoring candidate descendant."""
     gamestate = initial_gamestate.copy()
@@ -138,7 +138,7 @@ def find_route(
             gamestate,
             target,
             score,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
         )
         if candidate is None:
             break

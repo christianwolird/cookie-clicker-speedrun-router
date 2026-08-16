@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Callable
 
-from . import age_scoring, naive_scoring
+from . import age_scoring, cookie_scoring
 from .models import RouteResult
 
 
@@ -21,10 +21,10 @@ ALGORITHMS = {
         "greedy upgrade descendants scored by their effective acquisition time",
         age_scoring.find_route,
     ),
-    "naive_scoring": Algorithm(
-        "naive_scoring",
-        "greedy upgrade descendants scored by their total sticker price",
-        naive_scoring.find_route,
+    "cookie_scoring": Algorithm(
+        "cookie_scoring",
+        "greedy upgrade descendants scored by their cookie cost",
+        cookie_scoring.find_route,
     ),
 }
 

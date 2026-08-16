@@ -5,10 +5,10 @@ from src.algorithms import available_algorithms, get_algorithm
 from src.algorithms.age_scoring import descendant_score as age_score
 from src.algorithms.greedy import (
     candidate_descendants,
-    price_cutoff,
+    price_horizon,
     upgrade_descendant,
 )
-from src.algorithms.naive_scoring import descendant_score as naive_score
+from src.algorithms.cookie_scoring import descendant_score as cookie_score
 from src.data import Upgrade
 from src.data.v2_031 import UPGRADES
 from src.gamestate import Gamestate
@@ -32,7 +32,7 @@ class AlgorithmTests(unittest.TestCase):
     def test_named_algorithms_share_the_route_interface(self):
         self.assertEqual(
             available_algorithms(),
-            ("age_scoring", "naive_scoring"),
+            ("age_scoring", "cookie_scoring"),
         )
         for name in available_algorithms():
             with self.subTest(name=name):
@@ -67,8 +67,8 @@ class AlgorithmTests(unittest.TestCase):
             age_score(ancestor, slower_descendant),
         )
         self.assertEqual(
-            naive_score(ancestor, faster_descendant),
-            naive_score(ancestor, slower_descendant),
+            cookie_score(ancestor, faster_descendant),
+            cookie_score(ancestor, slower_descendant),
         )
 
     def test_search_beats_buying_nothing(self):
@@ -110,12 +110,12 @@ class AlgorithmTests(unittest.TestCase):
             )
         )
 
-    def test_price_cutoff_multiplier_is_configurable(self):
+    def test_price_horizon_multiplier_is_configurable(self):
         self.gamestate.lifetime_cookies = 10_000
 
-        self.assertEqual(price_cutoff(self.gamestate, 2.0), 20_000)
-        self.assertEqual(price_cutoff(self.gamestate, 4.0), 40_000)
-        self.assertEqual(price_cutoff(self.gamestate, 0.01), 1_000)
+        self.assertEqual(price_horizon(self.gamestate, 2.0), 20_000)
+        self.assertEqual(price_horizon(self.gamestate, 4.0), 40_000)
+        self.assertEqual(price_horizon(self.gamestate, 0.01), 1_000)
 
     def test_candidate_descendants_include_locked_upgrade_prerequisites(self):
         candidate = next(
@@ -136,9 +136,9 @@ class AlgorithmTests(unittest.TestCase):
             ["Grandma #1", "Forwards from grandma"],
         )
 
-    def test_upgrade_cutoff_does_not_exclude_mixed_prerequisites(self):
+    def test_upgrade_horizon_does_not_exclude_mixed_prerequisites(self):
         self.gamestate.lifetime_cookies = 30_000
-        cutoff = price_cutoff(self.gamestate, 2.0)
+        horizon = price_horizon(self.gamestate, 2.0)
         candidate = next(
             candidate
             for candidate in candidate_descendants(self.gamestate, age_score)
@@ -147,11 +147,11 @@ class AlgorithmTests(unittest.TestCase):
         )
         descendant = candidate.gamestate
 
-        self.assertEqual(cutoff, 60_000)
+        self.assertEqual(horizon, 60_000)
         self.assertGreater(
             descendant.lifetime_cookies
             - self.gamestate.lifetime_cookies,
-            cutoff,
+            horizon,
         )
         self.assertEqual(descendant.building_counts["Grandma"], 1)
         self.assertEqual(descendant.building_counts["Farm"], 15)

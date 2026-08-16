@@ -6,7 +6,7 @@ route to a category target.
 
 ```sh
 python3 make_route.py --category one_million --save routes/local/age_scoring/one_million_10_cps.route
-python3 make_route.py --category one_million --algorithm naive_scoring
+python3 make_route.py --category one_million --algorithm cookie_scoring
 python3 make_route.py --category one_million --verbose
 python3 make_route.py --category neverclick
 python3 make_route.py --category hardcore
@@ -81,10 +81,10 @@ consequences are recorded in the
 The search generates a small set of strategically chosen descendants from each
 parent. A single building currently creates a child because every purchase is
 approximated as one errand. A locked upgrade whose own price is under the
-parent's price cutoff is also considered: the router finds a greedy order for
+parent's price horizon is also considered: the router finds a greedy order for
 its missing prerequisite errands, then buys the upgrade. The resulting
 candidate can be a distant descendant rather than a child. This lets upgrade
-unlocks direct the search without raising the cutoff for every building.
+unlocks direct the search without raising the horizon for every building.
 
 ## Routing algorithms
 
@@ -92,7 +92,7 @@ Select an implementation with `--algorithm`. The default is `age_scoring`:
 
 ```sh
 python3 make_route.py --category one_million --algorithm age_scoring
-python3 make_route.py --category one_million --algorithm naive_scoring
+python3 make_route.py --category one_million --algorithm cookie_scoring
 ```
 
 Algorithm names are registered in `src/algorithms/__init__.py`. Every
@@ -105,13 +105,15 @@ they compare every single-building child with every in-range descendant ending
 in an upgrade. They differ in how they assign the ancestor-to-descendant price
 `A`.
 
-`naive_scoring` uses the sum of sticker prices:
+`cookie_scoring` measures acquisition cost directly in cookies, using the sum
+of sticker prices:
 
 ```text
 A = descendant_lifetime_cookies - ancestor_lifetime_cookies
 ```
 
-`age_scoring` uses the descendant's effective price:
+`age_scoring` measures acquisition cost from elapsed gamestate age, then
+converts it to an effective cookie price at the ancestor's CpS:
 
 ```text
 A = (descendant_age - ancestor_age) * ancestor_cps
@@ -134,14 +136,15 @@ upgrade as one candidate descendant lets that strategic path compete without
 generating every possible descendant several errands deep. It does not mean
 the purchases form one errand: today each is still timed separately.
 
-Candidates whose own price exceeds the parent gamestate's cutoff are omitted,
+Candidates whose own price lies beyond the parent gamestate's price horizon
+are omitted,
 and purchases that would slow reaching the target are skipped near the end of
-the run. The cutoff is
+the run. The horizon is
 `max(1,000, lifetime_cookies * multiplier)`. Its multiplier defaults to `2.0`
 and can be changed with:
 
 ```sh
-python3 make_route.py --category one_million --price-cutoff-multiplier 4.0
+python3 make_route.py --category one_million --price-horizon-multiplier 4.0
 ```
 
 The same score orders mixed upgrade prerequisites. If an upgrade still needs

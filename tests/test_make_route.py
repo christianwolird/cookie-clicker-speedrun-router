@@ -64,7 +64,7 @@ class RouteTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             purchase = Purchase("buy", "Streamed item", 1.2, 15)
@@ -84,17 +84,17 @@ class RouteTests(unittest.TestCase):
         self.assertEqual(output.getvalue().count("Streamed item"), 1)
         self.assertTrue(output.getvalue().rstrip().endswith("Final time: 2:03.5"))
 
-    def test_cli_sets_price_cutoff_multiplier(self):
+    def test_cli_sets_price_horizon_multiplier(self):
         captured = {}
 
         def fake_calculate_route(
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
-            captured["multiplier"] = price_cutoff_multiplier
+            captured["multiplier"] = price_horizon_multiplier
             initial_gamestate.lifetime_cookies = target
             return RouteResult(initial_gamestate, ())
 
@@ -102,7 +102,7 @@ class RouteTests(unittest.TestCase):
             patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(StringIO()),
         ):
-            main(["--price-cutoff-multiplier", "4.0"])
+            main(["--price-horizon-multiplier", "4.0"])
 
         self.assertEqual(captured["multiplier"], 4.0)
 
@@ -113,7 +113,7 @@ class RouteTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["version"] = initial_gamestate.version
@@ -135,7 +135,7 @@ class RouteTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["initial_gamestate"] = initial_gamestate
@@ -223,7 +223,7 @@ class RouteTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["algorithm"] = algorithm_name
@@ -234,13 +234,13 @@ class RouteTests(unittest.TestCase):
             patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(StringIO()),
         ):
-            main(["--algorithm", "naive_scoring"])
+            main(["--algorithm", "cookie_scoring"])
 
         self.assertEqual(
             available_algorithms(),
-            ("age_scoring", "naive_scoring"),
+            ("age_scoring", "cookie_scoring"),
         )
-        self.assertEqual(captured["algorithm"], "naive_scoring")
+        self.assertEqual(captured["algorithm"], "cookie_scoring")
 
     def test_cli_configures_both_parts_of_errand_timing(self):
         captured = {}
@@ -249,7 +249,7 @@ class RouteTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["errand_duration"] = initial_gamestate.errand_duration

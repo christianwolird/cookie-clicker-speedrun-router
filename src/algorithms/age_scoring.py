@@ -18,12 +18,12 @@ def find_route(
     initial_gamestate,
     target,
     on_purchase=None,
-    price_cutoff_multiplier=2.0,
+    price_horizon_multiplier=2.0,
 ):
     return find_greedy_route(
         initial_gamestate,
         descendant_score,
         target=target,
         on_purchase=on_purchase,
-        price_cutoff_multiplier=price_cutoff_multiplier,
+        price_horizon_multiplier=price_horizon_multiplier,
     )

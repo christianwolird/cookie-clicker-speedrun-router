@@ -34,7 +34,7 @@ class CategoryConfigTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = Path(directory) / "custom.conf"
             path.write_text(
-                "algorithm = naive_scoring\n"
+                "algorithm = cookie_scoring\n"
                 "target = 123\n"
                 "click_rate = 7.5\n"
             )
@@ -43,7 +43,7 @@ class CategoryConfigTests(unittest.TestCase):
             self.assertEqual(
                 load_category("custom", directory),
                 {
-                    "algorithm": "naive_scoring",
+                    "algorithm": "cookie_scoring",
                     "target": 123,
                     "click_rate": 7.5,
                 },
@@ -56,7 +56,7 @@ class CategoryConfigTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["initial_gamestate"] = initial_gamestate
@@ -97,7 +97,7 @@ class CategoryConfigTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["initial_gamestate"] = initial_gamestate
@@ -129,7 +129,7 @@ class CategoryConfigTests(unittest.TestCase):
             algorithm_name,
             initial_gamestate,
             target,
-            price_cutoff_multiplier,
+            price_horizon_multiplier,
             on_purchase,
         ):
             captured["initial_gamestate"] = initial_gamestate

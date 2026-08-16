@@ -3,11 +3,11 @@
 ## Scope and terminology
 
 This case study compares the saved 1.0466 Hardcore routes generated with
-`naive_scoring` and `age_scoring`. Hardcore targets one billion lifetime
+`cookie_scoring` and `age_scoring`. Hardcore targets one billion lifetime
 cookies, uses a click rate of 10, and disallows upgrades.
 
 The source routes are
-[`routes/local/naive_scoring/hardcore_10_cps.route`](../routes/local/naive_scoring/hardcore_10_cps.route)
+[`routes/local/cookie_scoring/hardcore_10_cps.route`](../routes/local/cookie_scoring/hardcore_10_cps.route)
 and
 [`routes/local/age_scoring/hardcore_10_cps.route`](../routes/local/age_scoring/hardcore_10_cps.route).
 
@@ -28,7 +28,7 @@ not predictions of an optimally grouped physical run.
 
 | Scoring | Final time | Purchases modeled as errands | Final CpS |
 |---|---:|---:|---:|
-| Naive | 133:26.3 | 182 | 630,708.2 |
+| Cookie | 133:26.3 | 182 | 630,708.2 |
 | Age | 133:25.9 | 182 | 630,708.2 |
 
 Age scoring saves 0.3976 seconds. Both routes buy exactly the same multiset of
@@ -52,7 +52,7 @@ score.
 
 ## Why a building-only route changes
 
-Naive scoring assigns a one-purchase child the sticker price `P`. Age scoring
+Cookie scoring assigns a one-purchase child the sticker price `P`. Age scoring
 assigns the parent-to-child step the effective price
 
 ```text
@@ -68,18 +68,18 @@ A_effective = P + H*d
 ```
 
 Age scoring therefore includes the hand production forgone during the errand.
-Naive scoring is the idealized `d = 0` case even though replay later charges a
+Cookie scoring is the idealized `d = 0` case even though replay later charges a
 nonzero duration.
 
 The first decision demonstrates the resulting ordering reversal. The fresh
 parent has `c = H = 10` and `d = 0.5`:
 
-| Child | Sticker price | Effective price | CpS buff | Naive score | Age score |
+| Child | Sticker price | Effective price | CpS buff | Cookie score | Age score |
 |---|---:|---:|---:|---:|---:|
 | Cursor #1 | 15 | 20 | 0.1 | **1,515.0** | 2,020.0 |
 | Farm #1 | 500 | 505 | 4.0 | 1,750.0 | **1,767.5** |
 
-Naive scoring begins with a cursor; age scoring begins with two farms before
+Cookie scoring begins with a cursor; age scoring begins with two farms before
 its first cursor. The later routes repeatedly make small, locally justified
 transpositions of the same purchases. Their accumulated gain is only four
 tenths of a second, but it establishes that age scoring is not merely a better

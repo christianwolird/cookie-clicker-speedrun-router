@@ -76,7 +76,7 @@ UPGRADES = {
 }
 
 
-UPGRADE_FAMILIES = {
+SPREADSHEET_UPGRADE_FAMILIES = {
     "Cursor": (
         "Reinforced index finger",
         "Carpal tunnel prevention cream",

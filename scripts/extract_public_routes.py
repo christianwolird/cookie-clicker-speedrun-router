@@ -11,6 +11,8 @@ REPOSITORY = Path(__file__).resolve().parents[1]
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
+from src.data import get_version_data
+
 
 SPREADSHEET_NAMESPACE = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
 RELATIONSHIP_ID = (
@@ -102,12 +104,12 @@ def _route_rows(path):
 def _workbook_settings(path):
     name = path.name
     if "Neverclick" in name:
-        return "neverclick", "2.031", 1_000_000, "neverclick", True
+        return "neverclick", "2.031", 1_000_000, "neverclick"
     if "Hardcore" in name:
-        return "hardcore", "1.0466", 1_000_000_000, "fresh", False
+        return "hardcore", "1.0466", 1_000_000_000, "fresh"
     if "Heavenly Chip" in name:
-        return "heavenly_chip", "1.0466", 1_000_000_000_000, "fresh", True
-    return "one_million", "2.031", 1_000_000, "fresh", True
+        return "heavenly_chip", "1.0466", 1_000_000_000_000, "fresh"
+    return "one_million", "2.031", 1_000_000, "fresh"
 
 
 def _click_rate(category, initial_state):
@@ -119,7 +121,10 @@ def _click_rate(category, initial_state):
     return float(match.group(1))
 
 
-def _normalize_actions(raw_route, initial_state):
+def _normalize_actions(raw_route, initial_state, version):
+    spreadsheet_upgrade_families = (
+        get_version_data(version).SPREADSHEET_UPGRADE_FAMILIES
+    )
     tiers = Counter()
     actions = []
     skipped_initial_cursor = initial_state != "neverclick"
@@ -140,7 +145,16 @@ def _normalize_actions(raw_route, initial_state):
         if token in UPGRADE_TOKENS:
             family = UPGRADE_TOKENS[token]
             tiers[family] += 1
-            actions.append(f"upgrade {family} {tiers[family]}")
+            try:
+                upgrade_name = spreadsheet_upgrade_families[family][
+                    tiers[family] - 1
+                ]
+            except (KeyError, IndexError) as error:
+                raise ValueError(
+                    f"Unknown {version} spreadsheet upgrade: "
+                    f"{family} tier {tiers[family]}"
+                ) from error
+            actions.append(f"upgrade {upgrade_name}")
 
     return actions
 
@@ -157,11 +171,15 @@ def extract_routes(spreadsheet_directory, output_directory):
     sources_by_destination = {}
 
     for workbook in sorted(spreadsheet_directory.glob("*.xlsx")):
-        category_name, version, target, initial_state, allow_upgrades = (
+        category_name, version, target, initial_state = (
             _workbook_settings(workbook)
         )
         for row_number, values in _route_rows(workbook):
-            actions = _normalize_actions(values["B"], initial_state)
+            actions = _normalize_actions(
+                values["B"],
+                initial_state,
+                version,
+            )
             if len(actions) < 5:
                 continue
 
@@ -192,9 +210,7 @@ def extract_routes(spreadsheet_directory, output_directory):
                 f"version = {version}",
                 f"target = {target}",
                 f"click_rate = {click_rate:g}",
-                "purchase_delay = 0.5",
                 f"initial_state = {initial_state}",
-                f"allow_upgrades = {str(allow_upgrades).lower()}",
                 "",
                 *actions,
                 "",

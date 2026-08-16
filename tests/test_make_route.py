@@ -7,15 +7,15 @@ from unittest.mock import patch
 
 from make_route import (
     LivePurchaseTable,
-    RouteResult,
-    find_route,
+    available_algorithms,
     format_purchase_table,
     format_time,
     local_route_path,
     main,
     save_route,
 )
-from src.game import Game, Purchase, purchase_score
+from src.algorithms import RouteResult
+from src.gamestate import Gamestate, Purchase
 
 
 class RouteTests(unittest.TestCase):
@@ -55,18 +55,24 @@ class RouteTests(unittest.TestCase):
         self.assertIn("\n\n  #", output.getvalue())
 
     def test_cli_prints_final_time_after_live_table(self):
-        game = Game()
-        game.age = 123.456
-        game.cookies = 1_000_000
+        final_gamestate = Gamestate()
+        final_gamestate.age = 123.456
+        final_gamestate.lifetime_cookies = 1_000_000
         output = StringIO()
 
-        def fake_find_route(start, target, on_purchase):
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
             purchase = Purchase("buy", "Streamed item", 1.2, 15)
             on_purchase(purchase)
-            return RouteResult(game, (purchase,))
+            return RouteResult(final_gamestate, (purchase,))
 
         with (
-            patch("make_route.find_route", side_effect=fake_find_route),
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(output),
         ):
             main(["--verbose"])
@@ -81,13 +87,19 @@ class RouteTests(unittest.TestCase):
     def test_cli_sets_price_cutoff_multiplier(self):
         captured = {}
 
-        def fake_find_route(game, target, on_purchase):
-            captured["multiplier"] = game.price_cutoff_multiplier
-            game.cookies = target
-            return RouteResult(game, ())
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
+            captured["multiplier"] = price_cutoff_multiplier
+            initial_gamestate.lifetime_cookies = target
+            return RouteResult(initial_gamestate, ())
 
         with (
-            patch("make_route.find_route", side_effect=fake_find_route),
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(StringIO()),
         ):
             main(["--price-cutoff-multiplier", "4.0"])
@@ -97,13 +109,19 @@ class RouteTests(unittest.TestCase):
     def test_cli_selects_game_version(self):
         captured = {}
 
-        def fake_find_route(game, target, on_purchase):
-            captured["version"] = game.version
-            game.cookies = target
-            return RouteResult(game, ())
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
+            captured["version"] = initial_gamestate.version
+            initial_gamestate.lifetime_cookies = target
+            return RouteResult(initial_gamestate, ())
 
         with (
-            patch("make_route.find_route", side_effect=fake_find_route),
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(StringIO()),
         ):
             main(["--version", "1.0466"])
@@ -113,31 +131,37 @@ class RouteTests(unittest.TestCase):
     def test_cli_configures_neverclick_and_no_upgrades(self):
         captured = {}
 
-        def fake_find_route(game, target, on_purchase):
-            captured["game"] = game
-            game.cookies = target
-            return RouteResult(game, ())
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
+            captured["initial_gamestate"] = initial_gamestate
+            initial_gamestate.lifetime_cookies = target
+            return RouteResult(initial_gamestate, ())
 
         with (
-            patch("make_route.find_route", side_effect=fake_find_route),
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
             redirect_stdout(StringIO()),
         ):
             main(["--neverclick-start", "--no-upgrades"])
 
-        game = captured["game"]
-        self.assertEqual(game.clickrate, 0)
-        self.assertEqual(game.cookies, 1_000_000)
-        self.assertEqual(game.handmade_cookies, 15)
-        self.assertEqual(game.num_buildings["Cursor"], 1)
-        self.assertFalse(game.allow_upgrades)
+        gamestate = captured["initial_gamestate"]
+        self.assertEqual(gamestate.click_rate, 0)
+        self.assertEqual(gamestate.lifetime_cookies, 1_000_000)
+        self.assertEqual(gamestate.handmade_cookies, 15)
+        self.assertEqual(gamestate.building_counts["Cursor"], 1)
+        self.assertFalse(gamestate.upgrades_allowed)
 
     def test_cli_saves_only_when_requested(self):
-        game = Game()
-        game.cookies = 1_000_000
-        result = RouteResult(game, ())
+        final_gamestate = Gamestate()
+        final_gamestate.lifetime_cookies = 1_000_000
+        result = RouteResult(final_gamestate, ())
 
         with (
-            patch("make_route.find_route", return_value=result),
+            patch("make_route.calculate_route", return_value=result),
             patch(
                 "make_route.save_route",
                 return_value=(
@@ -154,7 +178,10 @@ class RouteTests(unittest.TestCase):
         save.assert_called_once()
         self.assertEqual(
             save.call_args.args[0],
-            Path(__file__).resolve().parents[1] / "routes" / "local" / "test.route",
+            Path(__file__).resolve().parents[1]
+            / "routes"
+            / "local"
+            / "test.route",
         )
 
     def test_save_destination_is_an_explicit_local_route_file(self):
@@ -175,16 +202,12 @@ class RouteTests(unittest.TestCase):
             local_route_path("routes/from_online/not_local.route")
 
     def test_save_route_refuses_to_replace_a_file_without_overwrite(self):
-        game = Game()
-        result = RouteResult(game, ())
+        result = RouteResult(Gamestate(), ())
         settings = {
             "version": "2.031",
             "target": 1,
             "click_rate": 10.0,
-            "purchase_delay": 0.5,
-            "price_cutoff_multiplier": 2.0,
             "initial_state": "fresh",
-            "allow_upgrades": True,
         }
 
         with tempfile.TemporaryDirectory() as directory:
@@ -193,42 +216,64 @@ class RouteTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 save_route(path, settings, result)
 
-    def test_purchase_score_matches_pairwise_ordering_formula(self):
-        class State:
-            def __init__(self, cookies, cps):
-                self.cookies = cookies
-                self._cps = cps
+    def test_cli_selects_algorithm(self):
+        captured = {}
 
-            def cps(self):
-                return self._cps
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
+            captured["algorithm"] = algorithm_name
+            initial_gamestate.lifetime_cookies = target
+            return RouteResult(initial_gamestate, ())
 
-        parent = State(0, 10)
-        better_first = State(100, 20)
-        worse_first = State(80, 15)
+        with (
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
+            redirect_stdout(StringIO()),
+        ):
+            main(["--algorithm", "naive_scoring"])
 
-        self.assertLess(
-            purchase_score(parent, better_first),
-            purchase_score(parent, worse_first),
+        self.assertEqual(
+            available_algorithms(),
+            ("age_scoring", "naive_scoring"),
         )
+        self.assertEqual(captured["algorithm"], "naive_scoring")
 
-    def test_search_beats_buying_nothing(self):
-        game = Game()
-        game.clickrate = 8
-        no_purchases = game.finish(100_000)
+    def test_cli_configures_both_parts_of_errand_timing(self):
+        captured = {}
 
-        route = find_route(game, target=100_000)
+        def fake_calculate_route(
+            algorithm_name,
+            initial_gamestate,
+            target,
+            price_cutoff_multiplier,
+            on_purchase,
+        ):
+            captured["errand_duration"] = initial_gamestate.errand_duration
+            captured["purchase_click_rate"] = (
+                initial_gamestate.purchase_click_rate
+            )
+            initial_gamestate.lifetime_cookies = target
+            return RouteResult(initial_gamestate, ())
 
-        self.assertLess(route.game.age, no_purchases.age)
-        self.assertEqual(route.game.cookies, 100_000)
-        self.assertTrue(route.purchases)
+        with (
+            patch("make_route.calculate_route", side_effect=fake_calculate_route),
+            redirect_stdout(StringIO()),
+        ):
+            main(
+                [
+                    "--errand-duration",
+                    "0.75",
+                    "--purchase-click-rate",
+                    "4",
+                ]
+            )
 
-    def test_search_reports_each_purchase_as_it_is_selected(self):
-        game = Game()
-        purchases = []
-
-        route = find_route(game, target=1_000, on_purchase=purchases.append)
-
-        self.assertEqual(purchases, list(route.purchases))
+        self.assertEqual(captured["errand_duration"], 0.75)
+        self.assertEqual(captured["purchase_click_rate"], 4)
 
 
 if __name__ == "__main__":

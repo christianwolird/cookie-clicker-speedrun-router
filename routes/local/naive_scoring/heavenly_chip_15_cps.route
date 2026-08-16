@@ -4,14 +4,11 @@ source = this codebase
 version = 1.0466
 target = 1000000000000
 click_rate = 15
-purchase_delay = 0.5
-price_cutoff_multiplier = 2
 initial_state = fresh
-allow_upgrades = true
 
 buy Cursor
-upgrade Cursor 1
-upgrade Cursor 2
+upgrade Reinforced index finger
+upgrade Carpal tunnel prevention cream
 buy Cursor
 buy Cursor
 buy Cursor
@@ -33,13 +30,13 @@ buy Farm
 buy Grandma
 buy Cursor
 buy Farm
-upgrade Cursor 3
+upgrade Ambidextrous
 buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-upgrade Farm 1
+upgrade Cheap hoes
 buy Farm
 buy Farm
 buy Farm
@@ -59,7 +56,7 @@ buy Cursor
 buy Factory
 buy Mine
 buy Farm
-upgrade Grandma 1
+upgrade Forwards from grandma
 buy Grandma
 buy Grandma
 buy Grandma
@@ -75,17 +72,17 @@ buy Grandma
 buy Cursor
 buy Mine
 buy Shipment
-upgrade Farm 2
+upgrade Fertilizer
 buy Farm
 buy Farm
 buy Farm
 buy Farm
 buy Farm
 buy Shipment
-upgrade Mouse 1
+upgrade Plastic mouse
 buy Farm
 buy Mine
-upgrade Mine 1
+upgrade Sugar gas
 buy Mine
 buy Mine
 buy Mine
@@ -97,7 +94,7 @@ buy Cursor
 buy Shipment
 buy Farm
 buy Factory
-upgrade Factory 1
+upgrade Sturdier conveyor belts
 buy Factory
 buy Factory
 buy Factory
@@ -113,10 +110,10 @@ buy Farm
 buy Mine
 buy Factory
 buy Grandma
-upgrade Grandma 2
+upgrade Steel-plated rolling pins
 buy Grandma
 buy Grandma
-upgrade Grandma synergy 1
+upgrade Farmer grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -142,9 +139,9 @@ buy Portal
 buy Portal
 buy Portal
 buy Portal
-upgrade Portal 1
+upgrade Ancient tablet
 buy Portal
-upgrade Mouse 2
+upgrade Iron mouse
 buy Portal
 buy Portal
 buy Portal
@@ -153,7 +150,7 @@ buy Portal
 buy Alchemy Lab
 buy Mine
 buy Farm
-upgrade Shipment 1
+upgrade Vanilla nebulae
 buy Shipment
 buy Shipment
 buy Shipment
@@ -162,7 +159,7 @@ buy Shipment
 buy Factory
 buy Shipment
 buy Grandma
-upgrade Grandma 3
+upgrade Lubricated dentures
 buy Grandma
 buy Grandma
 buy Cursor
@@ -170,7 +167,7 @@ buy Portal
 buy Grandma
 buy Alchemy Lab
 buy Farm
-upgrade Farm 3
+upgrade Cookie trees
 buy Farm
 buy Farm
 buy Grandma
@@ -181,25 +178,25 @@ buy Grandma
 buy Farm
 buy Factory
 buy Factory
-upgrade Grandma synergy 2
+upgrade Worker grandmas
 buy Grandma
 buy Grandma
-upgrade Factory 2
+upgrade Child labor
 buy Factory
 buy Factory
 buy Factory
-buy Factory
-buy Grandma
-buy Mine
-upgrade Mine 2
-buy Mine
-buy Mine
-buy Mine
-buy Mine
 buy Factory
 buy Grandma
 buy Mine
-upgrade Cursor 4
+upgrade Megadrill
+buy Mine
+buy Mine
+buy Mine
+buy Mine
+buy Factory
+buy Grandma
+buy Mine
+upgrade Thousand fingers
 buy Cursor
 buy Cursor
 buy Cursor
@@ -223,7 +220,7 @@ buy Cursor
 buy Cursor
 buy Grandma
 buy Farm
-upgrade Grandma synergy 3
+upgrade Miner grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -238,7 +235,7 @@ buy Grandma
 buy Mine
 buy Cursor
 buy Alchemy Lab
-upgrade Alchemy Lab 1
+upgrade Antimony
 buy Alchemy Lab
 buy Alchemy Lab
 buy Alchemy Lab
@@ -263,12 +260,12 @@ buy Factory
 buy Alchemy Lab
 buy Cursor
 buy Shipment
-upgrade Shipment 2
+upgrade Wormholes
 buy Shipment
 buy Shipment
 buy Shipment
 buy Shipment
-upgrade Portal 2
+upgrade Insane oatling workers
 buy Portal
 buy Portal
 buy Portal
@@ -283,13 +280,13 @@ buy Time Machine
 buy Mine
 buy Factory
 buy Alchemy Lab
-upgrade Grandma synergy 4
+upgrade Cosmic grandmas
 buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
 buy Shipment
-upgrade Grandma 4
+upgrade Prune juice
 buy Grandma
 buy Grandma
 buy Grandma
@@ -303,7 +300,7 @@ buy Mine
 buy Factory
 buy Cursor
 buy Alchemy Lab
-upgrade Alchemy Lab 2
+upgrade Essence of dough
 buy Alchemy Lab
 buy Alchemy Lab
 buy Alchemy Lab
@@ -311,7 +308,7 @@ buy Alchemy Lab
 buy Grandma
 buy Farm
 buy Alchemy Lab
-upgrade Grandma synergy 5
+upgrade Transmuted grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -324,7 +321,7 @@ buy Shipment
 buy Cursor
 buy Mine
 buy Factory
-upgrade Mine 3
+upgrade Ultradrill
 buy Mine
 buy Mine
 buy Mine
@@ -332,8 +329,8 @@ buy Mine
 buy Grandma
 buy Mine
 buy Farm
-upgrade Cookie 1
-upgrade Grandma synergy 6
+upgrade Oatmeal raisin cookies
+upgrade Altered grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -345,17 +342,17 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Portal
-upgrade Cookie 2
-upgrade Cookie 3
+upgrade Peanut butter cookies
+upgrade Plain cookies
 buy Cursor
 buy Grandma
-upgrade Factory 3
+upgrade Sweatshop
 buy Factory
 buy Factory
 buy Factory
 buy Factory
 buy Factory
-upgrade Cookie 4
+upgrade Sugar cookies
 buy Alchemy Lab
 buy Time Machine
 buy Shipment
@@ -363,32 +360,32 @@ buy Farm
 buy Mine
 buy Portal
 buy Cursor
-buy Grandma
-buy Factory
-buy Alchemy Lab
-buy Time Machine
-buy Shipment
-buy Cursor
-buy Farm
-buy Mine
-buy Portal
 buy Grandma
 buy Factory
 buy Alchemy Lab
 buy Time Machine
+buy Shipment
+buy Cursor
+buy Farm
+buy Mine
+buy Portal
+buy Grandma
+buy Factory
+buy Alchemy Lab
+buy Time Machine
 buy Cursor
 buy Shipment
 buy Farm
 buy Grandma
 buy Mine
 buy Portal
-upgrade Time Machine 1
+upgrade Flux capacitors
 buy Time Machine
 buy Time Machine
-upgrade Mouse 3
+upgrade Titanium mouse
 buy Time Machine
 buy Time Machine
-upgrade Portal 3
+upgrade Soul bond
 buy Portal
 buy Portal
 buy Grandma
@@ -405,7 +402,7 @@ buy Grandma
 buy Time Machine
 buy Alchemy Lab
 buy Shipment
-upgrade Shipment 3
+upgrade Frequent flyer
 buy Shipment
 buy Shipment
 buy Shipment
@@ -415,20 +412,20 @@ buy Shipment
 buy Mine
 buy Portal
 buy Cursor
-buy Grandma
-buy Factory
-buy Time Machine
-buy Alchemy Lab
-buy Farm
-buy Shipment
-buy Cursor
-buy Mine
-buy Portal
 buy Grandma
 buy Factory
 buy Time Machine
 buy Alchemy Lab
-upgrade Alchemy Lab 3
+buy Farm
+buy Shipment
+buy Cursor
+buy Mine
+buy Portal
+buy Grandma
+buy Factory
+buy Time Machine
+buy Alchemy Lab
+upgrade True chocolate
 buy Alchemy Lab
 buy Alchemy Lab
 buy Alchemy Lab
@@ -449,7 +446,7 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-upgrade Cursor 6
+upgrade Billion fingers
 buy Farm
 buy Cursor
 buy Farm
@@ -492,7 +489,7 @@ buy Farm
 buy Factory
 buy Shipment
 buy Mine
-upgrade Cursor 5
+upgrade Million fingers
 buy Cursor
 buy Farm
 buy Factory
@@ -535,7 +532,7 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-upgrade Cursor 7
+upgrade Trillion fingers
 buy Factory
 buy Farm
 buy Factory
@@ -595,10 +592,10 @@ buy Factory
 buy Grandma
 buy Farm
 buy Mine
-upgrade Cookie 5
-upgrade Cookie 6
+upgrade Coconut cookies
+upgrade White chocolate cookies
 buy Shipment
-upgrade Cookie 7
+upgrade Macadamia nut cookies
 buy Alchemy Lab
 buy Factory
 buy Grandma
@@ -614,7 +611,7 @@ buy Portal
 buy Time Machine
 buy Shipment
 buy Antimatter Condenser
-upgrade Time Machine 2
+upgrade Time paradox resolver
 buy Time Machine
 buy Time Machine
 buy Time Machine
@@ -628,19 +625,11 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
-upgrade Grandma 5
+upgrade Double-thick glasses
 buy Farm
 buy Mine
-upgrade Farm 4
+upgrade Genetically-modified cookies
 buy Antimatter Condenser
-buy Portal
-buy Shipment
-buy Time Machine
-buy Alchemy Lab
-buy Factory
-buy Farm
-buy Antimatter Condenser
-buy Mine
 buy Portal
 buy Shipment
 buy Time Machine
@@ -665,14 +654,22 @@ buy Factory
 buy Farm
 buy Antimatter Condenser
 buy Mine
-upgrade Antimatter Condenser 1
+buy Portal
+buy Shipment
+buy Time Machine
+buy Alchemy Lab
+buy Factory
+buy Farm
+buy Antimatter Condenser
+buy Mine
+upgrade Sugar bosons
 buy Antimatter Condenser
 buy Antimatter Condenser
 buy Antimatter Condenser
 buy Antimatter Condenser
 buy Antimatter Condenser
 buy Portal
-upgrade Grandma synergy 7
+upgrade Grandmas' grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -691,13 +688,13 @@ buy Mine
 buy Portal
 buy Grandma
 buy Time Machine
-upgrade Time Machine 3
+upgrade Quantum conundrum
 buy Time Machine
 buy Time Machine
 buy Grandma
 buy Time Machine
 buy Grandma
-upgrade Mouse 4
+upgrade Adamantium mouse
 buy Grandma
 buy Time Machine
 buy Prism
@@ -718,5 +715,5 @@ buy Antimatter Condenser
 buy Prism
 buy Portal
 buy Time Machine
-upgrade Cookie 8
+upgrade Double-chip cookies
 buy Time Machine

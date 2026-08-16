@@ -7,16 +7,37 @@ from io import StringIO
 from pathlib import Path
 from unittest.mock import patch
 
-from make_route import RouteResult, find_route, load_category, print_result, save_route
+from make_route import load_category, print_result, save_route
 from scripts.extract_public_routes import extract_routes
 from scripts.replay_route import execute_route, load_route, main
-from src.game import Game
+from src.algorithms import DEFAULT_ALGORITHM, RouteResult, get_algorithm
+from src.gamestate import Gamestate
 
 
 REPOSITORY = Path(__file__).resolve().parent.parent
 
 
 class RouteFileTests(unittest.TestCase):
+    def test_stored_routes_use_the_exact_metadata_schema(self):
+        expected = {
+            "name",
+            "source",
+            "version",
+            "target",
+            "click_rate",
+            "initial_state",
+        }
+        for path in (REPOSITORY / "routes").glob("**/*.route"):
+            with self.subTest(path=path):
+                plan = load_route(path)
+                self.assertTrue(plan.actions)
+                keys = {
+                    line.partition("=")[0].strip()
+                    for line in path.read_text().splitlines()
+                    if "=" in line
+                }
+                self.assertEqual(keys, expected)
+
     def test_all_online_routes_extract_parse_and_execute(self):
         with tempfile.TemporaryDirectory() as directory:
             paths = extract_routes(
@@ -30,7 +51,10 @@ class RouteFileTests(unittest.TestCase):
                 with self.subTest(path=path.name):
                     plan = load_route(path)
                     result = execute_route(plan)
-                    self.assertEqual(result.game.cookies, plan.target)
+                    self.assertEqual(
+                        result.final_gamestate.lifetime_cookies,
+                        plan.target,
+                    )
                     self.assertTrue(result.purchases)
 
     def test_normalized_route_is_plain_readable_text(self):
@@ -44,7 +68,15 @@ class RouteFileTests(unittest.TestCase):
             self.assertRegex(contents, r"(?m)^source = dha spreadsheet: .+ row \d+$")
             self.assertIn("version = ", contents)
             self.assertNotIn("profile = ", contents)
+            self.assertNotIn("errand_duration = ", contents)
+            self.assertNotIn("purchase_click_rate = ", contents)
+            self.assertNotIn("allow_upgrades = ", contents)
             self.assertRegex(contents, r"(?m)^buy \S+")
+            self.assertIn("upgrade Reinforced index finger", contents)
+            self.assertNotRegex(
+                contents,
+                r"(?m)^upgrade (Cursor|Grandma|Farm|Mine|Factory) \d+$",
+            )
             self.assertNotIn("Cursor_up", contents)
             self.assertNotIn("Super_up", contents)
 
@@ -95,7 +127,7 @@ class RouteFileTests(unittest.TestCase):
             (REPOSITORY / "routes" / "from_online").glob("one_million_*.route")
         )
         plan = load_route(route)
-        result = RouteResult(Game("1.0466"), ())
+        result = RouteResult(Gamestate("1.0466"), ())
 
         with (
             patch("scripts.replay_route.load_route", return_value=plan),
@@ -108,17 +140,26 @@ class RouteFileTests(unittest.TestCase):
         ):
             main([str(route), "--version", "1.0466"])
 
-        execute.assert_called_once_with(plan, "1.0466", on_purchase=None)
+        execute.assert_called_once_with(
+            plan,
+            "1.0466",
+            on_purchase=None,
+            errand_duration=1.0,
+            purchase_click_rate=5.0,
+        )
 
     def test_saved_generated_route_is_replay_source_of_truth(self):
         settings = load_category("one_million")
+        settings["algorithm"] = DEFAULT_ALGORITHM
         settings["target"] = 1_000
-        game = Game(settings["version"])
-        game.clickrate = settings["click_rate"]
-        game.purchase_delay = settings["purchase_delay"]
-        game.price_cutoff_multiplier = settings["price_cutoff_multiplier"]
-        game.allow_upgrades = settings["allow_upgrades"]
-        generated = find_route(game, settings["target"])
+        initial_gamestate = Gamestate(settings["version"])
+        initial_gamestate.click_rate = settings["click_rate"]
+        initial_gamestate.upgrades_allowed = settings["allow_upgrades"]
+        generated = get_algorithm(settings["algorithm"]).find_route(
+            initial_gamestate,
+            settings["target"],
+            price_cutoff_multiplier=settings["price_cutoff_multiplier"],
+        )
 
         with tempfile.TemporaryDirectory() as directory:
             path = save_route(
@@ -131,6 +172,24 @@ class RouteFileTests(unittest.TestCase):
             replayed = execute_route(plan)
 
         self.assertIn("source = this codebase", contents)
+        metadata_keys = {
+            line.partition("=")[0].strip()
+            for line in contents.splitlines()
+            if "=" in line
+        }
+        self.assertEqual(
+            metadata_keys,
+            {
+                "name",
+                "source",
+                "version",
+                "target",
+                "click_rate",
+                "initial_state",
+            },
+        )
+        self.assertIn("upgrade Reinforced index finger", contents)
+        self.assertNotIn("upgrade Cursor 1", contents)
         self.assertEqual(
             [purchase.route_action() for purchase in generated.purchases],
             [purchase.route_action() for purchase in replayed.purchases],

@@ -4,13 +4,11 @@ source = dha spreadsheet: one million row 4
 version = 2.031
 target = 1000000
 click_rate = 10
-purchase_delay = 0.5
 initial_state = fresh
-allow_upgrades = true
 
 buy Cursor
-upgrade Cursor 1
-upgrade Cursor 2
+upgrade Reinforced index finger
+upgrade Carpal tunnel prevention cream
 buy Cursor
 buy Cursor
 buy Cursor
@@ -27,7 +25,7 @@ buy Grandma
 buy Farm
 buy Grandma
 buy Grandma
-upgrade Grandma 1
+upgrade Forwards from grandma
 buy Grandma
 buy Grandma
 buy Cursor
@@ -41,7 +39,7 @@ buy Grandma
 buy Farm
 buy Cursor
 buy Grandma
-upgrade Grandma 2
+upgrade Steel-plated rolling pins
 buy Grandma
 buy Grandma
 buy Grandma
@@ -49,14 +47,14 @@ buy Grandma
 buy Grandma
 buy Farm
 buy Farm
-upgrade Farm 1
+upgrade Cheap hoes
 buy Farm
 buy Farm
 buy Farm
 buy Cursor
 buy Grandma
 buy Cursor
-upgrade Cursor 3
+upgrade Ambidextrous
 buy Cursor
 buy Cursor
 buy Cursor
@@ -70,12 +68,12 @@ buy Mine
 buy Farm
 buy Grandma
 buy Farm
-upgrade Farm 2
+upgrade Fertilizer
 buy Farm
 buy Farm
 buy Farm
 buy Farm
-upgrade Grandma synergy 1
+upgrade Farmer grandmas
 buy Grandma
 buy Grandma
 buy Grandma
@@ -83,7 +81,7 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
-upgrade Grandma 3
+upgrade Lubricated dentures
 buy Grandma
 buy Grandma
 buy Grandma
@@ -92,7 +90,7 @@ buy Grandma
 buy Farm
 buy Mine
 buy Grandma
-upgrade Mouse 1
+upgrade Plastic mouse
 buy Cursor
 buy Farm
 buy Grandma
@@ -103,7 +101,7 @@ buy Grandma
 buy Mine
 buy Cursor
 buy Mine
-upgrade Mine 1
+upgrade Sugar gas
 buy Mine
 buy Mine
 buy Mine

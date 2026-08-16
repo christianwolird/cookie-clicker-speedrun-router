@@ -2,7 +2,6 @@
 
 import argparse
 import sys
-from dataclasses import dataclass
 from pathlib import Path
 
 
@@ -10,8 +9,18 @@ REPOSITORY = Path(__file__).resolve().parent
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
+from src.algorithms import (
+    DEFAULT_ALGORITHM,
+    available_algorithms,
+    get_algorithm,
+)
 from src.data import DEFAULT_VERSION, SUPPORTED_VERSIONS
-from src.game import Game, Purchase, purchase_score
+from src.gamestate import (
+    DEFAULT_CLICK_RATE,
+    DEFAULT_ERRAND_DURATION,
+    DEFAULT_PURCHASE_CLICK_RATE,
+    Gamestate,
+)
 
 
 ONE_MILLION = 1_000_000
@@ -19,10 +28,12 @@ LIVE_BUILDING_NUMBER = "0000"
 CATEGORY_DIRECTORY = REPOSITORY / "categories"
 LOCAL_ROUTE_DIRECTORY = REPOSITORY / "routes" / "local"
 DEFAULT_SETTINGS = {
+    "algorithm": DEFAULT_ALGORITHM,
     "version": DEFAULT_VERSION,
     "target": ONE_MILLION,
-    "click_rate": 10.0,
-    "purchase_delay": 0.5,
+    "click_rate": DEFAULT_CLICK_RATE,
+    "errand_duration": DEFAULT_ERRAND_DURATION,
+    "purchase_click_rate": DEFAULT_PURCHASE_CLICK_RATE,
     "price_cutoff_multiplier": 2.0,
     "initial_state": "fresh",
     "allow_upgrades": True,
@@ -39,10 +50,10 @@ def _boolean(value, key):
 
 
 CATEGORY_VALUE_PARSERS = {
+    "algorithm": str,
     "version": str,
     "target": int,
     "click_rate": float,
-    "purchase_delay": float,
     "price_cutoff_multiplier": float,
     "initial_state": str,
     "allow_upgrades": lambda value: _boolean(value, "allow_upgrades"),
@@ -72,7 +83,9 @@ def load_category(name, category_directory=CATEGORY_DIRECTORY):
         if key not in CATEGORY_VALUE_PARSERS:
             raise ValueError(f"{path}:{line_number}: unknown setting: {key}")
         if key in settings:
-            raise ValueError(f"{path}:{line_number}: duplicate setting: {key}")
+            raise ValueError(
+                f"{path}:{line_number}: duplicate setting: {key}"
+            )
         try:
             settings[key] = CATEGORY_VALUE_PARSERS[key](value)
         except ValueError as error:
@@ -80,6 +93,8 @@ def load_category(name, category_directory=CATEGORY_DIRECTORY):
 
     if settings.get("version", DEFAULT_VERSION) not in SUPPORTED_VERSIONS:
         raise ValueError(f"{path}: unsupported version: {settings['version']}")
+    if settings.get("algorithm", DEFAULT_ALGORITHM) not in available_algorithms():
+        raise ValueError(f"{path}: unknown algorithm: {settings['algorithm']}")
     if settings.get("initial_state", "fresh") not in {"fresh", "neverclick"}:
         raise ValueError(
             f"{path}: initial_state must be fresh or neverclick"
@@ -93,48 +108,21 @@ def format_time(seconds):
     return f"{minutes}:{remaining_tenths / 10:04.1f}"
 
 
-def top_child(parent, target):
-    finish_without_purchase = parent.finish(target).age
-    candidates = []
-
-    for candidate in parent.children(cookie_limit=target):
-        child = candidate.game
-        # Reaching the target while saving means the purchase never happens.
-        if child.cookies >= target:
-            continue
-        # Near the end, do not buy an item that delays the target even if it
-        # would be locally first among a longer, no-longer-useful purchase list.
-        if child.finish(target).age >= finish_without_purchase:
-            continue
-        candidates.append(candidate)
-
-    return min(
-        candidates,
-        key=lambda candidate: purchase_score(parent, candidate.game),
-        default=None,
+def calculate_route(
+    algorithm_name,
+    initial_gamestate,
+    target,
+    price_cutoff_multiplier,
+    on_purchase=None,
+):
+    """Dispatch route calculation to the selected algorithm."""
+    algorithm = get_algorithm(algorithm_name)
+    return algorithm.find_route(
+        initial_gamestate,
+        target,
+        on_purchase=on_purchase,
+        price_cutoff_multiplier=price_cutoff_multiplier,
     )
-
-
-@dataclass(frozen=True, slots=True)
-class RouteResult:
-    game: Game
-    purchases: tuple[Purchase, ...]
-
-
-def find_route(start, target=ONE_MILLION, on_purchase=None):
-    """Greedily take the locally optimal atomic purchase until the target."""
-    game = start.copy()
-    purchases = []
-    while game.cookies < target:
-        candidate = top_child(game, target)
-        if candidate is None:
-            break
-        for purchase in candidate.purchases:
-            purchases.append(purchase)
-            if on_purchase is not None:
-                on_purchase(purchase)
-        game = candidate.game
-    return RouteResult(game.finish(target), tuple(purchases))
 
 
 def purchase_table_header(item_width):
@@ -152,7 +140,8 @@ def purchase_table_header(item_width):
 def format_purchase_row(number, purchase, item_width):
     return (
         f"{number:>3}  {purchase.display_item:<{item_width}}  "
-        f"{format_time(purchase.age):>13}  {purchase.cookies:>18,.1f}"
+        f"{format_time(purchase.age):>13}  "
+        f"{purchase.lifetime_cookies:>18,.1f}"
     )
 
 
@@ -179,10 +168,11 @@ def format_purchase_table(purchases, block_size=10):
     return "\n".join(lines)
 
 
-def live_item_width(game):
-    items = ["Item", *game.upgrade_info]
+def live_item_width(gamestate):
+    items = ["Item", *gamestate.upgrade_catalog]
     items.extend(
-        f"Sell {name} #{LIVE_BUILDING_NUMBER}" for name in game.building_info
+        f"Sell {name} #{LIVE_BUILDING_NUMBER}"
+        for name in gamestate.building_catalog
     )
     return max(map(len, items))
 
@@ -206,15 +196,15 @@ class LivePurchaseTable:
 
 
 def print_result(result, target, include_table=True):
-    game = result.game
+    final_gamestate = result.final_gamestate
     print(f"Target: {target:,} cookies")
-    print(f"Time: {format_time(game.age)}")
-    print(f"Final CpS: {game.cps():.3f}")
+    print(f"Time: {format_time(final_gamestate.age)}")
+    print(f"Final CpS: {final_gamestate.cps():.3f}")
     print(f"Purchases: {len(result.purchases)}")
     if include_table and result.purchases:
         print()
         print(format_purchase_table(result.purchases))
-    print(f"\nFinal time: {format_time(game.age)}")
+    print(f"\nFinal time: {format_time(final_gamestate.age)}")
 
 
 def local_route_path(destination):
@@ -248,10 +238,7 @@ def save_route(
         f"version = {settings['version']}",
         f"target = {settings['target']}",
         f"click_rate = {settings['click_rate']:g}",
-        f"purchase_delay = {settings['purchase_delay']:g}",
-        f"price_cutoff_multiplier = {settings['price_cutoff_multiplier']:g}",
         f"initial_state = {settings['initial_state']}",
-        f"allow_upgrades = {str(settings['allow_upgrades']).lower()}",
         "",
         *(purchase.route_action() for purchase in result.purchases),
         "",
@@ -268,12 +255,33 @@ def main(argv=None):
         help="load defaults from categories/NAME.conf",
     )
     parser.add_argument(
+        "--algorithm",
+        choices=available_algorithms(),
+        help=f"route calculation algorithm (default: {DEFAULT_ALGORITHM})",
+    )
+    parser.add_argument(
         "--version",
         choices=SUPPORTED_VERSIONS,
     )
     parser.add_argument("--target", type=int)
     parser.add_argument("--click-rate", type=float)
-    parser.add_argument("--purchase-delay", type=float)
+    parser.add_argument(
+        "--errand-duration",
+        dest="errand_duration",
+        type=float,
+        help=(
+            "fixed hand-clicking pause for a shop trip, before purchase clicks "
+            f"(default: {DEFAULT_ERRAND_DURATION:g})"
+        ),
+    )
+    parser.add_argument(
+        "--purchase-click-rate",
+        type=float,
+        help=(
+            "items purchased per second during an errand "
+            f"(default: {DEFAULT_PURCHASE_CLICK_RATE:g})"
+        ),
+    )
     parser.add_argument("--price-cutoff-multiplier", type=float)
     parser.add_argument(
         "--save",
@@ -341,8 +349,10 @@ def main(argv=None):
         parser.error("--target must be greater than zero")
     if settings["click_rate"] < 0:
         parser.error("--click-rate cannot be negative")
-    if settings["purchase_delay"] < 0:
-        parser.error("--purchase-delay cannot be negative")
+    if settings["errand_duration"] < 0:
+        parser.error("--errand-duration cannot be negative")
+    if settings["purchase_click_rate"] <= 0:
+        parser.error("--purchase-click-rate must be greater than zero")
     if settings["price_cutoff_multiplier"] <= 0:
         parser.error("--price-cutoff-multiplier must be greater than zero")
     if args.overwrite and not args.save:
@@ -356,23 +366,33 @@ def main(argv=None):
         if save_path.exists() and not args.overwrite:
             parser.error(f"route already exists: {save_path}")
 
-    game = Game(settings["version"])
-    game.clickrate = settings["click_rate"]
+    initial_gamestate = Gamestate(settings["version"])
+    initial_gamestate.click_rate = settings["click_rate"]
     if settings["initial_state"] == "neverclick":
-        game.initialize_neverclick()
+        initial_gamestate.initialize_neverclick()
         # Neverclick normally disables clicking, but an explicit CLI click rate
         # still wins over the category or initial-state behavior.
         if args.click_rate is not None:
-            game.clickrate = args.click_rate
-    settings["click_rate"] = game.clickrate
-    game.purchase_delay = settings["purchase_delay"]
-    game.price_cutoff_multiplier = settings["price_cutoff_multiplier"]
-    game.allow_upgrades = settings["allow_upgrades"]
-    print(f"Calculating route to {settings['target']:,} cookies...", flush=True)
-    live_table = LivePurchaseTable(live_item_width(game)) if args.verbose else None
-    result = find_route(
-        game,
+            initial_gamestate.click_rate = args.click_rate
+    settings["click_rate"] = initial_gamestate.click_rate
+    initial_gamestate.errand_duration = settings["errand_duration"]
+    initial_gamestate.purchase_click_rate = settings["purchase_click_rate"]
+    initial_gamestate.upgrades_allowed = settings["allow_upgrades"]
+    print(
+        f"Calculating route to {settings['target']:,} cookies "
+        f"with {settings['algorithm']}...",
+        flush=True,
+    )
+    live_table = (
+        LivePurchaseTable(live_item_width(initial_gamestate))
+        if args.verbose
+        else None
+    )
+    result = calculate_route(
+        settings["algorithm"],
+        initial_gamestate,
         settings["target"],
+        settings["price_cutoff_multiplier"],
         on_purchase=live_table.print_purchase if live_table else None,
     )
     if live_table and live_table.count:

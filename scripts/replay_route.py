@@ -8,16 +8,20 @@ REPOSITORY = Path(__file__).resolve().parents[1]
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
-from make_route import LivePurchaseTable, RouteResult, live_item_width, print_result
+from make_route import LivePurchaseTable, live_item_width, print_result
+from src.algorithms import RouteResult
 from src.data import SUPPORTED_VERSIONS
-from src.game import Game
+from src.gamestate import (
+    DEFAULT_ERRAND_DURATION,
+    DEFAULT_PURCHASE_CLICK_RATE,
+    Gamestate,
+)
 
 
 @dataclass(frozen=True, slots=True)
 class RouteAction:
     operation: str
     item: str
-    tier: int | None = None
 
 
 @dataclass(frozen=True, slots=True)
@@ -27,19 +31,18 @@ class RoutePlan:
     version: str
     target: int
     click_rate: float
-    purchase_delay: float
     initial_state: str
-    allow_upgrades: bool
     actions: tuple[RouteAction, ...]
 
 
-def _boolean(value, key):
-    normalized = value.lower()
-    if normalized == "true":
-        return True
-    if normalized == "false":
-        return False
-    raise ValueError(f"{key} must be true or false")
+ROUTE_METADATA_FIELDS = {
+    "name",
+    "source",
+    "version",
+    "target",
+    "click_rate",
+    "initial_state",
+}
 
 
 def load_route(path):
@@ -59,23 +62,14 @@ def load_route(path):
         operation, separator, item = line.partition(" ")
         if not separator or operation not in {"buy", "sell", "upgrade"}:
             raise ValueError(f"{path}:{line_number}: invalid route action: {line}")
-        if operation == "upgrade":
-            family, separator, tier = item.rpartition(" ")
-            if not separator or not tier.isdigit():
-                raise ValueError(
-                    f"{path}:{line_number}: upgrade actions require a numeric tier"
-                )
-            actions.append(RouteAction(operation, family, int(tier)))
-        else:
-            actions.append(RouteAction(operation, item))
+        actions.append(RouteAction(operation, item))
 
-    required = {"name", "source", "target", "click_rate"}
-    missing = sorted(required - metadata.keys())
-    version = metadata.get("version", metadata.get("profile"))
-    if version is None:
-        missing.append("version")
+    missing = sorted(ROUTE_METADATA_FIELDS - metadata.keys())
     if missing:
         raise ValueError(f"{path}: missing metadata: {', '.join(missing)}")
+    unexpected = sorted(metadata.keys() - ROUTE_METADATA_FIELDS)
+    if unexpected:
+        raise ValueError(f"{path}: unknown metadata: {', '.join(unexpected)}")
 
     initial_state = metadata.get("initial_state", "fresh")
     if initial_state not in {"fresh", "neverclick"}:
@@ -84,45 +78,44 @@ def load_route(path):
     return RoutePlan(
         name=metadata["name"],
         source=metadata["source"],
-        version=version,
+        version=metadata["version"],
         target=int(metadata["target"]),
         click_rate=float(metadata["click_rate"]),
-        purchase_delay=float(metadata.get("purchase_delay", 0.5)),
         initial_state=initial_state,
-        allow_upgrades=_boolean(metadata.get("allow_upgrades", "true"), "allow_upgrades"),
         actions=tuple(actions),
     )
 
 
-def execute_route(plan, version=None, on_purchase=None):
-    game = Game(version or plan.version)
+def execute_route(
+    plan,
+    version=None,
+    on_purchase=None,
+    *,
+    errand_duration=DEFAULT_ERRAND_DURATION,
+    purchase_click_rate=DEFAULT_PURCHASE_CLICK_RATE,
+):
+    gamestate = Gamestate(version or plan.version)
     if plan.initial_state == "neverclick":
-        game.initialize_neverclick()
-    game.clickrate = plan.click_rate
-    game.purchase_delay = plan.purchase_delay
-    game.allow_upgrades = plan.allow_upgrades
+        gamestate.initialize_neverclick()
+    gamestate.click_rate = plan.click_rate
+    gamestate.errand_duration = errand_duration
+    gamestate.purchase_click_rate = purchase_click_rate
     purchases = []
 
     for step, action in enumerate(plan.actions, 1):
-        if game.cookies >= plan.target:
+        if gamestate.lifetime_cookies >= plan.target:
             break
         try:
-            child = game.copy()
+            # Flat route files do not record errand groups yet, so each buy or
+            # upgrade is replayed independently and creates a child. Sales keep
+            # their legacy instantaneous-credit behavior for now.
+            child = gamestate.copy()
             if action.operation == "buy":
                 child.purchase_building(action.item)
             elif action.operation == "sell":
                 child.sell_building(action.item)
             else:
-                upgrades = game.upgrade_families.get(action.item, ())
-                if (
-                    action.tier is None
-                    or action.tier < 1
-                    or action.tier > len(upgrades)
-                ):
-                    raise ValueError(
-                        f"Unknown {action.item} upgrade tier: {action.tier}"
-                    )
-                child.purchase_upgrade(upgrades[action.tier - 1])
+                child.purchase_upgrade(action.item)
         except (KeyError, ValueError) as error:
             raise ValueError(
                 f"Step {step} ({action.operation} {action.item}): {error}"
@@ -130,14 +123,17 @@ def execute_route(plan, version=None, on_purchase=None):
 
         # If saving for this purchase reaches the category target first, the
         # run ends without making that purchase, just as make_route.py does.
-        if action.operation != "sell" and child.cookies >= plan.target:
+        if (
+            action.operation != "sell"
+            and child.lifetime_cookies >= plan.target
+        ):
             break
         purchases.append(child.last_purchase)
         if on_purchase is not None:
             on_purchase(child.last_purchase)
-        game = child
+        gamestate = child
 
-    return RouteResult(game.finish(plan.target), tuple(purchases))
+    return RouteResult(gamestate.finish(plan.target), tuple(purchases))
 
 
 def main(argv=None):
@@ -153,16 +149,44 @@ def main(argv=None):
         action="store_true",
         help="print purchases as the route is replayed",
     )
+    parser.add_argument(
+        "--errand-duration",
+        type=float,
+        default=DEFAULT_ERRAND_DURATION,
+        help=(
+            "fixed hand-clicking pause for a shop trip "
+            f"(default: {DEFAULT_ERRAND_DURATION:g})"
+        ),
+    )
+    parser.add_argument(
+        "--purchase-click-rate",
+        type=float,
+        default=DEFAULT_PURCHASE_CLICK_RATE,
+        help=(
+            "items purchased per second during an errand "
+            f"(default: {DEFAULT_PURCHASE_CLICK_RATE:g})"
+        ),
+    )
     args = parser.parse_args(argv)
+    if args.errand_duration < 0:
+        parser.error("--errand-duration cannot be negative")
+    if args.purchase_click_rate <= 0:
+        parser.error("--purchase-click-rate must be greater than zero")
 
     plan = load_route(args.route_file)
-    game = Game(args.version or plan.version)
-    live_table = LivePurchaseTable(live_item_width(game)) if args.verbose else None
+    initial_gamestate = Gamestate(args.version or plan.version)
+    live_table = (
+        LivePurchaseTable(live_item_width(initial_gamestate))
+        if args.verbose
+        else None
+    )
     print(f"Replaying route to {plan.target:,} cookies...", flush=True)
     result = execute_route(
         plan,
         args.version,
         on_purchase=live_table.print_purchase if live_table else None,
+        errand_duration=args.errand_duration,
+        purchase_click_rate=args.purchase_click_rate,
     )
     if live_table and live_table.count:
         print()

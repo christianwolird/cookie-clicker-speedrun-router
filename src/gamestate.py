@@ -15,25 +15,22 @@ class Purchase:
     item: str
     age: float
     lifetime_cookies: float
+    current_cps: float = 0.0
     label: str | None = None
 
     @property
     def display_item(self):
         return self.label or self.item
 
-    def route_action(self):
-        return f"{self.operation} {self.item}"
-
-
 class Gamestate:
     """A snapshot of a fresh Cookie Clicker ascension.
 
     ``version`` selects one complete data catalog for the lifetime of the run.
     ``lifetime_cookies`` is total cookies baked, not the current bank; the
-    current model assumes the bank is empty at each snapshot. Until errands can
-    contain multiple purchases, every purchase is treated as a separate errand.
-    Hand-clicking pauses for ``errand_duration`` seconds of travel plus one
-    shop click at ``purchase_click_rate`` while buildings continue producing.
+    current model assumes the bank is empty at each snapshot. An errand applies
+    an unordered set of purchases simultaneously after hand-clicking pauses for
+    ``errand_duration`` seconds of travel plus one shop action per distinct
+    purchase type at ``purchase_click_rate``.
     """
 
     def __init__(self, version=DEFAULT_VERSION):
@@ -56,7 +53,6 @@ class Gamestate:
         self.building_counts = {name: 0 for name in self.building_catalog}
         self.purchased_upgrades = set()
         self.earned_achievements = set()
-        self.last_purchase = None
         self._automatic_cps_cache = None
 
     def copy(self):
@@ -74,7 +70,6 @@ class Gamestate:
         copied_gamestate.earned_achievements = set(
             self.earned_achievements
         )
-        copied_gamestate.last_purchase = self.last_purchase
         copied_gamestate._automatic_cps_cache = self._automatic_cps_cache
         return copied_gamestate
 
@@ -96,9 +91,16 @@ class Gamestate:
     def __repr__(self):
         return str(self)
 
-    def building_price(self, name):
+    def building_price(self, name, additional_owned=0):
         base_price = self.building_catalog[name].base_price
-        return ceil(base_price * 1.15 ** self.building_counts[name])
+        owned = self.building_counts[name] + additional_owned
+        return ceil(base_price * 1.15 ** owned)
+
+    def building_group_price(self, name, quantity):
+        return sum(
+            self.building_price(name, additional_owned=offset)
+            for offset in range(quantity)
+        )
 
     def _cursor_bonus(self):
         bonus = sum(
@@ -209,21 +211,22 @@ class Gamestate:
                         self._automatic_cps_cache = None
                     changed = True
 
-    def errand_pause(self, purchase_count=1):
+    def errand_pause(self, purchase_type_count=1):
         """Return hand-clicking downtime for one errand.
 
-        Route actions are not grouped into errands yet, so callers currently
-        pass the default one purchase. Keeping the count explicit makes the
-        timing rule ready for multi-purchase errands without storing player
-        timing assumptions in route files.
+        Buying several copies of one building still visits only one purchase
+        type. Each distinct building or upgrade adds one shop action.
         """
-        if purchase_count < 1:
-            raise ValueError("purchase_count must be at least one")
+        if purchase_type_count < 1:
+            raise ValueError("purchase_type_count must be at least one")
         if self.purchase_click_rate <= 0:
             raise ValueError("purchase_click_rate must be greater than zero")
-        return self.errand_duration + purchase_count / self.purchase_click_rate
+        return (
+            self.errand_duration
+            + purchase_type_count / self.purchase_click_rate
+        )
 
-    def _advance_to_purchase(self, price):
+    def _advance_to_errand(self, price, purchase_type_count=1):
         credit = min(price, self.sale_credit)
         self.sale_credit -= credit
         price -= credit
@@ -235,11 +238,12 @@ class Gamestate:
             raise ValueError("Cannot earn cookies with zero CpS")
 
         hand_cps = self.hand_cps()
-        # Each purchase is currently its own errand: one fixed trip plus one
-        # shop click. Hand-clicking stops for that whole pause while buildings
-        # keep baking. Solving (auto + hand) * (T - pause) + auto * pause
-        # = price gives T = (price + hand * pause) / total CpS.
-        pause = self.errand_pause()
+        # All purchases close simultaneously with an empty bank. Hand-clicking
+        # stops for one trip plus one action per distinct purchase type while
+        # the parent's buildings keep baking. Solving
+        # (auto + hand) * (T - pause) + auto * pause = price gives
+        # T = (price + hand * pause) / total CpS.
+        pause = self.errand_pause(purchase_type_count)
         duration = (price + hand_cps * pause) / total_cps
         active_clicking = max(0.0, duration - pause)
         self.handmade_cookies += hand_cps * active_clicking
@@ -247,19 +251,81 @@ class Gamestate:
         self.lifetime_cookies += price
         self.update_achievements()
 
-    def purchase_building(self, name):
-        price = self.building_price(name)
-        self._advance_to_purchase(price)
-        self.building_counts[name] += 1
-        self._automatic_cps_cache = None
-        self.last_purchase = Purchase(
-            "buy",
-            name,
-            self.age,
-            self.lifetime_cookies,
-            label=f"{name} #{self.building_counts[name]}",
+    def purchase_errand(self, building_quantities=None, upgrades=()):
+        """Apply an unordered set of purchases as one zero-bank errand."""
+        building_quantities = {
+            name: quantity
+            for name, quantity in (building_quantities or {}).items()
+            if quantity
+        }
+        upgrades = frozenset(upgrades)
+
+        for name, quantity in building_quantities.items():
+            if name not in self.building_catalog:
+                raise KeyError(name)
+            if not isinstance(quantity, int) or quantity <= 0:
+                raise ValueError(
+                    f"Building quantity must be a positive integer: {name}"
+                )
+        if upgrades and not self.upgrades_allowed:
+            raise ValueError("Upgrades are disabled")
+        for name in upgrades:
+            if name not in self.upgrade_catalog:
+                raise KeyError(name)
+            if name in self.purchased_upgrades:
+                raise ValueError(f"Upgrade already purchased: {name}")
+
+        purchase_type_count = len(building_quantities) + len(upgrades)
+        if purchase_type_count == 0:
+            raise ValueError("An errand must contain at least one purchase")
+
+        price = sum(
+            self.building_group_price(name, quantity)
+            for name, quantity in building_quantities.items()
+        ) + sum(self.upgrade_catalog[name].price for name in upgrades)
+
+        completed = self.copy()
+        completed._advance_to_errand(price, purchase_type_count)
+        original_counts = dict(completed.building_counts)
+        for name, quantity in building_quantities.items():
+            completed.building_counts[name] += quantity
+        completed._automatic_cps_cache = None
+        completed.update_achievements()
+
+        for name in upgrades:
+            if not completed.upgrade_unlocked(name):
+                raise ValueError(f"Upgrade is still locked: {name}")
+        completed.purchased_upgrades.update(upgrades)
+        completed._automatic_cps_cache = None
+        completed.update_achievements()
+
+        purchase_specs = []
+        for name, quantity in building_quantities.items():
+            for number in range(
+                original_counts[name] + 1,
+                original_counts[name] + quantity + 1,
+            ):
+                purchase_specs.append((name, "buy", f"{name} #{number}"))
+        purchase_specs.extend(
+            (name, "upgrade", None) for name in upgrades
         )
-        self.update_achievements()
+        purchase_specs.sort(key=lambda spec: (spec[0], spec[1]))
+        purchases = tuple(
+            Purchase(
+                operation,
+                name,
+                completed.age,
+                completed.lifetime_cookies,
+                current_cps=completed.cps(),
+                label=label,
+            )
+            for name, operation, label in purchase_specs
+        )
+        self.__dict__.update(completed.__dict__)
+        return purchases
+
+    def purchase_building(self, name):
+        return self.purchase_errand({name: 1})
 
     def sell_building(self, name):
         if self.building_counts[name] <= 0:
@@ -271,14 +337,16 @@ class Gamestate:
         self.building_counts[name] -= 1
         self.sale_credit += refund
         self._automatic_cps_cache = None
-        self.last_purchase = Purchase(
+        purchase = Purchase(
             "sell",
             name,
             self.age,
             self.lifetime_cookies,
+            current_cps=self.cps(),
             label=f"Sell {name} #{self.building_counts[name] + 1}",
         )
         self.update_achievements()
+        return (purchase,)
 
     def upgrade_unlocked(self, name):
         upgrade = self.upgrade_catalog[name]
@@ -293,30 +361,7 @@ class Gamestate:
         )
 
     def purchase_upgrade(self, name):
-        if not self.upgrades_allowed:
-            raise ValueError("Upgrades are disabled")
-        if name in self.purchased_upgrades:
-            raise ValueError(f"Upgrade already purchased: {name}")
-
-        upgrade = self.upgrade_catalog[name]
-        paid = self.copy()
-        paid._advance_to_purchase(upgrade.price)
-        if not paid.upgrade_unlocked(name):
-            raise ValueError(f"Upgrade is still locked: {name}")
-
-        self.age = paid.age
-        self.lifetime_cookies = paid.lifetime_cookies
-        self.handmade_cookies = paid.handmade_cookies
-        self.earned_achievements = paid.earned_achievements
-        self.purchased_upgrades.add(name)
-        self._automatic_cps_cache = None
-        self.last_purchase = Purchase(
-            "upgrade",
-            name,
-            self.age,
-            self.lifetime_cookies,
-        )
-        self.update_achievements()
+        return self.purchase_errand(upgrades=(name,))
 
     def finish(self, target):
         finished = self.copy()

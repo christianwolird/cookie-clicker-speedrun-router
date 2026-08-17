@@ -1,3 +1,7 @@
+#!/usr/bin/env python3
+
+"""Extract normalized community routes from the DHA workbooks."""
+
 import argparse
 import re
 import sys
@@ -12,6 +16,7 @@ if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
 from src.data import get_version_data
+from src.routes import RouteAction, RoutePlan, write_route
 
 
 SPREADSHEET_NAMESPACE = "{http://schemas.openxmlformats.org/spreadsheetml/2006/main}"
@@ -50,6 +55,10 @@ UPGRADE_TOKENS = {
     "Super_up": "Grandma synergy",
     "Cookies_up": "Cookie",
 }
+
+ONLINE_ROUTE_ALGORITHM = "singleton_errands"
+ONLINE_ERRAND_DURATION = 1.0
+ONLINE_PURCHASE_CLICK_RATE = 5.0
 
 
 def _shared_strings(archive):
@@ -137,10 +146,10 @@ def _normalize_actions(raw_route, initial_state, version):
             if not skipped_initial_cursor and building == "Cursor":
                 skipped_initial_cursor = True
                 continue
-            actions.append(f"buy {building}")
+            actions.append(RouteAction("buy", building))
             continue
         if token.startswith("Sell_") and token[5:] in BUILDING_TOKENS:
-            actions.append(f"sell {BUILDING_TOKENS[token[5:]]}")
+            actions.append(RouteAction("sell", BUILDING_TOKENS[token[5:]]))
             continue
         if token in UPGRADE_TOKENS:
             family = UPGRADE_TOKENS[token]
@@ -154,7 +163,7 @@ def _normalize_actions(raw_route, initial_state, version):
                     f"Unknown {version} spreadsheet upgrade: "
                     f"{family} tier {tiers[family]}"
                 ) from error
-            actions.append(f"upgrade {upgrade_name}")
+            actions.append(RouteAction("upgrade", upgrade_name))
 
     return actions
 
@@ -203,19 +212,27 @@ def extract_routes(spreadsheet_directory, output_directory):
                 )
             sources_by_destination[destination] = source
             route_name = f"{category_name}: {author} ({click_category})"
-            lines = [
-                "# Extracted from the workbook's hidden Routes sheet.",
-                f"name = {route_name}",
-                f"source = {source}",
-                f"version = {version}",
-                f"target = {target}",
-                f"click_rate = {click_rate:g}",
-                f"initial_state = {initial_state}",
-                "",
-                *actions,
-                "",
-            ]
-            destination.write_text("\n".join(lines))
+            plan = RoutePlan(
+                name=route_name,
+                source=source,
+                version=version,
+                target=target,
+                click_rate=click_rate,
+                initial_state=initial_state,
+                algorithm=ONLINE_ROUTE_ALGORITHM,
+                errand_duration=ONLINE_ERRAND_DURATION,
+                purchase_click_rate=ONLINE_PURCHASE_CLICK_RATE,
+                upgrades_enabled=category_name != "hardcore",
+                errands_enabled=False,
+                errands=tuple((action,) for action in actions),
+            )
+            write_route(
+                destination,
+                plan,
+                comment="Extracted from the workbook's hidden Routes sheet.",
+                explicit_errands=False,
+                overwrite=True,
+            )
             written.append(destination)
 
     return written
@@ -227,7 +244,10 @@ def main(argv=None):
         "--source",
         default=REPOSITORY / "routes" / "dha_spreadsheets",
     )
-    parser.add_argument("--output", default=REPOSITORY / "routes" / "from_online")
+    parser.add_argument(
+        "--output",
+        default=REPOSITORY / "routes" / "from_online" / "singletons",
+    )
     args = parser.parse_args(argv)
 
     for path in extract_routes(args.source, args.output):

@@ -1,242 +1,249 @@
 # Cookie Clicker speedrun router
 
-A deliberately small, hand-written Cookie Clicker purchase router. It models a
-fresh ascension with configurable player timing, then searches for a quick
-route to a category target.
+A small, dependency-free simulator and heuristic route generator for no-golden-
+cookie Cookie Clicker speedruns. The project currently focuses on the first
+million cookies, while also carrying presets and comparison routes for
+Neverclick, Hardcore, and the first heavenly chip.
+
+The router models buildings, upgrades, achievements, hand clicking, shop
+downtime, and grouped shopping trips called errands. It is research software:
+stored routes are reproducible under the model, but generated routes are not
+claimed to be globally optimal.
+
+## Quick start
+
+Python 3.10 or newer is sufficient; there are no third-party runtime
+dependencies.
 
 ```sh
-python3 make_route.py --category one_million --save routes/local/age_scoring/one_million_10_cps.route
-python3 make_route.py --category one_million --algorithm cookie_scoring
+python3 make_route.py --category one_million
 python3 make_route.py --category one_million --verbose
-python3 make_route.py --category neverclick
-python3 make_route.py --category hardcore
-python3 make_route.py --category heavenly_chip
-python3 make_route.py --category one_million --click-rate 20
-python3 scripts/replay_route.py routes/local/age_scoring/one_million_10_cps.route --verbose
-python3 -m unittest
+python3 make_route.py --category heavenly_chip --click-rate 15
 ```
 
-The hand-written gamestate model lives in `src/gamestate.py`. Each supported
-ruleset owns its building, upgrade, and achievement catalogs under
-`src/data/v2_031/` or `src/data/v1_0466/`; shared value types and the small
-version registry remain directly under `src/data/`. Route-calculation
-implementations, including descendant construction, scoring, candidate
-generation, and search, live under `src/algorithms/`. The root `make_route.py`
-command handles category and version configuration, algorithm selection,
-printing, and route saving. Extraction and replay commands live in `scripts/`,
-and category defaults are plain-text files under `categories/`.
-
-The 2.031 data slice contains all buildings, the early upgrades that can
-plausibly affect a one-million-cookie run, the first two kitten upgrades, and
-the automatic achievements relevant to early milk. The 1.0466 data supports
-the older Hardcore and heavenly-chip routes. Golden cookies, seasons, prestige,
-minigames, and random effects are intentionally outside the model.
-
-## Game versions
-
-Constructing `Gamestate(version)` selects one complete version package for that
-run and every descendant copied from it. Supported version strings are `2.031`
-and `1.0466`; `make_route.py --version` exposes the same selection on the CLI.
-Normalized route files retain their version so replays remain reproducible.
-
-## Errands and the current timing approximation
-
-An **errand** is one continuous absence from the big cookie: the player moves
-to the shop, makes one or more purchases, and returns to hand-clicking. A
-gamestate reached from a parent by one errand is its **child**. A gamestate
-reached after two or more errands is a more distant **descendant**.
-
-Multi-purchase errands are not implemented yet. The current approximation
-treats every purchase as its own errand. The fixed part of an errand is 1.0
-second by default, and shop purchases are made at a default
-`purchase_click_rate` of 5 items per second. A one-purchase errand therefore
-pauses hand-clicking for 1.2 seconds. Buildings keep producing during the
-pause. If `A` is automatic CpS, `H` is hand CpS, `n` is the number of items in
-the errand, and the purchase happens after `T` seconds, the router uses:
-
-```text
-pause = errand_duration + n / purchase_click_rate
-(A + H) * (T - pause) + A * pause = price
-T = (price + H * pause) / (A + H)
-```
-
-This is why a purchase does not simply add `price / total_cps` to the clock.
-The timing assumptions are universal runtime defaults, not route metadata.
-They can be changed for route creation or replay:
+Save a generated route under `routes/local/`:
 
 ```sh
-python3 make_route.py --category one_million --errand-duration 0.8 --purchase-click-rate 6
-python3 scripts/replay_route.py routes/from_online/one_million_fast_clicks_15_cps_dha.route --errand-duration 0.8 --purchase-click-rate 6
+python3 make_route.py \
+  --category one_million \
+  --save routes/local/errand_queueing/one_million_10_cps.route \
+  --overwrite
 ```
 
-Physical trials expose the limitation: an isolated purchase takes about 1.2
-seconds, while five purchases made during one errand take about 2.0 seconds.
-The setup cost belongs to the errand, and each additional shop click adds only
-about 0.2 seconds. The current model cannot express that shared cost; flat
-`.route` files likewise do not yet record errand boundaries. The detailed
-consequences are recorded in the
-[Hardcore age-scoring case study](docs/age-scoring-hardcore.md) and
-[heavenly-chip age-scoring case study](docs/age-scoring-heavenly-chip.md).
-
-The search generates a small set of strategically chosen descendants from each
-parent. A single building currently creates a child because every purchase is
-approximated as one errand. A locked upgrade whose own price is under the
-parent's price horizon is also considered: the router finds a greedy order for
-its missing prerequisite errands, then buys the upgrade. The resulting
-candidate can be a distant descendant rather than a child. This lets upgrade
-unlocks direct the search without raising the horizon for every building.
-
-## Routing algorithms
-
-Select an implementation with `--algorithm`. The default is `age_scoring`:
+Category files provide defaults. Explicit command-line options take precedence:
 
 ```sh
-python3 make_route.py --category one_million --algorithm age_scoring
-python3 make_route.py --category one_million --algorithm cookie_scoring
-```
-
-Algorithm names are registered in `src/algorithms/__init__.py`. Every
-implementation exposes the same route interface, but it may use its own
-descendant construction, scoring, or search. `make_route.py` only selects and
-runs it.
-
-The two current algorithms share the greedy candidate search. At each step,
-they compare every single-building child with every in-range descendant ending
-in an upgrade. They differ in how they assign the ancestor-to-descendant price
-`A`.
-
-`cookie_scoring` measures acquisition cost directly in cookies, using the sum
-of sticker prices:
-
-```text
-A = descendant_lifetime_cookies - ancestor_lifetime_cookies
-```
-
-`age_scoring` measures acquisition cost from elapsed gamestate age, then
-converts it to an effective cookie price at the ancestor's CpS:
-
-```text
-A = (descendant_age - ancestor_age) * ancestor_cps
-```
-
-This values a descendant by the time its actual internal errand order takes. It
-therefore credits production gained from earlier purchases and charges the
-modeled hand-clicking pauses, rather than treating every item as if it were
-bought simultaneously at the end. A descendant with effective price `A` that
-increases current CpS from `c` by `a` is scored as:
-
-```text
-A * (a + c) / a
-```
-
-The lowest score is locally optimal when it and another swappable candidate
-will both be taken: putting the lower-scoring candidate first reaches the
-second purchase sooner. Treating prerequisite buildings plus their unlocked
-upgrade as one candidate descendant lets that strategic path compete without
-generating every possible descendant several errands deep. It does not mean
-the purchases form one errand: today each is still timed separately.
-
-Candidates whose own price lies beyond the parent gamestate's price horizon
-are omitted,
-and purchases that would slow reaching the target are skipped near the end of
-the run. The horizon is
-`max(1,000, lifetime_cookies * multiplier)`. Its multiplier defaults to `2.0`
-and can be changed with:
-
-```sh
-python3 make_route.py --category one_million --price-horizon-multiplier 4.0
-```
-
-The same score orders mixed upgrade prerequisites. If an upgrade still needs
-both grandmas and farms, for example, the router scores the child produced by a
-grandma errand and the child produced by a farm errand, recurses on the lower
-score, and repeats until the upgrade unlocks. Grouping several of those
-purchases into one errand is future work.
-
-## Category configuration
-
-`make_route.py --category NAME` loads `categories/NAME.conf`. Category names are
-discovered from the directory, so adding a config file automatically adds a
-valid CLI category. Each file supplies route-generation defaults such as
-version, target, click rate, initial state, price horizon, and whether upgrades
-are allowed.
-Explicit CLI options are applied afterward and therefore take priority:
-
-```sh
-python3 make_route.py --category one_million --click-rate 20
+python3 make_route.py --category one_million --click-rate 15
 python3 make_route.py --category hardcore --allow-upgrades
-python3 make_route.py --category neverclick --fresh-start
+python3 make_route.py --category neverclick --initial-state fresh --click-rate 10
 ```
 
-Pass `--verbose` to print and flush each selected purchase while calculating.
-Table headers repeat every ten purchases, and the final summary is printed after
-the route reaches its target. Without `--verbose`, only calculation status and
-the final summary are printed.
+Run `python3 make_route.py --help` for the complete option list.
 
-The included configs represent the four no-golden-cookie categories from the
-DHA spreadsheets. Neverclick starts immediately after the initial 15 clicks
-and first Cursor. Hardcore targets one billion cookies with upgrades disabled.
-The heavenly-chip category targets one trillion cookies. One million and
-Neverclick use version 2.031; Hardcore and heavenly chip use version 1.0466.
+## Simulation model
 
-## Stored route files
+A `Gamestate` is a snapshot with zero cookies banked. It records elapsed time,
+lifetime cookies, handmade cookies, owned buildings, purchased upgrades, and
+earned achievements. The selected game version supplies all prices, production
+values, unlock requirements, and achievement thresholds.
 
-The source spreadsheets live in `routes/dha_spreadsheets/`.
-`scripts/extract_public_routes.py` reads them without third-party packages and
-writes every submitted route from their hidden `Routes` sheets to
-`routes/from_online/`. `make_route.py --save ROUTE_FILE` stores a generated
-route at the specified `.route` path under `routes/local/`; it refuses to
-replace an existing route unless `--overwrite` is also passed. Local routes use
-`source = this codebase`.
+An errand is an unordered set of purchases made during one trip to the shop.
+All its purchases close simultaneously. Buying several Cursors counts as one
+purchase type; buying Cursors, Farms, and an upgrade counts as three.
 
-The `.route` file is the persistent source of truth. Its plain-text metadata is
-limited to `name`, `source`, `version`, `target`, `click_rate`, and
-`initial_state`, followed by one `buy`, `upgrade`, or `sell` command per line.
-Timing mechanics and route-generation controls such as `allow_upgrades`, the
-algorithm, and the price horizon are deliberately not route metadata. Whether
-a stored route contains upgrades is inherent in its actions. Gamestates retain
-only their most recent purchase, while route generation collects purchases
-from accepted descendants outside the gamestate and serializes them here.
-Upgrade commands always contain the exact name from the selected game version,
-for example `upgrade Reinforced index finger`; family-and-tier identifiers are
-not part of the canonical route format. The spreadsheet extractor alone
-translates source tokens such as `Cursor_up` by consulting that version's
-`SPREADSHEET_UPGRADE_FAMILIES` table.
-Spreadsheet provenance, including the source row, is recorded in the route's
-`source` metadata rather than encoded in its filename. Re-run the online-route
-extraction with:
+The default shop timing is:
+
+```text
+travel time             = 1.0 second per errand
+purchase click rate     = 5 distinct purchase types per second
+pause                   = travel time + purchase types / click rate
+```
+
+If `A` is automatic CpS, `H` is hand CpS, `P` is the errand price, and `T` is
+the time until the errand closes, the player stops hand-clicking during the
+pause:
+
+```text
+(A + H) × (T - pause) + A × pause = P
+T = (P + H × pause) / (A + H)
+```
+
+This is why purchase time is not simply `price / total CpS`. Both timing values
+can be changed from `make_route.py` and are stored in generated route files.
+
+The zero-bank, simultaneous-close approximation intentionally ignores cookies
+produced by new buildings during the errand and any bank remaining when the
+mouse returns to the big cookie. Sales are represented as immediate credit
+toward later purchases. A sale returns one quarter of the previous purchase
+price, calculated from the current buy price as `current price × 0.25 / 1.15`.
+
+## Route generation
+
+`errand_queueing` is the default and primary algorithm. At each gamestate it:
+
+1. Seeds candidates with each building and each upgrade. A locked upgrade seed
+   includes the buildings still needed to unlock it.
+2. Rejects errands whose total sticker price exceeds the moving price horizon.
+   The default horizon is twice current lifetime cookies, with a 1,000-cookie
+   floor.
+3. Age-scores valid candidates and places promising errands in a priority
+   queue.
+4. Repeatedly adds one building or upgrade to queued errands, deduplicating
+   unordered purchase sets and pruning candidates whose effective-cost lower
+   bound cannot beat the best score found.
+5. Executes the best viable errand and repeats from its child gamestate.
+
+The default queue budget is 100 pops per gamestate. Change the two main search
+bounds with:
+
+```sh
+python3 make_route.py \
+  --category one_million \
+  --price-horizon-multiplier 4 \
+  --errand-queue-depth 250
+```
+
+`singleton_errands` uses the same scoring and candidate seeds but permits only
+one purchase per errand. Neverclick uses this mode because pausing hand clicks
+has no cost when the click rate is zero.
+
+The active generator intentionally exposes only these two modes. Older cookie-
+scoring and one-purchase age-scoring outputs remain under `routes/local/` as
+historical baselines, but their obsolete generator implementations have been
+removed.
+
+## Age scoring and its limit
+
+For an ancestor with CpS `c` and a descendant that costs effective price `A`
+and adds CpS `a`, the router minimizes:
+
+```text
+score = A × (a + c) / a
+A = elapsed acquisition time × ancestor CpS
+```
+
+This correctly accounts for purchase downtime and the internal elapsed time of
+a descendant. It gives a useful local ordering for disjoint, swappable
+investments that will all eventually be bought.
+
+It does not supply long-term planning. In particular, the score can undervalue
+an upgrade when its main payoff is a run of stronger building purchases after
+the upgrade. It also cannot choose an optimal partition by comparing nested
+sets such as `{A}`, `{A, B}`, and `{A, B, C}`; those alternatives overlap and
+are not swappable purchases. These limitations define the next phase of the
+project. See [routing notes](docs/routing-notes.md).
+
+## Stored routes
+
+`.route` files are readable text containing reproducibility metadata followed
+by `buy`, `upgrade`, and `sell` actions. An `errand` marker groups the actions
+that follow it. A markerless action list is interpreted as singleton errands.
+
+```text
+name = example
+source = this codebase
+version = 2.031
+target = 1000000
+click_rate = 10
+initial_state = fresh
+algorithm = errand_queueing
+errand_duration = 1.0
+purchase_click_rate = 5.0
+upgrades_enabled = true
+errands_enabled = true
+errand_queue_depth = 100
+
+errand
+buy Cursor
+upgrade Reinforced index finger
+```
+
+The route directories are:
+
+```text
+routes/
+├── dha_spreadsheets/       original community workbooks
+├── from_online/
+│   ├── singletons/         normalized community purchase orders
+│   └── erranded/           experimental greedy regroupings
+└── local/                  routes generated during this research
+```
+
+Replay a route with its recorded settings:
+
+```sh
+python3 scripts/replay_route.py \
+  routes/from_online/singletons/one_million_fast_clicks_15_cps_dha.route \
+  --verbose
+```
+
+Replay-time `--version`, `--errand-duration`, and `--purchase-click-rate`
+options deliberately override recorded metadata for controlled comparisons.
+
+Regenerate the normalized community routes from the workbooks with:
 
 ```sh
 python3 scripts/extract_public_routes.py
 ```
 
-Replay any normalized file with `scripts/replay_route.py`. It parses the route,
-initializes its recorded game version and category state, and executes purchases
-until the target is reached. Until route files record errand groups, replay
-interprets each buy or upgrade independently; sales retain the legacy
-instantaneous-credit behavior. `--verbose` prints the same timestamped purchase
-table used during verbose route generation; both commands finish with the same
-summary:
+`scripts/bunch_route.py` is an experimental analysis tool that greedily groups
+the next 1–20 actions of a singleton route by age score:
 
 ```sh
-python3 scripts/replay_route.py routes/from_online/neverclick_neverclick_36champ.route --verbose
+python3 scripts/bunch_route.py \
+  routes/from_online/singletons \
+  routes/from_online/erranded \
+  --overwrite
 ```
 
-Each normalized route records its game version. Pass `--version` to deliberately
-override it during replay:
+This tool preserves action order and keeps sales singleton, but its locally
+selected partitions can make a complete route slower. It is not used by
+`make_route.py`.
+
+## Code layout
+
+```text
+make_route.py               route-generation CLI
+categories/                 data-driven category defaults
+scripts/
+├── replay_route.py         deterministic route replay
+├── extract_public_routes.py
+└── bunch_route.py          experimental fixed-route grouping
+src/
+├── gamestate.py            simulation and purchase mechanics
+├── routes.py               route format, I/O, and replay
+├── presentation.py         shared terminal table
+├── config.py               category configuration
+├── algorithms/             current search and scoring
+└── data/                    version-specific game catalogs
+tests/                      behavioral test suite
+```
+
+Game data is split between versions `1.0466` and `2.031`. Upgrade commands use
+the proper version-specific names. The hand-written catalogs were checked
+against the [Cookie Clicker upgrade table](https://cookieclicker.fandom.com/wiki/Upgrades),
+the [achievement table](https://cookieclicker.fandom.com/wiki/Achievement), and
+the corresponding game source.
+
+## Tests
 
 ```sh
-python3 scripts/replay_route.py routes/from_online/neverclick_neverclick_36champ.route --version 2.031
+python3 -m unittest discover -v
 ```
 
-The 1.0466 data package preserves the older building prices, CpS values, and
-proper upgrade names used by the Hardcore and heavenly-chip workbooks. Sale
-commands accumulate credit toward following purchases, matching the workbook
-route representation.
+The suite covers simulation math, version data, achievements and kittens,
+sales, errand search, route round-trips, every stored route, workbook
+extraction, experimental bunching, and both public CLIs.
 
-The hand-written values are checked against the
-[upgrade table](https://cookieclicker.fandom.com/wiki/Upgrades),
-[achievement table](https://cookieclicker.fandom.com/wiki/Achievement), and the
-[current game source](https://github.com/ozh/cookieclicker/blob/gh-pages/main.js).
-The legacy catalog is additionally checked against the official
-[1.0466 source](https://orteil.dashnet.org/cookieclicker/v10466/main.js).
+## Next research direction
+
+The next goal is to plan across several errands instead of evaluating only one
+errand at a time. The important case is upgrade synergy: a useful descendant
+may include prerequisite buildings, the upgrade errand, and one or more later
+errands containing buildings whose value the upgrade increased.
+
+A future search should therefore construct strategically selected multi-errand
+descendants, retain their real internal timing, and compare them without
+assuming overlapping purchase bundles are swappable. Banked-cookie and
+within-errand ordering refinements can wait until this larger planning problem
+is working.

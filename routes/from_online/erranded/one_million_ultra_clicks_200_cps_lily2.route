@@ -1,14 +1,25 @@
-# Extracted from the workbook's hidden Routes sheet.
+# Contiguous purchases bunched by scripts/bunch_route.py.
 name = one_million: Lily2_ (Ultra clicks (200 cps))
 source = dha spreadsheet: one million row 5
 version = 2.031
 target = 1000000
 click_rate = 200
 initial_state = fresh
+algorithm = contiguous_errand_bunching
+errand_duration = 1.0
+purchase_click_rate = 5.0
+upgrades_enabled = true
+errands_enabled = true
+max_errand_size = 20
 
+errand
 buy Cursor
 upgrade Reinforced index finger
+
+errand
 upgrade Carpal tunnel prevention cream
+
+errand
 buy Cursor
 buy Cursor
 buy Cursor
@@ -19,6 +30,8 @@ buy Cursor
 buy Cursor
 buy Cursor
 upgrade Ambidextrous
+
+errand
 buy Cursor
 buy Cursor
 buy Grandma
@@ -39,6 +52,8 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
+
+errand
 buy Grandma
 buy Cursor
 buy Grandma
@@ -59,19 +74,29 @@ buy Mine
 buy Farm
 upgrade Cheap hoes
 buy Farm
+
+errand
 buy Farm
 buy Farm
 buy Farm
+
+errand
 buy Farm
 buy Cursor
 buy Grandma
 buy Mine
+
+errand
 buy Farm
 upgrade Fertilizer
 buy Farm
 buy Farm
+
+errand
 buy Farm
 buy Farm
+
+errand
 buy Farm
 buy Mine
 upgrade Farmer grandmas
@@ -81,10 +106,14 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
+
+errand
 buy Grandma
 upgrade Lubricated dentures
 buy Grandma
 buy Grandma
+
+errand
 buy Grandma
 buy Grandma
 buy Cursor
@@ -98,6 +127,8 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
+
+errand
 buy Cursor
 buy Grandma
 buy Cursor
@@ -105,18 +136,24 @@ buy Farm
 buy Grandma
 buy Cursor
 buy Farm
+
+errand
 buy Grandma
 buy Cursor
 buy Farm
 buy Cursor
 buy Grandma
 buy Mine
+
+errand
 buy Farm
 buy Cursor
 buy Grandma
 buy Mine
 buy Cursor
 buy Farm
+
+errand
 buy Grandma
 buy Mine
 buy Cursor
@@ -125,7 +162,11 @@ buy Grandma
 upgrade Sugar gas
 buy Mine
 buy Mine
+
+errand
 buy Mine
+
+errand
 buy Cursor
 buy Grandma
 buy Cursor

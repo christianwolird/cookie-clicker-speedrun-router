@@ -1,31 +1,12 @@
-from dataclasses import dataclass
-from typing import Callable
-
-from . import age_scoring, cookie_scoring
-from .models import RouteResult
+from . import errand_queueing
 
 
-DEFAULT_ALGORITHM = "age_scoring"
-
-
-@dataclass(frozen=True, slots=True)
-class Algorithm:
-    name: str
-    description: str
-    find_route: Callable
+DEFAULT_ALGORITHM = "errand_queueing"
 
 
 ALGORITHMS = {
-    "age_scoring": Algorithm(
-        "age_scoring",
-        "greedy upgrade descendants scored by their effective acquisition time",
-        age_scoring.find_route,
-    ),
-    "cookie_scoring": Algorithm(
-        "cookie_scoring",
-        "greedy upgrade descendants scored by their cookie cost",
-        cookie_scoring.find_route,
-    ),
+    "errand_queueing": errand_queueing.find_route,
+    "singleton_errands": errand_queueing.find_singleton_route,
 }
 
 
@@ -41,9 +22,7 @@ def get_algorithm(name):
 
 
 __all__ = [
-    "Algorithm",
     "DEFAULT_ALGORITHM",
-    "RouteResult",
     "available_algorithms",
     "get_algorithm",
 ]

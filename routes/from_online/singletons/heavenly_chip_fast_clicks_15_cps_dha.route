@@ -5,6 +5,11 @@ version = 1.0466
 target = 1000000000000
 click_rate = 15
 initial_state = fresh
+algorithm = singleton_errands
+errand_duration = 1.0
+purchase_click_rate = 5.0
+upgrades_enabled = true
+errands_enabled = false
 
 buy Cursor
 upgrade Reinforced index finger

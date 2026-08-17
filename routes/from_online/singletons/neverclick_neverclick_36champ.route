@@ -1,70 +1,70 @@
 # Extracted from the workbook's hidden Routes sheet.
-name = one_million: dha (Fast clicks (15 cps))
-source = dha spreadsheet: one million row 2
+name = neverclick: 36champ (Neverclick)
+source = dha spreadsheet: neverclick row 3
 version = 2.031
 target = 1000000
-click_rate = 15
-initial_state = fresh
+click_rate = 0
+initial_state = neverclick
+algorithm = singleton_errands
+errand_duration = 1.0
+purchase_click_rate = 5.0
+upgrades_enabled = true
+errands_enabled = false
 
 buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
 upgrade Reinforced index finger
-upgrade Carpal tunnel prevention cream
 buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Grandma
-buy Grandma
-buy Grandma
-buy Grandma
-buy Farm
 buy Grandma
 buy Grandma
 buy Grandma
 upgrade Forwards from grandma
 buy Grandma
 buy Grandma
+buy Farm
+buy Grandma
+buy Farm
+buy Grandma
+buy Farm
+buy Cursor
+buy Cursor
+upgrade Carpal tunnel prevention cream
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
 buy Grandma
 buy Grandma
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Farm
-buy Farm
-buy Farm
 upgrade Steel-plated rolling pins
 buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
-buy Grandma
-buy Grandma
-upgrade Ambidextrous
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
 buy Farm
+buy Cursor
 buy Farm
 upgrade Cheap hoes
 buy Farm
 buy Farm
 buy Farm
 buy Farm
+buy Grandma
+buy Farm
+buy Mine
+buy Cursor
+buy Grandma
+buy Farm
 buy Mine
 buy Grandma
-buy Grandma
-buy Grandma
-buy Mine
-buy Farm
-buy Farm
 buy Farm
 upgrade Fertilizer
 buy Farm
@@ -78,47 +78,47 @@ buy Grandma
 buy Grandma
 buy Grandma
 buy Grandma
+buy Grandma
 upgrade Lubricated dentures
 buy Grandma
 buy Grandma
 buy Grandma
-buy Grandma
-buy Grandma
-upgrade Plastic mouse
 buy Farm
-buy Farm
+buy Grandma
 buy Farm
 buy Mine
-buy Mine
 buy Grandma
-buy Grandma
-buy Grandma
+buy Cursor
 buy Farm
+buy Grandma
+buy Mine
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
+buy Farm
 buy Mine
 buy Mine
 upgrade Sugar gas
 buy Mine
 buy Mine
 buy Mine
-buy Mine
+buy Grandma
+buy Cursor
 buy Mine
 buy Farm
+buy Grandma
+buy Cursor
+buy Mine
 buy Farm
 buy Grandma
+buy Cursor
+buy Farm
 buy Grandma
+buy Cursor
+buy Farm
 buy Grandma
+buy Cursor
 buy Grandma
-buy Grandma
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
+upgrade Ambidextrous
 buy Cursor
 buy Cursor
 buy Cursor

@@ -1,165 +1,354 @@
-# Extracted from the workbook's hidden Routes sheet.
+# Contiguous purchases bunched by scripts/bunch_route.py.
 name = hardcore: dha (Left clicks (10 cps))
 source = dha spreadsheet: hardcore row 3
 version = 1.0466
 target = 1000000000
 click_rate = 10
 initial_state = fresh
+algorithm = contiguous_errand_bunching
+errand_duration = 1.0
+purchase_click_rate = 5.0
+upgrades_enabled = false
+errands_enabled = true
+max_errand_size = 20
 
+errand
 buy Farm
+
+errand
 buy Farm
+
+errand
 buy Farm
+
+errand
 buy Grandma
 buy Cursor
 buy Cursor
 buy Cursor
+
+errand
 buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Cursor
+buy Farm
+
+errand
 buy Grandma
 buy Cursor
 buy Farm
+
+errand
 buy Grandma
 buy Cursor
 buy Farm
+
+errand
 buy Grandma
 buy Cursor
 buy Farm
+
+errand
+buy Factory
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Farm
+
+errand
 buy Grandma
 buy Cursor
-buy Farm
-buy Factory
-buy Factory
-buy Mine
-buy Mine
-buy Mine
-buy Factory
-buy Farm
-buy Grandma
-buy Cursor
+
+errand
 buy Cursor
 buy Mine
+
+errand
 buy Factory
+
+errand
 buy Farm
+
+errand
 buy Grandma
+
+errand
 buy Cursor
 buy Mine
+
+errand
 buy Shipment
+
+errand
 buy Factory
+
+errand
 buy Mine
+
+errand
 buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
 buy Grandma
 buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Alchemy Lab
+
+errand
 buy Factory
 buy Mine
+
+errand
 buy Farm
-buy Grandma
-buy Shipment
-buy Factory
-buy Shipment
-buy Mine
-buy Farm
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
 buy Alchemy Lab
 buy Shipment
-buy Alchemy Lab
-buy Alchemy Lab
-buy Factory
-buy Mine
-buy Farm
-buy Alchemy Lab
+
+errand
 buy Portal
-buy Portal
-buy Portal
-buy Portal
-buy Portal
-buy Portal
-buy Portal
-buy Portal
-buy Alchemy Lab
-buy Shipment
-buy Portal
-buy Alchemy Lab
-buy Shipment
-buy Mine
-buy Factory
-buy Farm
-buy Portal
-buy Alchemy Lab
-buy Shipment
-buy Mine
-buy Factory
-buy Farm
-buy Portal
-buy Alchemy Lab
-buy Shipment
-buy Mine
-buy Factory
-buy Farm
-buy Portal
+
+errand
 buy Alchemy Lab
 buy Shipment
 buy Mine
 buy Factory
 buy Farm
+
+errand
 buy Portal
-buy Alchemy Lab
-buy Shipment
-buy Mine
-buy Factory
-buy Farm
-buy Portal
+
+errand
 buy Alchemy Lab
 buy Shipment
 buy Mine
 buy Factory
 buy Farm
 buy Portal
+
+errand
 buy Alchemy Lab
 buy Shipment
 buy Mine
 buy Factory
 buy Farm
 buy Portal
+
+errand
+buy Alchemy Lab
+buy Shipment
+buy Mine
+buy Factory
+buy Farm
+buy Portal
+
+errand
+buy Alchemy Lab
+buy Shipment
+buy Mine
+buy Factory
+buy Farm
+buy Portal
+
+errand
+buy Alchemy Lab
+buy Shipment
+buy Mine
+buy Factory
+buy Farm
+buy Portal
+
+errand
+buy Alchemy Lab
+buy Shipment
+buy Mine
+buy Factory
+buy Farm
+buy Portal
+
+errand
 buy Time Machine
+
+errand
 buy Time Machine
+
+errand
 buy Time Machine
+
+errand
 buy Alchemy Lab
 buy Time Machine
+
+errand
 buy Portal
+
+errand
 buy Shipment
-buy Alchemy Lab
-buy Portal
-buy Shipment
-buy Alchemy Lab
-buy Portal
-buy Shipment
-buy Alchemy Lab
-buy Portal
-buy Shipment
+
+errand
 buy Alchemy Lab
 buy Portal
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Portal
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Portal
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Portal
+
+errand
 buy Shipment
+
+errand
+buy Alchemy Lab
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+buy Portal
+
+errand
+buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Alchemy Lab
 buy Shipment
+
+errand
 buy Shipment
+
+errand
 buy Shipment
+
+errand
 buy Shipment

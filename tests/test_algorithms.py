@@ -1,23 +1,21 @@
 import unittest
-from unittest.mock import patch
 
 from src.algorithms import available_algorithms, get_algorithm
-from src.algorithms.age_scoring import descendant_score as age_score
-from src.algorithms.greedy import (
-    candidate_descendants,
+from src.algorithms.errand_queueing import (
+    ErrandPlan,
+    best_errand,
+    effective_cost,
+    errand_price,
+    initial_errands,
     price_horizon,
-    upgrade_descendant,
 )
-from src.algorithms.cookie_scoring import descendant_score as cookie_score
-from src.data import Upgrade
-from src.data.v2_031 import UPGRADES
+from src.algorithms.scoring import age_score
 from src.gamestate import Gamestate
 
 
-class SyntheticGamestate:
-    def __init__(self, age, lifetime_cookies, cps):
+class SyntheticState:
+    def __init__(self, age, cps):
         self.age = age
-        self.lifetime_cookies = lifetime_cookies
         self._cps = cps
 
     def cps(self):
@@ -29,171 +27,69 @@ class AlgorithmTests(unittest.TestCase):
         self.gamestate = Gamestate()
         self.gamestate.click_rate = 8
 
-    def test_named_algorithms_share_the_route_interface(self):
+    def test_only_active_generators_are_exposed(self):
         self.assertEqual(
             available_algorithms(),
-            ("age_scoring", "cookie_scoring"),
-        )
-        for name in available_algorithms():
-            with self.subTest(name=name):
-                route = get_algorithm(name).find_route(self.gamestate, 1_000)
-                self.assertEqual(
-                    route.final_gamestate.lifetime_cookies,
-                    1_000,
-                )
-                self.assertTrue(route.purchases)
-
-    def test_unknown_algorithm_is_rejected(self):
-        with self.assertRaisesRegex(ValueError, "Unknown algorithm"):
-            get_algorithm("unknown")
-
-    def test_age_score_matches_pairwise_ordering_formula(self):
-        ancestor = SyntheticGamestate(0, 0, 10)
-        better_first = SyntheticGamestate(10, 100, 20)
-        worse_first = SyntheticGamestate(8, 80, 15)
-
-        self.assertLess(
-            age_score(ancestor, better_first),
-            age_score(ancestor, worse_first),
+            ("errand_queueing", "singleton_errands"),
         )
 
-    def test_age_score_credits_faster_internal_descendant_order(self):
-        ancestor = SyntheticGamestate(5, 0, 10)
-        faster_descendant = SyntheticGamestate(12, 100, 25)
-        slower_descendant = SyntheticGamestate(13, 100, 25)
+    def test_age_score_uses_elapsed_acquisition_time(self):
+        ancestor = SyntheticState(5, 10)
+        faster = SyntheticState(12, 25)
+        slower = SyntheticState(13, 25)
 
-        self.assertLess(
-            age_score(ancestor, faster_descendant),
-            age_score(ancestor, slower_descendant),
-        )
-        self.assertEqual(
-            cookie_score(ancestor, faster_descendant),
-            cookie_score(ancestor, slower_descendant),
-        )
+        self.assertLess(age_score(ancestor, faster), age_score(ancestor, slower))
 
-    def test_search_beats_buying_nothing(self):
-        no_purchases = self.gamestate.finish(100_000)
-
-        route = get_algorithm("age_scoring").find_route(
-            self.gamestate,
-            100_000,
-        )
-
-        self.assertLess(route.final_gamestate.age, no_purchases.age)
-        self.assertEqual(
-            route.final_gamestate.lifetime_cookies,
-            100_000,
-        )
-
-    def test_search_reports_each_purchase_as_its_descendant_is_selected(self):
-        purchases = []
-
-        route = get_algorithm("age_scoring").find_route(
-            self.gamestate,
-            1_000,
-            on_purchase=purchases.append,
-        )
-
-        self.assertEqual(purchases, list(route.purchases))
-
-    def test_upgrades_can_be_removed_from_candidate_generation(self):
-        self.gamestate.upgrades_allowed = False
-        self.gamestate.purchase_building("Cursor")
-
-        self.assertFalse(
-            any(
-                candidate.gamestate.purchased_upgrades
-                for candidate in candidate_descendants(
-                    self.gamestate,
-                    age_score,
-                )
-            )
-        )
-
-    def test_price_horizon_multiplier_is_configurable(self):
+    def test_price_horizon_and_aggregate_errand_price(self):
         self.gamestate.lifetime_cookies = 10_000
-
-        self.assertEqual(price_horizon(self.gamestate, 2.0), 20_000)
-        self.assertEqual(price_horizon(self.gamestate, 4.0), 40_000)
-        self.assertEqual(price_horizon(self.gamestate, 0.01), 1_000)
-
-    def test_candidate_descendants_include_locked_upgrade_prerequisites(self):
-        candidate = next(
-            candidate
-            for candidate in candidate_descendants(self.gamestate, age_score)
-            if candidate.gamestate.last_purchase.display_item
-            == "Forwards from grandma"
-        )
-        descendant = candidate.gamestate
-
-        self.assertEqual(descendant.building_counts["Grandma"], 1)
-        self.assertIn(
-            "Forwards from grandma",
-            descendant.purchased_upgrades,
-        )
-        self.assertEqual(
-            [purchase.display_item for purchase in candidate.purchases],
-            ["Grandma #1", "Forwards from grandma"],
+        quantities = tuple(
+            2 if name == "Farm" else 0
+            for name in self.gamestate.building_catalog
         )
 
-    def test_upgrade_horizon_does_not_exclude_mixed_prerequisites(self):
-        self.gamestate.lifetime_cookies = 30_000
-        horizon = price_horizon(self.gamestate, 2.0)
-        candidate = next(
-            candidate
-            for candidate in candidate_descendants(self.gamestate, age_score)
-            if candidate.gamestate.last_purchase.display_item
-            == "Farmer grandmas"
+        self.assertEqual(price_horizon(self.gamestate, 2), 20_000)
+        self.assertEqual(errand_price(self.gamestate, ErrandPlan(quantities)), 2_365)
+
+    def test_locked_upgrade_seed_includes_prerequisite_buildings(self):
+        plan = next(
+            plan
+            for plan in initial_errands(self.gamestate)
+            if plan.upgrades == {"Forwards from grandma"}
         )
-        descendant = candidate.gamestate
+        grandma_index = list(self.gamestate.building_catalog).index("Grandma")
 
-        self.assertEqual(horizon, 60_000)
-        self.assertGreater(
-            descendant.lifetime_cookies
-            - self.gamestate.lifetime_cookies,
-            horizon,
+        self.assertEqual(plan.building_quantities[grandma_index], 1)
+        self.assertEqual(plan.purchase_count, 2)
+
+    def test_queue_finds_multi_purchase_errand(self):
+        candidate = best_errand(self.gamestate, 100_000, queue_pops=100)
+
+        self.assertGreater(len(candidate.purchases), 1)
+        self.assertLessEqual(
+            effective_cost(self.gamestate, candidate.gamestate),
+            candidate.score,
         )
-        self.assertEqual(descendant.building_counts["Grandma"], 1)
-        self.assertEqual(descendant.building_counts["Farm"], 15)
-        self.assertIn("Farmer grandmas", descendant.purchased_upgrades)
-        self.assertEqual(candidate.purchases[0].display_item, "Grandma #1")
 
-    def test_mixed_prerequisite_errands_follow_the_selected_score(self):
-        upgrade = Upgrade(1, (("Grandma", 15), ("Farm", 5)))
-
-        with patch.dict(UPGRADES, {"Test mixed": upgrade}):
-            candidate = upgrade_descendant(
-                self.gamestate,
-                "Test mixed",
-                age_score,
-            )
-
-        self.assertEqual(
-            [purchase.display_item for purchase in candidate.purchases],
-            [
-                "Grandma #1",
-                "Grandma #2",
-                "Grandma #3",
-                "Grandma #4",
-                "Grandma #5",
-                "Farm #1",
-                "Farm #2",
-                "Grandma #6",
-                "Farm #3",
-                "Grandma #7",
-                "Farm #4",
-                "Grandma #8",
-                "Farm #5",
-                "Grandma #9",
-                "Grandma #10",
-                "Grandma #11",
-                "Grandma #12",
-                "Grandma #13",
-                "Grandma #14",
-                "Grandma #15",
-                "Test mixed",
-            ],
+    def test_singleton_mode_never_groups(self):
+        result = get_algorithm("singleton_errands")(
+            self.gamestate,
+            10_000,
         )
+
+        self.assertTrue(result.errands)
+        self.assertTrue(all(len(errand) == 1 for errand in result.errands))
+
+    def test_route_generation_reaches_target_and_streams_errands(self):
+        streamed = []
+
+        result = get_algorithm("errand_queueing")(
+            self.gamestate,
+            10_000,
+            on_errand=streamed.append,
+        )
+
+        self.assertEqual(result.final_gamestate.lifetime_cookies, 10_000)
+        self.assertEqual(streamed, list(result.errands))
 
 
 if __name__ == "__main__":

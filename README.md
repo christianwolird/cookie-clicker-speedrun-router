@@ -111,26 +111,46 @@ has no cost when the click rate is zero.
 vertices and candidate errands are outgoing edges. The search retains the
 youngest known gamestate for each inventory and lazily discards older queue
 entries when they are popped. Its priority is the state's age plus a scaled
-zero-purchase-delay singleton route to completion. To keep those fuzzy routes
-short, the heuristic uses geometric lifetime-cookie checkpoints (100, 1,000,
-10,000, and so on): it routes a state only to the next checkpoint, then adds
-one shared checkpoint-to-target tail.
+zero-purchase-delay singleton estimate to completion. By default, one complete
+fuzzy route is generated from the initial state and used as a measuring stick:
+each node's lifetime cookies are interpolated onto that route, so scoring a
+node never generates another fuzzy route. The slower `individual` heuristic
+instead recalculates a complete fuzzy route from each node.
 
-The outer feeler count, inner errand-search budget, heuristic scale, and hard
-expansion limit are explicit runtime/quality knobs:
+The default `bounded_beam` inner search uses the feeler count as both its live
+queue width and its returned-errand roster size. It stops once the roster is
+full and the best queued errand scores worse than the roster's worst member.
+Because an errand extension can improve on its prefix's score, this is an
+intentional beam-search approximation. Increasing the feeler count lets more
+such prefixes survive. The prior fixed-pop search remains available for direct
+comparisons.
+
+The errand beam width, heuristic choice and scale, and hard expansion limit are
+explicit runtime/quality knobs:
 
 ```sh
 python3 make_route.py \
   --category 100k \
-  --astar-feelers 7 \
-  --errand-queue-depth 30 \
+  --astar-inner-search bounded_beam \
+  --astar-feelers 20 \
+  --astar-heuristic measuring_stick \
   --astar-fuzzy-scale 1.0 \
   --astar-max-expansions 10000
 ```
 
+Select the older inner search or the per-node heuristic with:
+
+```sh
+python3 make_route.py \
+  --category 100k \
+  --astar-inner-search fixed_pops \
+  --errand-queue-depth 30 \
+  --astar-heuristic individual
+```
+
 This is A*-style rather than a proof-producing A*: the top-k edge generator is
-incomplete, shared tails are approximate, and the fuzzy-scale assumption is
-empirical. Increasing feelers, queue depth, or the expansion limit trades
+incomplete, measuring-stick interpolation is approximate, and the fuzzy-scale
+assumption is empirical. Increasing feelers or the expansion limit trades
 runtime for a better chance of finding a faster route. Scales above 1 are
 accepted for experiments, though they weight the approximate heuristic more
 aggressively and may terminate before exploring useful detours. Older cookie-
@@ -274,9 +294,11 @@ extraction, experimental bunching, and both public CLIs.
 The experimental inventory search now plans across multiple errands, but its
 candidate generator still emits purchases only. The next major extension is to
 generate mixed sell-and-buy errands and measure stabilization as feeler count,
-inner queue depth, and fuzzy scale are widened. Achievement effects remain in
+inner method, and fuzzy scale are varied. Achievement effects remain in
 the simulated gamestate but are deliberately excluded from inventory identity,
 matching the current youngest-age dominance approximation.
 
 Profile results and prospective performance/search improvements are collected
-in [A* improvement ideas](docs/improvement_ideas.md).
+in [A* improvement ideas](docs/improvement_ideas.md). The implemented redesign
+and its benchmark results are documented in
+[revised A* inventory search](docs/revised_astar.md).

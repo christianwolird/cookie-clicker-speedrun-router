@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from heapq import heappop, heappush
+from heapq import heapify, heappop, heappush
 from itertools import count
 
 from ..gamestate import Gamestate, Purchase
@@ -9,6 +9,13 @@ from .scoring import age_score
 
 DEFAULT_QUEUE_POPS = 100
 DEFAULT_FEELERS = 10
+FIXED_POP_INNER_SEARCH = "fixed_pops"
+BOUNDED_BEAM_INNER_SEARCH = "bounded_beam"
+INNER_SEARCH_METHODS = (
+    BOUNDED_BEAM_INNER_SEARCH,
+    FIXED_POP_INNER_SEARCH,
+)
+DEFAULT_INNER_SEARCH = BOUNDED_BEAM_INNER_SEARCH
 
 
 @dataclass(frozen=True, slots=True)
@@ -287,6 +294,98 @@ def promising_errands(
             ),
         )[:limit]
     )
+
+
+def beam_promising_errands(
+    ancestor,
+    target,
+    limit=DEFAULT_FEELERS,
+    price_horizon_multiplier=2.0,
+):
+    """Return errands found by a bounded best-first beam search.
+
+    ``limit`` is both the maximum open-queue width and the size of the result
+    roster. A plan enters the roster only when popped. Once the roster is
+    full, searching stops when the best queued score is strictly worse than
+    the roster's worst score. Because adding purchases can improve age score,
+    this is deliberately an approximate search whose coverage grows with the
+    beam width.
+    """
+    if limit <= 0:
+        raise ValueError("limit must be greater than zero")
+
+    seen = set()
+    serial = count()
+    queue = []
+    roster = []
+
+    def candidate_order(candidate):
+        return candidate.score, candidate.plan.purchase_count
+
+    def evaluate(plan):
+        if plan in seen:
+            return None
+        seen.add(plan)
+
+        price = errand_price(ancestor, plan)
+        if price > price_horizon(ancestor, price_horizon_multiplier):
+            return None
+        if ancestor.lifetime_cookies + price >= target:
+            return None
+
+        child = ancestor.copy()
+        try:
+            purchases = child.purchase_errand(
+                _building_quantities(ancestor, plan),
+                plan.upgrades,
+            )
+        except (KeyError, ValueError):
+            return None
+
+        return ErrandCandidate(
+            plan,
+            child,
+            purchases,
+            age_score(ancestor, child),
+            effective_cost(ancestor, child),
+        )
+
+    def push_bounded(candidate):
+        entry = (*candidate_order(candidate), next(serial), candidate)
+        if len(queue) < limit:
+            heappush(queue, entry)
+            return
+
+        worst_index = max(
+            range(len(queue)),
+            key=lambda index: queue[index][:3],
+        )
+        if entry[:2] >= queue[worst_index][:2]:
+            return
+        queue[worst_index] = entry
+        heapify(queue)
+
+    for plan in initial_errands(ancestor):
+        candidate = evaluate(plan)
+        if candidate is not None:
+            push_bounded(candidate)
+
+    while queue:
+        if len(roster) == limit and queue[0][0] > roster[-1].score:
+            break
+
+        _, _, _, candidate = heappop(queue)
+        roster.append(candidate)
+        roster.sort(key=candidate_order)
+        if len(roster) > limit:
+            roster.pop()
+
+        for plan in added_purchase_errands(ancestor, candidate.plan):
+            child = evaluate(plan)
+            if child is not None:
+                push_bounded(child)
+
+    return tuple(roster)
 
 
 def find_route(

@@ -13,11 +13,19 @@ if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
 from src.algorithms import DEFAULT_ALGORITHM, available_algorithms, get_algorithm
-from src.algorithms.errand_queueing import DEFAULT_FEELERS, DEFAULT_QUEUE_POPS
+from src.algorithms.errand_queueing import (
+    DEFAULT_FEELERS,
+    DEFAULT_INNER_SEARCH,
+    DEFAULT_QUEUE_POPS,
+    FIXED_POP_INNER_SEARCH,
+    INNER_SEARCH_METHODS,
+)
 from src.algorithms.fuzzy_astar import (
+    DEFAULT_FUZZY_HEURISTIC,
     DEFAULT_FUZZY_SCALE,
     DEFAULT_MAX_EXPANSIONS,
     DEFAULT_PROGRESS_INTERVAL,
+    FUZZY_HEURISTIC_METHODS,
 )
 from src.config import (
     DEFAULT_SETTINGS,
@@ -48,6 +56,8 @@ def calculate_route(
     on_errand=None,
     errand_queue_depth=DEFAULT_QUEUE_POPS,
     astar_feelers=DEFAULT_FEELERS,
+    astar_inner_search=DEFAULT_INNER_SEARCH,
+    astar_heuristic=DEFAULT_FUZZY_HEURISTIC,
     astar_fuzzy_scale=DEFAULT_FUZZY_SCALE,
     astar_max_expansions=DEFAULT_MAX_EXPANSIONS,
     on_progress=None,
@@ -62,6 +72,8 @@ def calculate_route(
     if algorithm_name == "fuzzy_astar":
         options.update(
             feelers=astar_feelers,
+            inner_search=astar_inner_search,
+            fuzzy_heuristic=astar_heuristic,
             fuzzy_scale=astar_fuzzy_scale,
             max_expansions=astar_max_expansions,
             on_progress=on_progress,
@@ -117,6 +129,22 @@ def _parser():
         "--astar-feelers",
         type=int,
         help=f"outgoing errands per inventory (default: {DEFAULT_FEELERS})",
+    )
+    parser.add_argument(
+        "--astar-inner-search",
+        choices=INNER_SEARCH_METHODS,
+        help=(
+            "inner errand search method "
+            f"(default: {DEFAULT_INNER_SEARCH})"
+        ),
+    )
+    parser.add_argument(
+        "--astar-heuristic",
+        choices=FUZZY_HEURISTIC_METHODS,
+        help=(
+            "remaining-time heuristic "
+            f"(default: {DEFAULT_FUZZY_HEURISTIC})"
+        ),
     )
     parser.add_argument(
         "--astar-fuzzy-scale",
@@ -242,7 +270,10 @@ def _print_settings(settings, cli_overrides):
         ),
         _setting("Errands enabled", grouped, "algorithm", cli_overrides),
     ]
-    if grouped:
+    if grouped and (
+        settings["algorithm"] != "fuzzy_astar"
+        or settings["astar_inner_search"] == FIXED_POP_INNER_SEARCH
+    ):
         lines.append(
             _setting(
                 "Errand queue depth",
@@ -258,6 +289,18 @@ def _print_settings(settings, cli_overrides):
                     "A* feelers",
                     settings["astar_feelers"],
                     "astar_feelers",
+                    cli_overrides,
+                ),
+                _setting(
+                    "A* inner search",
+                    settings["astar_inner_search"],
+                    "astar_inner_search",
+                    cli_overrides,
+                ),
+                _setting(
+                    "A* heuristic",
+                    settings["astar_heuristic"],
+                    "astar_heuristic",
                     cli_overrides,
                 ),
                 _setting(
@@ -292,9 +335,27 @@ def _save_result(path, settings, result, overwrite=False):
         upgrades_enabled=settings["upgrades_enabled"],
         errands_enabled=grouped,
         errands=action_errands(result),
-        errand_queue_depth=(settings["errand_queue_depth"] if grouped else None),
+        errand_queue_depth=(
+            settings["errand_queue_depth"]
+            if grouped
+            and (
+                settings["algorithm"] != "fuzzy_astar"
+                or settings["astar_inner_search"] == FIXED_POP_INNER_SEARCH
+            )
+            else None
+        ),
         astar_feelers=(
             settings["astar_feelers"]
+            if settings["algorithm"] == "fuzzy_astar"
+            else None
+        ),
+        astar_inner_search=(
+            settings["astar_inner_search"]
+            if settings["algorithm"] == "fuzzy_astar"
+            else None
+        ),
+        astar_heuristic=(
+            settings["astar_heuristic"]
             if settings["algorithm"] == "fuzzy_astar"
             else None
         ),
@@ -398,6 +459,8 @@ def main(argv=None):
         on_errand=table.print_errand if table else None,
         errand_queue_depth=settings["errand_queue_depth"],
         astar_feelers=settings["astar_feelers"],
+        astar_inner_search=settings["astar_inner_search"],
+        astar_heuristic=settings["astar_heuristic"],
         astar_fuzzy_scale=settings["astar_fuzzy_scale"],
         astar_max_expansions=settings["astar_max_expansions"],
         on_progress=(
@@ -424,7 +487,6 @@ def main(argv=None):
             f"{stats.stale_skipped:,} stale, "
             f"{stats.heuristic_evaluations:,} heuristics, "
             f"{stats.fuzzy_route_evaluations:,} fuzzy routes, "
-            f"{stats.checkpoint_tails:,} shared tails, "
             f"max queue {stats.maximum_queue_size:,}, "
             f"runtime {stats.elapsed_seconds:,.1f}s, "
             f"stopped by {stats.termination}"

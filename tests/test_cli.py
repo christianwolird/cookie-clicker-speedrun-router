@@ -60,6 +60,10 @@ class CliTests(unittest.TestCase):
                 "20",
                 "--astar-feelers",
                 "3",
+                "--astar-inner-search",
+                "bounded_beam",
+                "--astar-heuristic",
+                "measuring_stick",
                 "--astar-max-expansions",
                 "100",
                 "--astar-progress-interval",
@@ -72,6 +76,8 @@ class CliTests(unittest.TestCase):
         )
 
         self.assertIn("Algorithm: fuzzy_astar", result.stdout)
+        self.assertIn("A* inner search: bounded_beam", result.stdout)
+        self.assertIn("A* heuristic: measuring_stick", result.stdout)
         self.assertIn("Search progress", result.stdout)
         self.assertIn("Search:", result.stdout)
 

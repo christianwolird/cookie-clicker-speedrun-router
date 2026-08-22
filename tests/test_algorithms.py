@@ -3,7 +3,10 @@ import unittest
 from src.algorithms import available_algorithms, get_algorithm
 from src.algorithms.contiguous_errand_dp import partition_contiguous_actions
 from src.algorithms.errand_queueing import (
+    BOUNDED_BEAM_INNER_SEARCH,
     ErrandPlan,
+    FIXED_POP_INNER_SEARCH,
+    beam_promising_errands,
     best_errand,
     effective_cost,
     errand_price,
@@ -12,6 +15,8 @@ from src.algorithms.errand_queueing import (
     promising_errands,
 )
 from src.algorithms.fuzzy_astar import (
+    INDIVIDUAL_FUZZY_HEURISTIC,
+    MeasuringStickHeuristic,
     SharedFuzzyHeuristic,
     find_route as find_fuzzy_astar_route,
 )
@@ -115,17 +120,34 @@ class AlgorithmTests(unittest.TestCase):
             sorted(candidate.score for candidate in candidates),
         )
 
+    def test_bounded_beam_returns_a_full_sorted_roster(self):
+        candidates = beam_promising_errands(
+            self.gamestate,
+            10_000,
+            limit=5,
+        )
+
+        self.assertEqual(len(candidates), 5)
+        self.assertEqual(
+            list(map(lambda candidate: candidate.score, candidates)),
+            sorted(candidate.score for candidate in candidates),
+        )
+
     def test_fuzzy_astar_reaches_target_and_reports_search_stats(self):
         progress_updates = []
+        heuristic_updates = []
         result = find_fuzzy_astar_route(
             self.gamestate,
             1_000,
             feelers=3,
-            queue_pops=20,
+            inner_search=BOUNDED_BEAM_INNER_SEARCH,
             fuzzy_scale=1.05,
             max_expansions=100,
             on_progress=progress_updates.append,
             progress_interval=0.000001,
+            on_heuristic=lambda state, remaining: heuristic_updates.append(
+                (state, remaining)
+            ),
         )
 
         self.assertEqual(result.final_gamestate.lifetime_cookies, 1_000)
@@ -134,6 +156,44 @@ class AlgorithmTests(unittest.TestCase):
         self.assertTrue(result.errands)
         self.assertTrue(progress_updates)
         self.assertLessEqual(len(progress_updates[-1].frontier), 3)
+        self.assertEqual(
+            len(heuristic_updates),
+            result.search_stats.heuristic_evaluations,
+        )
+        self.assertEqual(result.search_stats.fuzzy_route_evaluations, 1)
+
+    def test_individual_fuzzy_heuristic_remains_selectable(self):
+        result = find_fuzzy_astar_route(
+            self.gamestate,
+            1_000,
+            feelers=2,
+            fuzzy_heuristic=INDIVIDUAL_FUZZY_HEURISTIC,
+            max_expansions=20,
+        )
+
+        self.assertGreater(result.search_stats.fuzzy_route_evaluations, 1)
+
+    def test_fixed_pop_inner_search_remains_selectable(self):
+        result = find_fuzzy_astar_route(
+            self.gamestate,
+            1_000,
+            feelers=2,
+            queue_pops=5,
+            inner_search=FIXED_POP_INNER_SEARCH,
+            max_expansions=20,
+        )
+
+        self.assertTrue(result.errands)
+
+    def test_measuring_stick_uses_one_complete_fuzzy_route(self):
+        heuristic = MeasuringStickHeuristic(self.gamestate, 10_000)
+        initial_remaining = heuristic(self.gamestate)
+        later = self.gamestate.copy()
+        later.lifetime_cookies = 500
+
+        self.assertAlmostEqual(initial_remaining, heuristic.final_age)
+        self.assertLess(heuristic(later), initial_remaining)
+        self.assertEqual(heuristic.route_evaluations, 1)
 
     def test_fuzzy_heuristic_shares_geometric_checkpoint_tail(self):
         heuristic = SharedFuzzyHeuristic(self.gamestate, 20_000)

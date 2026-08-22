@@ -24,7 +24,13 @@ COMMON_METADATA_FIELDS = {
 }
 OPTIONAL_METADATA_FIELDS = {"errand_queue_depth", "max_errand_size"}
 OPTIONAL_METADATA_FIELDS.update(
-    {"astar_feelers", "astar_fuzzy_scale", "astar_max_expansions"}
+    {
+        "astar_feelers",
+        "astar_inner_search",
+        "astar_heuristic",
+        "astar_fuzzy_scale",
+        "astar_max_expansions",
+    }
 )
 
 
@@ -58,6 +64,8 @@ class RoutePlan:
     errand_queue_depth: int | None = None
     max_errand_size: int | None = None
     astar_feelers: int | None = None
+    astar_inner_search: str | None = None
+    astar_heuristic: str | None = None
     astar_fuzzy_scale: float | None = None
     astar_max_expansions: int | None = None
 
@@ -184,6 +192,8 @@ def load_route(path):
         if "astar_feelers" in metadata
         else None
     )
+    astar_inner_search = metadata.get("astar_inner_search")
+    astar_heuristic = metadata.get("astar_heuristic")
     astar_fuzzy_scale = (
         float(metadata["astar_fuzzy_scale"])
         if "astar_fuzzy_scale" in metadata
@@ -219,6 +229,20 @@ def load_route(path):
         )
     if astar_feelers is not None and astar_feelers <= 0:
         raise ValueError(f"{path}: astar_feelers must be greater than zero")
+    if astar_inner_search is not None:
+        from .algorithms.errand_queueing import INNER_SEARCH_METHODS
+
+        if astar_inner_search not in INNER_SEARCH_METHODS:
+            raise ValueError(
+                f"{path}: unknown astar_inner_search: {astar_inner_search}"
+            )
+    if astar_heuristic is not None:
+        from .algorithms.fuzzy_astar import FUZZY_HEURISTIC_METHODS
+
+        if astar_heuristic not in FUZZY_HEURISTIC_METHODS:
+            raise ValueError(
+                f"{path}: unknown astar_heuristic: {astar_heuristic}"
+            )
     if astar_fuzzy_scale is not None and astar_fuzzy_scale < 0:
         raise ValueError(f"{path}: astar_fuzzy_scale cannot be negative")
     if astar_max_expansions is not None and astar_max_expansions <= 0:
@@ -246,6 +270,8 @@ def load_route(path):
         errand_queue_depth=errand_queue_depth,
         max_errand_size=max_errand_size,
         astar_feelers=astar_feelers,
+        astar_inner_search=astar_inner_search,
+        astar_heuristic=astar_heuristic,
         astar_fuzzy_scale=astar_fuzzy_scale,
         astar_max_expansions=astar_max_expansions,
     )
@@ -292,6 +318,10 @@ def write_route(
         lines.append(f"max_errand_size = {plan.max_errand_size}")
     if plan.astar_feelers is not None:
         lines.append(f"astar_feelers = {plan.astar_feelers}")
+    if plan.astar_inner_search is not None:
+        lines.append(f"astar_inner_search = {plan.astar_inner_search}")
+    if plan.astar_heuristic is not None:
+        lines.append(f"astar_heuristic = {plan.astar_heuristic}")
     if plan.astar_fuzzy_scale is not None:
         lines.append(f"astar_fuzzy_scale = {plan.astar_fuzzy_scale:g}")
     if plan.astar_max_expansions is not None:

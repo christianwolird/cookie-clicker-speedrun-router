@@ -3,10 +3,17 @@
 from pathlib import Path
 
 from .algorithms import DEFAULT_ALGORITHM, available_algorithms
-from .algorithms.errand_queueing import DEFAULT_FEELERS, DEFAULT_QUEUE_POPS
+from .algorithms.errand_queueing import (
+    DEFAULT_FEELERS,
+    DEFAULT_INNER_SEARCH,
+    DEFAULT_QUEUE_POPS,
+    INNER_SEARCH_METHODS,
+)
 from .algorithms.fuzzy_astar import (
+    DEFAULT_FUZZY_HEURISTIC,
     DEFAULT_FUZZY_SCALE,
     DEFAULT_MAX_EXPANSIONS,
+    FUZZY_HEURISTIC_METHODS,
 )
 from .data import DEFAULT_VERSION, SUPPORTED_VERSIONS
 from .gamestate import (
@@ -28,6 +35,8 @@ DEFAULT_SETTINGS = {
     "purchase_click_rate": DEFAULT_PURCHASE_CLICK_RATE,
     "errand_queue_depth": DEFAULT_QUEUE_POPS,
     "astar_feelers": DEFAULT_FEELERS,
+    "astar_inner_search": DEFAULT_INNER_SEARCH,
+    "astar_heuristic": DEFAULT_FUZZY_HEURISTIC,
     "astar_fuzzy_scale": DEFAULT_FUZZY_SCALE,
     "astar_max_expansions": DEFAULT_MAX_EXPANSIONS,
     "price_horizon_multiplier": 2.0,
@@ -54,6 +63,8 @@ CATEGORY_VALUE_PARSERS = {
     "purchase_click_rate": float,
     "errand_queue_depth": int,
     "astar_feelers": int,
+    "astar_inner_search": str,
+    "astar_heuristic": str,
     "astar_fuzzy_scale": float,
     "astar_max_expansions": int,
     "price_horizon_multiplier": float,
@@ -103,6 +114,16 @@ def validate_settings(settings, source="settings"):
         raise ValueError(f"{source}: unknown algorithm: {settings['algorithm']}")
     if settings["initial_state"] not in {"fresh", "neverclick"}:
         raise ValueError(f"{source}: initial_state must be fresh or neverclick")
+    if settings["astar_inner_search"] not in INNER_SEARCH_METHODS:
+        raise ValueError(
+            f"{source}: astar_inner_search must be one of "
+            f"{', '.join(INNER_SEARCH_METHODS)}"
+        )
+    if settings["astar_heuristic"] not in FUZZY_HEURISTIC_METHODS:
+        raise ValueError(
+            f"{source}: astar_heuristic must be one of "
+            f"{', '.join(FUZZY_HEURISTIC_METHODS)}"
+        )
     bounds = (
         ("target", 0, False),
         ("click_rate", 0, True),

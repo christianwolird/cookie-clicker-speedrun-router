@@ -1,13 +1,18 @@
-"""Best-first inventory search using fuzzy zero-delay completion routes."""
+"""Best-first inventory search using fuzzy zero-delay completion estimates."""
 
+from bisect import bisect_right
 from dataclasses import dataclass
 from heapq import heappop, heappush, nsmallest
 from itertools import count
 from time import monotonic
 
 from .errand_queueing import (
+    BOUNDED_BEAM_INNER_SEARCH,
     DEFAULT_FEELERS,
+    DEFAULT_INNER_SEARCH,
     DEFAULT_QUEUE_POPS,
+    INNER_SEARCH_METHODS,
+    beam_promising_errands,
     find_singleton_route,
     promising_errands,
 )
@@ -18,6 +23,13 @@ DEFAULT_MAX_EXPANSIONS = 10_000
 DEFAULT_CHECKPOINT_BASE = 100
 DEFAULT_PROGRESS_INTERVAL = 30.0
 PROGRESS_FRONTIER_SIZE = 3
+MEASURING_STICK_HEURISTIC = "measuring_stick"
+INDIVIDUAL_FUZZY_HEURISTIC = "individual"
+FUZZY_HEURISTIC_METHODS = (
+    MEASURING_STICK_HEURISTIC,
+    INDIVIDUAL_FUZZY_HEURISTIC,
+)
+DEFAULT_FUZZY_HEURISTIC = MEASURING_STICK_HEURISTIC
 
 
 @dataclass(frozen=True, slots=True)
@@ -84,6 +96,80 @@ def fuzzy_remaining_time(gamestate, target, price_horizon_multiplier=2.0):
         price_horizon_multiplier=price_horizon_multiplier,
     )
     return max(0.0, result.final_gamestate.age - gamestate.age)
+
+
+class MeasuringStickHeuristic:
+    """Interpolate one complete fuzzy route by lifetime cookies."""
+
+    def __init__(self, initial_gamestate, target, price_horizon_multiplier=2.0):
+        fuzzy = initial_gamestate.copy()
+        fuzzy.errand_duration = 0.0
+        fuzzy.purchase_click_rate = float("inf")
+        route = find_singleton_route(
+            fuzzy,
+            target,
+            price_horizon_multiplier=price_horizon_multiplier,
+        )
+
+        points = [(fuzzy.lifetime_cookies, fuzzy.age)]
+        for errand in route.errands:
+            purchase = errand[-1]
+            if purchase.lifetime_cookies > points[-1][0]:
+                points.append((purchase.lifetime_cookies, purchase.age))
+        final = route.final_gamestate
+        if final.lifetime_cookies > points[-1][0]:
+            points.append((final.lifetime_cookies, final.age))
+
+        self.lifetimes = tuple(point[0] for point in points)
+        self.ages = tuple(point[1] for point in points)
+        self.final_age = final.age
+        self.route = route
+        self.route_evaluations = 1
+        self.shared_tails = {}
+
+    def remaining_time(self, lifetime_cookies):
+        if lifetime_cookies >= self.lifetimes[-1]:
+            return 0.0
+
+        right = bisect_right(self.lifetimes, lifetime_cookies)
+        left = max(0, right - 1)
+        right = min(right, len(self.lifetimes) - 1)
+        left_lifetime = self.lifetimes[left]
+        right_lifetime = self.lifetimes[right]
+        if right_lifetime == left_lifetime:
+            interpolated_age = self.ages[left]
+        else:
+            fraction = (
+                (lifetime_cookies - left_lifetime)
+                / (right_lifetime - left_lifetime)
+            )
+            interpolated_age = self.ages[left] + fraction * (
+                self.ages[right] - self.ages[left]
+            )
+        return max(0.0, self.final_age - interpolated_age)
+
+    def __call__(self, gamestate):
+        return self.remaining_time(gamestate.lifetime_cookies)
+
+
+class IndividualFuzzyHeuristic:
+    """Recalculate a complete fuzzy route from every scored state."""
+
+    def __init__(self, target, price_horizon_multiplier=2.0):
+        self.target = target
+        self.price_horizon_multiplier = price_horizon_multiplier
+        self.route_evaluations = 0
+        self.shared_tails = {}
+
+    def __call__(self, gamestate):
+        if gamestate.lifetime_cookies >= self.target:
+            return 0.0
+        self.route_evaluations += 1
+        return fuzzy_remaining_time(
+            gamestate,
+            self.target,
+            self.price_horizon_multiplier,
+        )
 
 
 class SharedFuzzyHeuristic:
@@ -210,14 +296,21 @@ def find_route(
     price_horizon_multiplier=2.0,
     queue_pops=DEFAULT_QUEUE_POPS,
     feelers=DEFAULT_FEELERS,
+    inner_search=DEFAULT_INNER_SEARCH,
+    fuzzy_heuristic=DEFAULT_FUZZY_HEURISTIC,
     fuzzy_scale=DEFAULT_FUZZY_SCALE,
     max_expansions=DEFAULT_MAX_EXPANSIONS,
     on_progress=None,
     progress_interval=DEFAULT_PROGRESS_INTERVAL,
+    on_heuristic=None,
 ):
     """Search inventories, retaining only the youngest state per inventory."""
     if feelers <= 0:
         raise ValueError("feelers must be greater than zero")
+    if inner_search not in INNER_SEARCH_METHODS:
+        raise ValueError(f"unknown inner search method: {inner_search}")
+    if fuzzy_heuristic not in FUZZY_HEURISTIC_METHODS:
+        raise ValueError(f"unknown fuzzy heuristic: {fuzzy_heuristic}")
     if fuzzy_scale < 0:
         raise ValueError("fuzzy_scale cannot be negative")
     if max_expansions is not None and max_expansions <= 0:
@@ -239,16 +332,24 @@ def find_route(
     stale_skipped = 0
     heuristic_evaluations = 0
     maximum_queue_size = 0
-    heuristic = SharedFuzzyHeuristic(
-        initial,
-        target,
-        price_horizon_multiplier,
-    )
+    if fuzzy_heuristic == MEASURING_STICK_HEURISTIC:
+        heuristic = MeasuringStickHeuristic(
+            initial,
+            target,
+            price_horizon_multiplier,
+        )
+    else:
+        heuristic = IndividualFuzzyHeuristic(
+            target,
+            price_horizon_multiplier,
+        )
 
     def priority(gamestate):
         nonlocal heuristic_evaluations
         heuristic_evaluations += 1
         remaining = heuristic(gamestate)
+        if on_heuristic is not None:
+            on_heuristic(gamestate, remaining)
         return gamestate.age + fuzzy_scale * remaining
 
     heappush(queue, (priority(initial), next(serial), initial))
@@ -292,13 +393,21 @@ def find_route(
             break
 
         expanded += 1
-        candidates = promising_errands(
-            gamestate,
-            target,
-            limit=feelers,
-            price_horizon_multiplier=price_horizon_multiplier,
-            queue_pops=queue_pops,
-        )
+        if inner_search == BOUNDED_BEAM_INNER_SEARCH:
+            candidates = beam_promising_errands(
+                gamestate,
+                target,
+                limit=feelers,
+                price_horizon_multiplier=price_horizon_multiplier,
+            )
+        else:
+            candidates = promising_errands(
+                gamestate,
+                target,
+                limit=feelers,
+                price_horizon_multiplier=price_horizon_multiplier,
+                queue_pops=queue_pops,
+            )
         generated += len(candidates)
 
         for candidate in candidates:

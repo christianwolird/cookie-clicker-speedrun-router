@@ -132,6 +132,14 @@ class RouteTests(unittest.TestCase):
         )
         self.assertEqual(load_category("neverclick")["algorithm"], "singleton_errands")
         self.assertEqual(load_category("10k")["algorithm"], "fuzzy_astar")
+        self.assertEqual(
+            load_category("10k")["astar_inner_search"],
+            "bounded_beam",
+        )
+        self.assertEqual(
+            load_category("10k")["astar_heuristic"],
+            "measuring_stick",
+        )
         self.assertEqual(load_category("10k")["astar_fuzzy_scale"], 1.0)
         self.assertEqual(load_category("100k")["target"], 100_000)
         self.assertFalse(load_category("hardcore")["upgrades_enabled"])

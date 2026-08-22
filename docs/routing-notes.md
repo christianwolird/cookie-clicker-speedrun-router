@@ -105,15 +105,21 @@ relaxes their destination inventories. Priority is:
 state age + fuzzy scale × estimated remaining time
 ```
 
-The remaining-time estimate is a greedy singleton route with zero shop delay.
-For a long target it runs only to the next power-of-ten lifetime-cookie
-checkpoint and adds a lazily computed tail shared by every state below that
-checkpoint. This avoids recomputing the expensive end of nearly identical
-fuzzy routes.
+The default remaining-time estimate generates one greedy singleton route with
+zero shop delay from the initial state to the target. Every searched state maps
+its lifetime cookies onto that route and interpolates the remaining duration.
+The alternative `individual` mode recalculates a complete zero-delay fuzzy
+route from the actual state.
 
-The method remains empirical. Top-k candidate generation does not make the
-graph complete, the shared reference tail is approximate, and treating a
-fuzzy route at its full 1.0 scale is not mechanically guaranteed to be
-admissible. Feelers, inner queue pops, fuzzy scale, and maximum expansions
-expose the intended runtime/quality tradeoff. Mixed sell-and-buy edges are not
-generated yet.
+The default inner errand generator is a bounded best-first beam. Its width is
+the requested feeler count, and a separate roster retains the best popped
+errands. Before the roster is full its cutoff is infinite. Afterward the search
+stops when the best queued score is strictly worse than the roster's worst
+score. The older fixed-pop inner queue remains selectable.
+
+The method remains empirical. Beam candidate generation does not make the graph
+complete, measuring-stick interpolation is approximate, and treating it at its
+full 1.0 scale is not mechanically guaranteed to be admissible. Beam width,
+inner method, heuristic method and scale, and maximum expansions expose the
+intended runtime/quality tradeoff. Mixed sell-and-buy edges are not generated
+yet.

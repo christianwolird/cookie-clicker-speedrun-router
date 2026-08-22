@@ -213,6 +213,86 @@ A(n) = reference_tail
 
 This remains empirical but addresses the clearest source of overestimation.
 
+### Initial measuring-stick experiment
+
+`scripts/measure_fuzzy_heuristics.py` initially instrumented the checkpoint
+search without changing its queue key. For every scored outer state it records:
+
+```text
+A_raw = interpolated tail of one empty-to-target zero-delay fuzzy route
+B     = full zero-delay fuzzy completion recalculated from the actual state
+```
+
+The first experiment used the normal scale-1.0 category settings: ten
+feelers/depth 100 for 10k and seven feelers/depth 30 for 100k. Results below
+deduplicate repeated scoring events by inventory, retaining the youngest
+observed state.
+
+| Category | Unique inventories | A_raw > B | Mean A_raw/B | Median | P95 | Maximum |
+|---|---:|---:|---:|---:|---:|---:|
+| 10k | 318 | 180 (56.60%) | 1.0039 | 1.0013 | 1.0333 | 1.1050 |
+| 100k | 933 | 372 (39.87%) | 1.0003 | 0.9999 | 1.0118 | 1.0319 |
+
+The raw measuring stick is therefore not an ordered underestimate. Violations
+were concentrated in the early run: every observed inventory between 100 and
+1,000 lifetime cookies had `A_raw > B`. The worst 10k state owned one Cursor
+and Reinforced index finger at 115 lifetime cookies; its global tail was
+185.190 seconds while its state-specific fuzzy completion was 167.594 seconds.
+
+The ratios are nevertheless close enough to make the method promising. The
+largest observed ratios imply these maximum empirically ordered scales:
+
+```text
+10k:  1 / 1.1050 = approximately 0.9050
+100k: 1 / 1.0319 = approximately 0.9691
+```
+
+Using `A = 0.90 * A_raw` placed A below B for every one of the 1,251 unique
+inventories sampled across both categories. This is empirical coverage, not a
+universal proof. The next instrumentation should compare scaled A against both
+the current checkpoint heuristic and a full fuzzy completion on longer
+categories.
+
+Run the diagnostic with:
+
+```sh
+python3 scripts/measure_fuzzy_heuristics.py 10k 100k
+```
+
+### Measuring-stick and bounded-beam implementation
+
+The measuring stick is now the default A* heuristic. It performs exactly one
+complete zero-delay fuzzy route per search; all node estimates use lifetime-
+cookie interpolation on that route. The full state-specific `individual`
+heuristic remains selectable for comparisons.
+
+The default inner search is now a bounded best-first beam. Its width `E` is
+also the number of errands returned to outer A*. Popped errands enter a
+separate top-`E` roster. The roster threshold is infinite until full, after
+which the search stops when the best queued score is strictly worse than the
+worst roster score. The former fixed-pop queue remains selectable.
+
+The first combined scale-1.0 sweep produced:
+
+| Category | Inner method | Heuristic | E | Route time | Search runtime | Expanded | Fuzzy routes |
+|---|---|---|---:|---:|---:|---:|---:|
+| 10k | bounded beam | measuring stick | 3 | 191.509s | 0.2s | 81 | 1 |
+| 10k | bounded beam | measuring stick | 5 | 191.022s | 0.5s | 168 | 1 |
+| 10k | bounded beam | measuring stick | 10 | 190.676s | 1.4s | 306 | 1 |
+| 10k | bounded beam | measuring stick | 20 | **189.975s** | 4.2s | 497 | 1 |
+| 100k | bounded beam | measuring stick | 3 | 583.700s | 0.7s | 258 | 1 |
+| 100k | bounded beam | measuring stick | 5 | 582.105s | 2.3s | 592 | 1 |
+| 100k | bounded beam | measuring stick | 7 | 581.771s | 4.2s | 868 | 1 |
+| 100k | bounded beam | measuring stick | 10 | 581.229s | 8.5s | 1,282 | 1 |
+| 100k | bounded beam | measuring stick | 20 | **578.730s** | 30.4s | 2,500 | 1 |
+
+The earlier fixed-pop/checkpoint results were 190.544s in about 11.1s for 10k
+at F10/Q100 and 581.305s in about 35.5s for 100k at F7/Q30. The best earlier
+10k queue-depth sweep was 190.473s in 7.1s at F10/Q30. Thus `E=20` improved
+route time by 0.498s versus that best prior 10k result, while the 100k result
+improved by 2.575s versus its prior result. Smaller beams expose the expected
+quality/runtime tradeoff.
+
 ### More rigorous cheap lower bounds
 
 The trivial `A(n) = 0` is valid but weak. A more useful analytical bound could
@@ -398,19 +478,15 @@ come after sequential algorithmic waste is removed.
 
 ## Recommended experiment order
 
-1. Add top-k inner lower-bound pruning.
-2. Store incremental prices and compact inner plans.
-3. Introduce a search-only state and defer purchase-history construction.
-4. Instrument the measuring-stick `A`, checkpoint `B`, and full fuzzy `C`
-   estimates without changing search behavior.
-5. Calibrate and validate empirical `A <= B <= C` ordering.
-6. Enable lazy heuristic staging and cache estimates by inventory/checkpoint.
-7. Seed the search with a cheap incumbent and measure saved work.
-8. Add resumable progressive successor generation.
-9. Test strategic candidate buckets while retaining multiple subset depths.
-10. Consider an anytime scale schedule.
-11. Test delay-aware guidance under a separate anchor queue.
-12. Port the stabilized hot core to Rust, then parallelize native batches.
+1. Store incremental prices and compact inner plans.
+2. Introduce a search-only state and defer purchase-history construction.
+3. Validate measuring-stick scales on one million and longer categories.
+4. Seed the search with a cheap incumbent and measure saved work.
+5. Add resumable progressive successor generation.
+6. Test strategic candidate buckets while retaining multiple subset depths.
+7. Consider an anytime scale schedule.
+8. Test delay-aware guidance under a separate anchor queue.
+9. Port the stabilized hot core to Rust, then parallelize native batches.
 
 Every experiment should record route time, wall time, expanded outer states,
 inner plan evaluations, exact purchase simulations, heuristic tier counts,

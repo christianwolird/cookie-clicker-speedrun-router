@@ -1,16 +1,16 @@
-# Contiguous purchases bunched by scripts/bunch_route.py.
+# Contiguous purchases partitioned by scripts/errandify.py.
 name = heavenly_chip: Bluestonex64 (Fast clicks (15 cps))
 source = dha spreadsheet: heavenly chip row 2
 version = 1.0466
 target = 1000000000000
 click_rate = 15
 initial_state = fresh
-algorithm = contiguous_errand_bunching
+algorithm = contiguous_errand_dp
 errand_duration = 1.0
 purchase_click_rate = 5.0
 upgrades_enabled = true
 errands_enabled = true
-max_errand_size = 20
+max_errand_size = 100
 
 errand
 buy Cursor
@@ -26,36 +26,32 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Farm
+buy Cursor
 
 errand
+buy Farm
 buy Cursor
 buy Farm
-
-errand
 buy Cursor
-buy Farm
 
 errand
-buy Cursor
 buy Farm
-
-errand
 buy Grandma
 buy Cursor
 buy Farm
-
-errand
 buy Grandma
 buy Cursor
+
+errand
 buy Farm
 
 errand
 upgrade Cheap hoes
+
+errand
 buy Farm
 
 errand
@@ -70,16 +66,14 @@ buy Cursor
 buy Grandma
 buy Cursor
 buy Farm
+buy Grandma
 
 errand
-buy Grandma
 buy Mine
 
 errand
 buy Cursor
 buy Farm
-
-errand
 buy Factory
 
 errand
@@ -119,7 +113,11 @@ errand
 buy Grandma
 buy Factory
 buy Cursor
+
+errand
 buy Mine
+
+errand
 buy Farm
 
 errand
@@ -127,6 +125,8 @@ buy Shipment
 
 errand
 upgrade Sugar gas
+
+errand
 buy Mine
 
 errand
@@ -137,12 +137,20 @@ buy Shipment
 
 errand
 buy Factory
+
+errand
 upgrade Sturdier conveyor belts
+
+errand
 buy Factory
+
+errand
 buy Factory
 buy Grandma
 buy Cursor
 buy Farm
+
+errand
 buy Mine
 
 errand
@@ -157,30 +165,44 @@ buy Alchemy Lab
 errand
 buy Grandma
 buy Farm
+buy Cursor
 
 errand
-buy Cursor
 buy Alchemy Lab
+
+errand
 buy Mine
 
 errand
 buy Shipment
+
+errand
 buy Factory
 
 errand
 buy Alchemy Lab
+
+errand
 buy Grandma
 buy Farm
 buy Cursor
+
+errand
 buy Mine
 
 errand
 buy Shipment
+
+errand
 upgrade Vanilla nebulae
+
+errand
 buy Shipment
 
 errand
 buy Portal
+
+errand
 upgrade Plastic mouse
 
 errand
@@ -212,6 +234,8 @@ buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -227,6 +251,8 @@ buy Farm
 buy Cursor
 buy Shipment
 buy Factory
+
+errand
 buy Portal
 
 errand
@@ -239,31 +265,21 @@ buy Grandma
 buy Farm
 buy Cursor
 buy Shipment
+
+errand
 buy Portal
 
 errand
 buy Factory
 buy Alchemy Lab
-
-errand
 buy Mine
 buy Grandma
 upgrade Thousand fingers
 buy Farm
 buy Cursor
 buy Shipment
-buy Portal
 
 errand
-buy Factory
-buy Alchemy Lab
-buy Mine
-
-errand
-buy Grandma
-buy Farm
-buy Cursor
-buy Shipment
 buy Portal
 
 errand
@@ -273,9 +289,21 @@ buy Mine
 buy Grandma
 buy Farm
 buy Cursor
+buy Shipment
 
 errand
+buy Portal
+
+errand
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
 buy Shipment
+
+errand
 buy Portal
 
 errand
@@ -285,9 +313,9 @@ buy Grandma
 buy Mine
 buy Farm
 buy Cursor
+buy Shipment
 
 errand
-buy Shipment
 buy Portal
 
 errand
@@ -296,39 +324,47 @@ buy Time Machine
 errand
 buy Factory
 buy Time Machine
+
+errand
 upgrade Iron mouse
 
 errand
 buy Time Machine
+
+errand
 buy Alchemy Lab
 buy Mine
 buy Grandma
 buy Farm
 buy Cursor
 upgrade Fertilizer
-
-errand
 buy Shipment
 buy Portal
 
 errand
 buy Time Machine
+
+errand
 buy Factory
 upgrade Cookie trees
 buy Alchemy Lab
-
-errand
 buy Mine
 buy Grandma
+
+errand
 buy Time Machine
+
+errand
 buy Farm
 buy Cursor
 buy Portal
 buy Shipment
+buy Factory
 
 errand
-buy Factory
 buy Time Machine
+
+errand
 buy Alchemy Lab
 buy Mine
 buy Grandma
@@ -367,10 +403,12 @@ upgrade Miner grandmas
 buy Factory
 upgrade Child labor
 buy Grandma
+buy Alchemy Lab
 
 errand
-buy Alchemy Lab
 buy Time Machine
+
+errand
 buy Mine
 buy Portal
 buy Farm
@@ -378,7 +416,11 @@ buy Cursor
 buy Shipment
 buy Factory
 buy Grandma
+
+errand
 buy Time Machine
+
+errand
 buy Alchemy Lab
 buy Mine
 upgrade Megadrill
@@ -386,6 +428,8 @@ buy Portal
 buy Farm
 buy Cursor
 buy Shipment
+
+errand
 upgrade Insane oatling workers
 buy Factory
 buy Grandma
@@ -393,20 +437,22 @@ buy Grandma
 errand
 upgrade Ultradrill
 buy Time Machine
+
+errand
 buy Alchemy Lab
 buy Mine
 buy Portal
-
-errand
 buy Farm
 buy Cursor
 buy Shipment
 buy Factory
 upgrade Sweatshop
-upgrade Soul bond
 
 errand
+upgrade Soul bond
 buy Grandma
+
+errand
 buy Time Machine
 
 errand
@@ -419,27 +465,35 @@ buy Mine
 
 errand
 buy Antimatter Condenser
+
+errand
 buy Portal
 buy Farm
 buy Cursor
 buy Shipment
 upgrade Wormholes
-upgrade Titanium mouse
 
 errand
+upgrade Titanium mouse
 buy Factory
+
+errand
 buy Antimatter Condenser
+
+errand
 buy Time Machine
 buy Grandma
 buy Alchemy Lab
 buy Mine
 buy Portal
-
-errand
 buy Farm
 buy Cursor
 buy Shipment
+
+errand
 buy Antimatter Condenser
+
+errand
 buy Factory
 buy Time Machine
 buy Grandma
@@ -453,6 +507,8 @@ buy Shipment
 
 errand
 buy Antimatter Condenser
+
+errand
 buy Factory
 buy Time Machine
 buy Grandma
@@ -460,11 +516,13 @@ buy Alchemy Lab
 upgrade Essence of dough
 buy Mine
 buy Portal
+buy Farm
 
 errand
-buy Farm
 buy Antimatter Condenser
 buy Cursor
+
+errand
 buy Shipment
 buy Time Machine
 buy Factory
@@ -476,14 +534,16 @@ upgrade Sugar bosons
 
 errand
 buy Antimatter Condenser
+
+errand
 buy Alchemy Lab
 buy Mine
 buy Portal
-
-errand
 buy Farm
 buy Cursor
 buy Shipment
+
+errand
 buy Antimatter Condenser
 
 errand
@@ -493,11 +553,11 @@ buy Grandma
 buy Alchemy Lab
 buy Mine
 buy Portal
-
-errand
 buy Farm
 buy Cursor
 buy Shipment
+
+errand
 buy Antimatter Condenser
 
 errand
@@ -514,24 +574,15 @@ errand
 buy Prism
 buy Factory
 buy Grandma
+
+errand
 buy Antimatter Condenser
 buy Alchemy Lab
 
 errand
 buy Prism
-buy Mine
-buy Portal
-buy Farm
-buy Cursor
-buy Shipment
-buy Time Machine
 
 errand
-buy Factory
-buy Grandma
-buy Prism
-buy Antimatter Condenser
-buy Alchemy Lab
 buy Mine
 buy Portal
 buy Farm
@@ -543,7 +594,11 @@ buy Grandma
 
 errand
 buy Prism
+
+errand
 buy Antimatter Condenser
+
+errand
 buy Alchemy Lab
 buy Mine
 buy Portal
@@ -551,8 +606,23 @@ buy Farm
 buy Cursor
 buy Shipment
 buy Time Machine
+buy Factory
+buy Grandma
 
 errand
+buy Prism
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
 buy Factory
 buy Cursor
 buy Cursor
@@ -573,8 +643,6 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
@@ -590,8 +658,6 @@ buy Cursor
 buy Cursor
 buy Cursor
 upgrade Million fingers
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
@@ -604,8 +670,6 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
@@ -613,8 +677,8 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
+buy Cursor
+buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
@@ -625,56 +689,24 @@ errand
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
 buy Cursor
-
-errand
-buy Cursor
-
-errand
-buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
@@ -698,6 +730,4 @@ upgrade Billion fingers
 
 errand
 buy Cursor
-
-errand
 buy Cursor

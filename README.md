@@ -165,7 +165,7 @@ routes/
 ├── dha_spreadsheets/       original community workbooks
 ├── from_online/
 │   ├── singletons/         normalized community purchase orders
-│   └── erranded/           experimental greedy regroupings
+│   └── erranded/           DP-errandified community purchase orders
 └── local/                  routes generated during this research
 ```
 
@@ -186,19 +186,22 @@ Regenerate the normalized community routes from the workbooks with:
 python3 scripts/extract_public_routes.py
 ```
 
-`scripts/bunch_route.py` is an experimental analysis tool that greedily groups
-the next 1–20 actions of a singleton route by age score:
+`scripts/errandify.py` partitions a fixed singleton purchase order with
+prefix dynamic programming. For every action prefix, it extends the fastest
+saved preceding prefix with each valid final errand of 1–100 actions and
+retains the fastest result:
 
 ```sh
-python3 scripts/bunch_route.py \
+python3 scripts/errandify.py \
   routes/from_online/singletons \
   routes/from_online/erranded \
   --overwrite
 ```
 
-This tool preserves action order and keeps sales singleton, but its locally
-selected partitions can make a complete route slower. It is not used by
-`make_route.py`.
+The tool preserves action order, keeps sales singleton, and defaults to the
+canonical `routes/from_online/erranded/` destination. It is not used by
+`make_route.py`. Historical fixed-route experiments and measurements are
+recorded in `docs/errandification.md`.
 
 ## Code layout
 
@@ -208,7 +211,7 @@ categories/                 data-driven category defaults
 scripts/
 ├── replay_route.py         deterministic route replay
 ├── extract_public_routes.py
-└── bunch_route.py          experimental fixed-route grouping
+└── errandify.py            dynamic-programming fixed-route errandification
 src/
 ├── gamestate.py            simulation and purchase mechanics
 ├── routes.py               route format, I/O, and replay

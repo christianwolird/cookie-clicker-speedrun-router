@@ -1,16 +1,16 @@
-# Contiguous purchases bunched by scripts/bunch_route.py.
+# Contiguous purchases partitioned by scripts/errandify.py.
 name = hardcore: Lookas123 (Left Clicks (10 cps))
 source = dha spreadsheet: hardcore row 2
 version = 1.0466
 target = 1000000000
 click_rate = 10
 initial_state = fresh
-algorithm = contiguous_errand_bunching
+algorithm = contiguous_errand_dp
 errand_duration = 1.0
 purchase_click_rate = 5.0
 upgrades_enabled = false
 errands_enabled = true
-max_errand_size = 20
+max_errand_size = 100
 
 errand
 buy Cursor
@@ -40,16 +40,22 @@ buy Farm
 errand
 buy Grandma
 buy Cursor
+
+errand
 buy Farm
 
 errand
 buy Grandma
 buy Cursor
+
+errand
 buy Farm
 
 errand
 buy Cursor
 buy Grandma
+
+errand
 buy Farm
 
 errand
@@ -67,9 +73,9 @@ buy Mine
 
 errand
 buy Farm
+buy Grandma
 
 errand
-buy Grandma
 buy Mine
 
 errand
@@ -84,6 +90,8 @@ buy Mine
 errand
 buy Cursor
 buy Grandma
+
+errand
 buy Factory
 
 errand
@@ -91,9 +99,9 @@ buy Mine
 
 errand
 buy Farm
+buy Cursor
 
 errand
-buy Cursor
 buy Shipment
 
 errand
@@ -108,10 +116,10 @@ buy Shipment
 
 errand
 buy Farm
-
-errand
 buy Cursor
 buy Grandma
+
+errand
 buy Factory
 
 errand
@@ -132,8 +140,6 @@ buy Mine
 errand
 buy Cursor
 buy Factory
-
-errand
 buy Grandma
 
 errand
@@ -298,8 +304,70 @@ buy Factory
 
 errand
 buy Shipment
+buy Cursor
+buy Grandma
 
 errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+buy Farm
+buy Factory
+
+errand
+buy Shipment
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+buy Farm
+buy Factory
+
+errand
+buy Shipment
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+buy Farm
+buy Factory
+
+errand
+buy Shipment
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+buy Farm
+buy Factory
+
+errand
+buy Shipment
 buy Cursor
 buy Grandma
 
@@ -314,15 +382,11 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Factory
+buy Cursor
 
 errand
 buy Shipment
-
-errand
-buy Cursor
 buy Grandma
 
 errand
@@ -336,100 +400,14 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Factory
+buy Cursor
 
 errand
 buy Shipment
-
-errand
-buy Cursor
 buy Grandma
 
 errand
-buy Portal
-
-errand
-buy Alchemy Lab
-
-errand
-buy Mine
-
-errand
-buy Farm
-
-errand
-buy Factory
-
-errand
-buy Shipment
-
-errand
-buy Cursor
-buy Grandma
-
-errand
-buy Portal
-
-errand
-buy Alchemy Lab
-
-errand
-buy Mine
-
-errand
-buy Farm
-
-errand
-buy Factory
-
-errand
-buy Shipment
-
-errand
-buy Cursor
-buy Grandma
-buy Portal
-
-errand
-buy Alchemy Lab
-
-errand
-buy Mine
-
-errand
-buy Farm
-
-errand
-buy Factory
-
-errand
-buy Cursor
-buy Shipment
-
-errand
-buy Grandma
-buy Portal
-
-errand
-buy Alchemy Lab
-
-errand
-buy Mine
-
-errand
-buy Farm
-
-errand
-buy Factory
-
-errand
-buy Cursor
-buy Shipment
-
-errand
-buy Grandma
 buy Portal
 
 errand
@@ -524,6 +502,8 @@ sell Portal
 
 errand
 buy Time Machine
+
+errand
 buy Shipment
 
 errand
@@ -696,15 +676,35 @@ sell Portal
 
 errand
 buy Time Machine
+
+errand
 buy Shipment
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
@@ -850,19 +850,11 @@ sell Portal
 
 errand
 buy Time Machine
+
+errand
 buy Shipment
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
@@ -876,24 +868,78 @@ buy Alchemy Lab
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
 buy Farm
+
+errand
 buy Portal
 
 errand
@@ -901,9 +947,15 @@ buy Factory
 buy Cursor
 buy Shipment
 buy Grandma
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
 buy Farm
+
+errand
 buy Portal
 
 errand
@@ -911,9 +963,15 @@ buy Factory
 buy Cursor
 buy Shipment
 buy Grandma
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
 buy Farm
+
+errand
 buy Portal
 
 errand
@@ -921,19 +979,21 @@ buy Factory
 buy Cursor
 buy Shipment
 buy Grandma
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
 buy Farm
+
+errand
 buy Portal
 
 errand
 buy Factory
-
-errand
 buy Cursor
 buy Shipment
-
-errand
 buy Grandma
 
 errand
@@ -1043,22 +1103,18 @@ sell Portal
 
 errand
 buy Time Machine
+
+errand
 buy Shipment
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
-buy Alchemy Lab
-buy Shipment
+
+errand
 buy Alchemy Lab
 
 errand
@@ -1087,60 +1143,122 @@ buy Alchemy Lab
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
 buy Shipment
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
+
+errand
 buy Portal
 
 errand
 buy Farm
-
-errand
 buy Factory
 buy Cursor
+
+errand
 buy Shipment
 buy Grandma
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
+
+errand
 buy Portal
 
 errand
 buy Farm
-
-errand
 buy Factory
 buy Cursor
+
+errand
 buy Shipment
 buy Grandma
+
+errand
 buy Alchemy Lab
+
+errand
 buy Mine
+
+errand
 buy Portal
 
 errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor
-buy Shipment
 
 errand
+buy Shipment
 buy Grandma
 
 errand
@@ -1148,18 +1266,12 @@ buy Alchemy Lab
 
 errand
 buy Mine
-
-errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor
-buy Shipment
 
 errand
+buy Shipment
 buy Grandma
 
 errand
@@ -1167,18 +1279,12 @@ buy Alchemy Lab
 
 errand
 buy Mine
-
-errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor
-buy Shipment
 
 errand
+buy Shipment
 buy Grandma
 
 errand
@@ -1186,18 +1292,12 @@ buy Alchemy Lab
 
 errand
 buy Mine
-
-errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor
-buy Shipment
 
 errand
+buy Shipment
 buy Grandma
 
 errand
@@ -1205,18 +1305,28 @@ buy Alchemy Lab
 
 errand
 buy Mine
-
-errand
 buy Farm
-
-errand
 buy Factory
+buy Cursor
 
 errand
-buy Cursor
 buy Shipment
 
 errand
+buy Grandma
+buy Mine
+
+errand
+buy Farm
+buy Factory
+buy Cursor
+
+errand
+buy Shipment
+
+errand
+buy Grandma
+buy Shipment
 buy Grandma
 
 errand
@@ -1224,20 +1334,10 @@ buy Mine
 
 errand
 buy Farm
-
-errand
-buy Factory
-
-errand
-buy Cursor
-buy Shipment
-buy Grandma
-buy Shipment
-buy Grandma
-buy Mine
-buy Farm
 buy Factory
 buy Cursor
+
+errand
 buy Alchemy Lab
 
 errand
@@ -1246,12 +1346,10 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Factory
+buy Cursor
 
 errand
-buy Cursor
 buy Shipment
 
 errand
@@ -1260,22 +1358,14 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor
+buy Grandma
 
 errand
-buy Grandma
 buy Mine
 
 errand
 buy Farm
-
-errand
 buy Factory
-
-errand
 buy Cursor

@@ -2,7 +2,10 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.bunch_route import bunch_plan, save_bunched_route
+from scripts.errandify import (
+    errandify_plan,
+    save_errandified_route,
+)
 from scripts.extract_public_routes import extract_routes
 from src.config import available_categories, load_category, local_route_path
 from src.presentation import format_route, format_time
@@ -86,11 +89,11 @@ class RouteTests(unittest.TestCase):
                 self.assertEqual(plan.errand_duration, 1.0)
                 self.assertEqual(plan.purchase_click_rate, 5.0)
 
-    def test_buncher_preserves_order_and_keeps_sales_singleton(self):
+    def test_errandifier_preserves_order_and_keeps_sales_singleton(self):
         source = load_route(
             ONLINE_SINGLETONS / "hardcore_left_clicks_10_cps_lookas123.route"
         )
-        errands = bunch_plan(source)
+        errands = errandify_plan(source)
 
         self.assertEqual(
             tuple(action for errand in errands for action in errand),
@@ -106,13 +109,14 @@ class RouteTests(unittest.TestCase):
         )
 
         with tempfile.TemporaryDirectory() as directory:
-            path = save_bunched_route(
-                Path(directory) / "bunched.route",
+            path = save_errandified_route(
+                Path(directory) / "errandified.route",
                 source,
                 errands,
             )
             saved = load_route(path)
-        self.assertEqual(saved.max_errand_size, 20)
+        self.assertEqual(saved.algorithm, "contiguous_errand_dp")
+        self.assertEqual(saved.max_errand_size, 100)
 
     def test_categories_are_data_driven(self):
         self.assertEqual(

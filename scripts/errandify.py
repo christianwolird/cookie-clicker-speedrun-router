@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Experimentally regroup a fixed singleton route into errands."""
+"""Errandify a fixed singleton route with dynamic programming."""
 
 import argparse
 import sys
@@ -12,25 +12,25 @@ REPOSITORY = Path(__file__).resolve().parents[1]
 if str(REPOSITORY) not in sys.path:
     sys.path.insert(0, str(REPOSITORY))
 
-from src.algorithms.contiguous_errand_bunching import (
+from src.algorithms.contiguous_errand_dp import (
     ALGORITHM_NAME,
     DEFAULT_MAX_ERRAND_SIZE,
-    bunch_contiguous_actions,
+    partition_contiguous_actions,
 )
 from src.routes import initial_gamestate, load_route, write_route
 
 
-def bunch_plan(plan, max_errand_size=DEFAULT_MAX_ERRAND_SIZE):
+def errandify_plan(plan, max_errand_size=DEFAULT_MAX_ERRAND_SIZE):
     if plan.errands_enabled or any(len(errand) != 1 for errand in plan.errands):
         raise ValueError("Input route must contain singleton errands")
-    return bunch_contiguous_actions(
+    return partition_contiguous_actions(
         initial_gamestate(plan),
         plan.actions,
         max_errand_size,
     )
 
 
-def save_bunched_route(
+def save_errandified_route(
     destination,
     plan,
     errands,
@@ -38,7 +38,7 @@ def save_bunched_route(
     *,
     overwrite=False,
 ):
-    bunched = replace(
+    errandified = replace(
         plan,
         algorithm=ALGORITHM_NAME,
         errands_enabled=True,
@@ -48,8 +48,8 @@ def save_bunched_route(
     )
     return write_route(
         destination,
-        bunched,
-        comment="Contiguous purchases bunched by scripts/bunch_route.py.",
+        errandified,
+        comment="Contiguous purchases partitioned by scripts/errandify.py.",
         overwrite=overwrite,
     )
 
@@ -79,7 +79,8 @@ def _route_pairs(source, output):
 def main(argv=None):
     parser = argparse.ArgumentParser(
         description=(
-            "Greedily bunch a singleton route into contiguous age-scored errands"
+            "Errandify a singleton route into its fastest bounded contiguous "
+            "partition with dynamic programming"
         )
     )
     parser.add_argument("source", type=Path)
@@ -89,7 +90,7 @@ def main(argv=None):
         type=int,
         default=DEFAULT_MAX_ERRAND_SIZE,
         help=(
-            "maximum contiguous actions per candidate "
+            "maximum actions per errand "
             f"(default: {DEFAULT_MAX_ERRAND_SIZE})"
         ),
     )
@@ -117,8 +118,8 @@ def main(argv=None):
                 raise FileExistsError(f"Route already exists: {existing[0]}")
         for source, destination in pairs:
             plan = load_route(source)
-            errands = bunch_plan(plan, args.max_errand_size)
-            saved = save_bunched_route(
+            errands = errandify_plan(plan, args.max_errand_size)
+            saved = save_errandified_route(
                 destination,
                 plan,
                 errands,

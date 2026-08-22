@@ -71,10 +71,10 @@ does not address interactions across several errands.
 
 ## Fixed-route grouping lesson
 
-The experimental `bunch_route.py` compares nested contiguous prefixes as
-single errands. A large prefix may beat the first singleton's age score while
-still taking longer than buying the same prefix across several errands. The
-missing alternatives are partitions:
+The retired greedy experiment compared nested contiguous prefixes as single
+errands. A large prefix may beat the first singleton's age score while still
+taking longer than buying the same prefix across several errands. The missing
+alternatives are partitions:
 
 ```text
 {A, B, C}
@@ -83,9 +83,12 @@ missing alternatives are partitions:
 {A}, {B}, {C}
 ```
 
-For a fixed action order and a maximum errand length, those partitions can be
-optimized directly with prefix dynamic programming. That is separate from the
-harder problem of generating the purchase order itself.
+For a fixed action order and a maximum errand length, `errandify.py` evaluates
+those partitions with prefix dynamic programming. It saves the fastest
+gamestate and predecessor choice for each prefix, then reconstructs the fastest
+bounded contiguous partition. Measurements from the greedy and DP experiments
+are recorded in `errandification.md`. Fixed-order errandification remains
+separate from the harder problem of generating the purchase order itself.
 
 ## Next planning model
 

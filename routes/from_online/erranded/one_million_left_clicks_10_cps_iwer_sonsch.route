@@ -1,16 +1,16 @@
-# Contiguous purchases bunched by scripts/bunch_route.py.
+# Contiguous purchases partitioned by scripts/errandify.py.
 name = one_million: Iwer Sonsch (Left Clicks (10 cps))
 source = dha spreadsheet: one million row 4
 version = 2.031
 target = 1000000
 click_rate = 10
 initial_state = fresh
-algorithm = contiguous_errand_bunching
+algorithm = contiguous_errand_dp
 errand_duration = 1.0
 purchase_click_rate = 5.0
 upgrades_enabled = true
 errands_enabled = true
-max_errand_size = 20
+max_errand_size = 100
 
 errand
 buy Cursor
@@ -25,15 +25,11 @@ buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
 buy Grandma
 buy Cursor
 buy Grandma
-
-errand
 buy Cursor
 buy Grandma
 buy Grandma
@@ -45,10 +41,10 @@ errand
 buy Grandma
 buy Grandma
 upgrade Forwards from grandma
-buy Grandma
-buy Grandma
 
 errand
+buy Grandma
+buy Grandma
 buy Cursor
 buy Grandma
 
@@ -75,15 +71,13 @@ buy Grandma
 
 errand
 upgrade Steel-plated rolling pins
+
+errand
+buy Grandma
 buy Grandma
 
 errand
 buy Grandma
-
-errand
-buy Grandma
-
-errand
 buy Grandma
 
 errand
@@ -97,6 +91,8 @@ buy Farm
 
 errand
 upgrade Cheap hoes
+
+errand
 buy Farm
 
 errand
@@ -109,10 +105,12 @@ errand
 buy Cursor
 buy Grandma
 buy Cursor
+
+errand
 upgrade Ambidextrous
-buy Cursor
 
 errand
+buy Cursor
 buy Cursor
 buy Cursor
 buy Cursor
@@ -136,8 +134,6 @@ buy Farm
 
 errand
 buy Grandma
-
-errand
 buy Farm
 
 errand
@@ -157,25 +153,25 @@ buy Farm
 
 errand
 upgrade Farmer grandmas
-buy Grandma
+
+errand
 buy Grandma
 buy Grandma
 buy Grandma
 
 errand
 buy Grandma
-
-errand
 buy Grandma
 
 errand
 buy Grandma
+buy Grandma
+
+errand
 upgrade Lubricated dentures
 
 errand
 buy Grandma
-
-errand
 buy Grandma
 
 errand
@@ -198,9 +194,9 @@ buy Grandma
 
 errand
 upgrade Plastic mouse
+buy Cursor
 
 errand
-buy Cursor
 buy Farm
 
 errand
@@ -218,11 +214,15 @@ buy Grandma
 
 errand
 buy Mine
+buy Cursor
 
 errand
-buy Cursor
 buy Mine
+
+errand
 upgrade Sugar gas
+
+errand
 buy Mine
 
 errand
@@ -236,43 +236,29 @@ buy Mine
 
 errand
 buy Farm
+buy Cursor
 
 errand
-buy Cursor
 buy Mine
 
 errand
 buy Grandma
-
-errand
 buy Farm
 
 errand
 buy Grandma
-
-errand
 buy Farm
 
 errand
 buy Cursor
 buy Grandma
-
-errand
 buy Cursor
 buy Grandma
-
-errand
 buy Cursor
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor
 buy Cursor
-
-errand
 buy Cursor

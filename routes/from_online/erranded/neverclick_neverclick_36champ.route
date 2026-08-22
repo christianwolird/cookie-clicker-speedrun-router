@@ -1,10 +1,10 @@
 # Contiguous purchases partitioned by scripts/errandify.py.
-name = one_million: dha (Fast clicks (15 cps))
-source = dha spreadsheet: one million row 2
+name = neverclick: 36champ (Neverclick)
+source = dha spreadsheet: neverclick row 3
 version = 2.031
 target = 1000000
-click_rate = 15
-initial_state = fresh
+click_rate = 0
+initial_state = neverclick
 algorithm = contiguous_errand_dp
 errand_duration = 1.0
 purchase_click_rate = 5.0
@@ -14,77 +14,125 @@ max_errand_size = 100
 
 errand
 buy Cursor
+
+errand
+buy Cursor
+
+errand
+buy Cursor
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
 upgrade Reinforced index finger
+
+errand
+buy Cursor
+
+errand
+buy Cursor
+
+errand
+buy Cursor
+
+errand
+buy Cursor
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
+upgrade Forwards from grandma
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Cursor
+
+errand
+buy Cursor
 
 errand
 upgrade Carpal tunnel prevention cream
 
 errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Grandma
-buy Grandma
-buy Grandma
-buy Grandma
 
 errand
 buy Farm
 
 errand
 buy Grandma
-buy Grandma
-buy Grandma
-upgrade Forwards from grandma
 
 errand
 buy Grandma
-buy Grandma
-buy Grandma
-buy Grandma
-
-errand
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Farm
-
-errand
-buy Farm
-
-errand
-buy Farm
 
 errand
 upgrade Steel-plated rolling pins
 
 errand
 buy Grandma
-buy Grandma
+
+errand
 buy Grandma
 
 errand
 buy Grandma
-buy Grandma
+
+errand
 buy Grandma
 
 errand
-upgrade Ambidextrous
-
-errand
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
 buy Farm
+
+errand
+buy Cursor
+
+errand
 buy Farm
 
 errand
@@ -103,21 +151,28 @@ errand
 buy Farm
 
 errand
-buy Mine
-
-errand
 buy Grandma
-buy Grandma
-buy Grandma
-
-errand
-buy Mine
 
 errand
 buy Farm
 
 errand
+buy Mine
+
+errand
+buy Cursor
+
+errand
+buy Grandma
+
+errand
 buy Farm
+
+errand
+buy Mine
+
+errand
+buy Grandma
 
 errand
 buy Farm
@@ -142,12 +197,23 @@ upgrade Farmer grandmas
 
 errand
 buy Grandma
-buy Grandma
+
+errand
 buy Grandma
 
 errand
 buy Grandma
+
+errand
 buy Grandma
+
+errand
+buy Grandma
+
+errand
+buy Grandma
+
+errand
 buy Grandma
 
 errand
@@ -155,23 +221,18 @@ upgrade Lubricated dentures
 
 errand
 buy Grandma
-buy Grandma
-
-errand
-buy Grandma
-buy Grandma
 
 errand
 buy Grandma
 
 errand
-upgrade Plastic mouse
+buy Grandma
 
 errand
 buy Farm
 
 errand
-buy Farm
+buy Grandma
 
 errand
 buy Farm
@@ -180,20 +241,25 @@ errand
 buy Mine
 
 errand
-buy Mine
+buy Grandma
 
 errand
-buy Grandma
-buy Grandma
-buy Grandma
+buy Cursor
 
 errand
 buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Mine
+
+errand
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
+
+errand
+buy Farm
 
 errand
 buy Mine
@@ -214,35 +280,88 @@ errand
 buy Mine
 
 errand
-buy Mine
+buy Grandma
+
+errand
+buy Cursor
 
 errand
 buy Mine
 
 errand
 buy Farm
+
+errand
+buy Grandma
+
+errand
+buy Cursor
+
+errand
+buy Mine
+
+errand
 buy Farm
 
 errand
 buy Grandma
-buy Grandma
-buy Grandma
+
+errand
+buy Cursor
+
+errand
+buy Farm
 
 errand
 buy Grandma
+
+errand
+buy Cursor
+
+errand
+buy Farm
+
+errand
 buy Grandma
+
+errand
 buy Cursor
+
+errand
+buy Grandma
+
+errand
 buy Cursor
+
+errand
+upgrade Ambidextrous
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
+
+errand
 buy Cursor
-buy Cursor
-buy Cursor
-buy Cursor
+
+errand
 buy Cursor

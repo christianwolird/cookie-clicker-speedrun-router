@@ -1,16 +1,16 @@
-# Contiguous purchases bunched by scripts/bunch_route.py.
+# Contiguous purchases partitioned by scripts/errandify.py.
 name = hardcore: dha (Left clicks (10 cps))
 source = dha spreadsheet: hardcore row 3
 version = 1.0466
 target = 1000000000
 click_rate = 10
 initial_state = fresh
-algorithm = contiguous_errand_bunching
+algorithm = contiguous_errand_dp
 errand_duration = 1.0
 purchase_click_rate = 5.0
 upgrades_enabled = false
 errands_enabled = true
-max_errand_size = 20
+max_errand_size = 100
 
 errand
 buy Farm
@@ -32,43 +32,7 @@ buy Farm
 
 errand
 buy Grandma
-
-errand
 buy Cursor
-buy Farm
-
-errand
-buy Grandma
-buy Cursor
-buy Farm
-
-errand
-buy Grandma
-buy Cursor
-buy Farm
-
-errand
-buy Grandma
-buy Cursor
-buy Farm
-
-errand
-buy Factory
-
-errand
-buy Factory
-
-errand
-buy Mine
-
-errand
-buy Mine
-
-errand
-buy Mine
-
-errand
-buy Factory
 
 errand
 buy Farm
@@ -78,20 +42,58 @@ buy Grandma
 buy Cursor
 
 errand
+buy Farm
+
+errand
+buy Grandma
 buy Cursor
-buy Mine
-
-errand
-buy Factory
 
 errand
 buy Farm
 
 errand
 buy Grandma
-
-errand
 buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Farm
+buy Grandma
+buy Cursor
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Farm
+buy Grandma
+buy Cursor
+
+errand
 buy Mine
 
 errand
@@ -105,8 +107,6 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Grandma
 
 errand
@@ -120,9 +120,9 @@ buy Mine
 
 errand
 buy Farm
-
-errand
 buy Grandma
+
+errand
 buy Shipment
 
 errand
@@ -151,6 +151,8 @@ buy Alchemy Lab
 
 errand
 buy Factory
+
+errand
 buy Mine
 
 errand
@@ -185,6 +187,8 @@ buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
@@ -192,7 +196,25 @@ buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
+buy Mine
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
 buy Mine
 buy Factory
 buy Farm
@@ -202,50 +224,76 @@ buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Mine
 buy Factory
 buy Farm
+
+errand
 buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Mine
 buy Factory
 buy Farm
+
+errand
 buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Mine
 buy Factory
 buy Farm
+
+errand
 buy Portal
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
+
+errand
 buy Mine
+
+errand
 buy Factory
 buy Farm
+
+errand
 buy Portal
 
 errand
 buy Alchemy Lab
-buy Shipment
-buy Mine
-buy Factory
-buy Farm
-buy Portal
 
 errand
-buy Alchemy Lab
 buy Shipment
+
+errand
 buy Mine
+
+errand
 buy Factory
 buy Farm
+
+errand
 buy Portal
 
 errand
@@ -259,6 +307,8 @@ buy Time Machine
 
 errand
 buy Alchemy Lab
+
+errand
 buy Time Machine
 
 errand
@@ -269,6 +319,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -276,6 +328,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -283,6 +337,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -290,6 +346,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -297,6 +355,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -304,6 +364,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -311,6 +373,8 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Portal
 
 errand
@@ -318,30 +382,44 @@ buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand
 buy Alchemy Lab
+
+errand
 buy Shipment
 
 errand

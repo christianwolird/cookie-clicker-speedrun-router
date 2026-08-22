@@ -1,6 +1,7 @@
 import unittest
 
 from src.algorithms import available_algorithms, get_algorithm
+from src.algorithms.contiguous_errand_dp import partition_contiguous_actions
 from src.algorithms.errand_queueing import (
     ErrandPlan,
     best_errand,
@@ -11,6 +12,7 @@ from src.algorithms.errand_queueing import (
 )
 from src.algorithms.scoring import age_score
 from src.gamestate import Gamestate
+from src.routes import RouteAction
 
 
 class SyntheticState:
@@ -39,6 +41,30 @@ class AlgorithmTests(unittest.TestCase):
         slower = SyntheticState(13, 25)
 
         self.assertLess(age_score(ancestor, faster), age_score(ancestor, slower))
+
+    def test_dp_partition_can_start_with_one_multi_item_errand(self):
+        gamestate = Gamestate("1.0466")
+        gamestate.click_rate = 10
+        gamestate.upgrades_allowed = False
+        actions = (
+            RouteAction("buy", "Cursor"),
+            RouteAction("buy", "Farm"),
+        )
+
+        errands = partition_contiguous_actions(gamestate, actions)
+
+        self.assertEqual(errands, (actions,))
+
+    def test_dp_partition_respects_maximum_errand_size(self):
+        actions = tuple(RouteAction("buy", "Cursor") for _ in range(3))
+
+        errands = partition_contiguous_actions(
+            self.gamestate,
+            actions,
+            max_errand_size=1,
+        )
+
+        self.assertEqual(errands, tuple((action,) for action in actions))
 
     def test_price_horizon_and_aggregate_errand_price(self):
         self.gamestate.lifetime_cookies = 10_000

@@ -47,6 +47,34 @@ class CliTests(unittest.TestCase):
         self.assertIn("Current CpS", result.stdout)
         self.assertIn("Done!", result.stdout)
 
+    def test_fuzzy_astar_category_reports_search_stats(self):
+        result = subprocess.run(
+            [
+                sys.executable,
+                "make_route.py",
+                "--category",
+                "10k",
+                "--target",
+                "1000",
+                "--errand-queue-depth",
+                "20",
+                "--astar-feelers",
+                "3",
+                "--astar-max-expansions",
+                "100",
+                "--astar-progress-interval",
+                "0.000001",
+            ],
+            cwd=REPOSITORY,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+        self.assertIn("Algorithm: fuzzy_astar", result.stdout)
+        self.assertIn("Search progress", result.stdout)
+        self.assertIn("Search:", result.stdout)
+
 
 if __name__ == "__main__":
     unittest.main()

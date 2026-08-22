@@ -90,17 +90,30 @@ bounded contiguous partition. Measurements from the greedy and DP experiments
 are recorded in `errandification.md`. Fixed-order errandification remains
 separate from the harder problem of generating the purchase order itself.
 
-## Next planning model
+## Inventory best-first prototype
 
-The next router should evaluate selected multi-errand descendants. An upgrade-
-centered descendant may contain:
+`fuzzy_astar` now evaluates selected multi-errand paths. A vertex key contains
+building counts and purchased upgrades. A queue entry retains the full
+gamestate so its age and lifetime-cookie count remain available; when an entry
+is popped, it is stale if a younger gamestate has since reached the same
+inventory. Achievement differences are intentionally ignored for dominance.
 
-1. errands buying missing prerequisites;
-2. an errand containing the upgrade;
-3. later errands buying buildings strengthened by that upgrade.
+Each expansion asks the bounded errand queue for its top-k candidates, then
+relaxes their destination inventories. Priority is:
 
-The descendant must retain its actual internal timing so the score sees early
-production. Candidate generation should stay selective—upgrade-centered
-families, a horizon, dominance, and branch-and-bound are preferable to an
-unrestricted tree. This is the main architectural seam left intentionally open
-in `src/algorithms/`.
+```text
+state age + fuzzy scale × estimated remaining time
+```
+
+The remaining-time estimate is a greedy singleton route with zero shop delay.
+For a long target it runs only to the next power-of-ten lifetime-cookie
+checkpoint and adds a lazily computed tail shared by every state below that
+checkpoint. This avoids recomputing the expensive end of nearly identical
+fuzzy routes.
+
+The method remains empirical. Top-k candidate generation does not make the
+graph complete, the shared reference tail is approximate, and treating a
+fuzzy route at its full 1.0 scale is not mechanically guaranteed to be
+admissible. Feelers, inner queue pops, fuzzy scale, and maximum expansions
+expose the intended runtime/quality tradeoff. Mixed sell-and-buy edges are not
+generated yet.

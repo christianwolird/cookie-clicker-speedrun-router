@@ -107,10 +107,41 @@ python3 make_route.py \
 one purchase per errand. Neverclick uses this mode because pausing hand clicks
 has no cost when the click rate is zero.
 
-The active generator intentionally exposes only these two modes. Older cookie-
+`fuzzy_astar` is the experimental multi-errand planner. Inventories are graph
+vertices and candidate errands are outgoing edges. The search retains the
+youngest known gamestate for each inventory and lazily discards older queue
+entries when they are popped. Its priority is the state's age plus a scaled
+zero-purchase-delay singleton route to completion. To keep those fuzzy routes
+short, the heuristic uses geometric lifetime-cookie checkpoints (100, 1,000,
+10,000, and so on): it routes a state only to the next checkpoint, then adds
+one shared checkpoint-to-target tail.
+
+The outer feeler count, inner errand-search budget, heuristic scale, and hard
+expansion limit are explicit runtime/quality knobs:
+
+```sh
+python3 make_route.py \
+  --category 100k \
+  --astar-feelers 7 \
+  --errand-queue-depth 30 \
+  --astar-fuzzy-scale 1.0 \
+  --astar-max-expansions 10000
+```
+
+This is A*-style rather than a proof-producing A*: the top-k edge generator is
+incomplete, shared tails are approximate, and the fuzzy-scale assumption is
+empirical. Increasing feelers, queue depth, or the expansion limit trades
+runtime for a better chance of finding a faster route. Scales above 1 are
+accepted for experiments, though they weight the approximate heuristic more
+aggressively and may terminate before exploring useful detours. Older cookie-
 scoring and one-purchase age-scoring outputs remain under `routes/local/` as
 historical baselines, but their obsolete generator implementations have been
 removed.
+
+Long fuzzy-A* runs print a three-line progress snapshot every 30 seconds. It
+includes runtime, search counts, the incumbent finish, queue size, and the top
+three live frontier states with their incoming errands. Change the cadence
+with `--astar-progress-interval SECONDS`.
 
 ## Age scoring and its limit
 
@@ -240,13 +271,12 @@ extraction, experimental bunching, and both public CLIs.
 
 ## Next research direction
 
-The next goal is to plan across several errands instead of evaluating only one
-errand at a time. The important case is upgrade synergy: a useful descendant
-may include prerequisite buildings, the upgrade errand, and one or more later
-errands containing buildings whose value the upgrade increased.
+The experimental inventory search now plans across multiple errands, but its
+candidate generator still emits purchases only. The next major extension is to
+generate mixed sell-and-buy errands and measure stabilization as feeler count,
+inner queue depth, and fuzzy scale are widened. Achievement effects remain in
+the simulated gamestate but are deliberately excluded from inventory identity,
+matching the current youngest-age dominance approximation.
 
-A future search should therefore construct strategically selected multi-errand
-descendants, retain their real internal timing, and compare them without
-assuming overlapping purchase bundles are swappable. Banked-cookie and
-within-errand ordering refinements can wait until this larger planning problem
-is working.
+Profile results and prospective performance/search improvements are collected
+in [A* improvement ideas](docs/improvement_ideas.md).

@@ -9,6 +9,11 @@ from src.algorithms.errand_queueing import (
     errand_price,
     initial_errands,
     price_horizon,
+    promising_errands,
+)
+from src.algorithms.fuzzy_astar import (
+    SharedFuzzyHeuristic,
+    find_route as find_fuzzy_astar_route,
 )
 from src.algorithms.scoring import age_score
 from src.gamestate import Gamestate
@@ -32,7 +37,7 @@ class AlgorithmTests(unittest.TestCase):
     def test_only_active_generators_are_exposed(self):
         self.assertEqual(
             available_algorithms(),
-            ("errand_queueing", "singleton_errands"),
+            ("errand_queueing", "fuzzy_astar", "singleton_errands"),
         )
 
     def test_age_score_uses_elapsed_acquisition_time(self):
@@ -95,6 +100,50 @@ class AlgorithmTests(unittest.TestCase):
             effective_cost(self.gamestate, candidate.gamestate),
             candidate.score,
         )
+
+    def test_queue_returns_requested_number_of_promising_errands(self):
+        candidates = promising_errands(
+            self.gamestate,
+            10_000,
+            limit=3,
+            queue_pops=20,
+        )
+
+        self.assertEqual(len(candidates), 3)
+        self.assertEqual(
+            list(map(lambda candidate: candidate.score, candidates)),
+            sorted(candidate.score for candidate in candidates),
+        )
+
+    def test_fuzzy_astar_reaches_target_and_reports_search_stats(self):
+        progress_updates = []
+        result = find_fuzzy_astar_route(
+            self.gamestate,
+            1_000,
+            feelers=3,
+            queue_pops=20,
+            fuzzy_scale=1.05,
+            max_expansions=100,
+            on_progress=progress_updates.append,
+            progress_interval=0.000001,
+        )
+
+        self.assertEqual(result.final_gamestate.lifetime_cookies, 1_000)
+        self.assertGreater(result.search_stats.expanded, 0)
+        self.assertGreaterEqual(result.search_stats.elapsed_seconds, 0)
+        self.assertTrue(result.errands)
+        self.assertTrue(progress_updates)
+        self.assertLessEqual(len(progress_updates[-1].frontier), 3)
+
+    def test_fuzzy_heuristic_shares_geometric_checkpoint_tail(self):
+        heuristic = SharedFuzzyHeuristic(self.gamestate, 20_000)
+
+        remaining = heuristic(self.gamestate)
+
+        self.assertGreater(remaining, 0)
+        self.assertEqual(heuristic.checkpoints, (100, 1_000, 10_000))
+        self.assertEqual(set(heuristic.shared_tails), {100})
+        self.assertEqual(heuristic.route_evaluations, 2)
 
     def test_singleton_mode_never_groups(self):
         result = get_algorithm("singleton_errands")(

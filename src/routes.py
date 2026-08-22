@@ -23,6 +23,9 @@ COMMON_METADATA_FIELDS = {
     "errands_enabled",
 }
 OPTIONAL_METADATA_FIELDS = {"errand_queue_depth", "max_errand_size"}
+OPTIONAL_METADATA_FIELDS.update(
+    {"astar_feelers", "astar_fuzzy_scale", "astar_max_expansions"}
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -54,6 +57,9 @@ class RoutePlan:
     errands: tuple[tuple[RouteAction, ...], ...]
     errand_queue_depth: int | None = None
     max_errand_size: int | None = None
+    astar_feelers: int | None = None
+    astar_fuzzy_scale: float | None = None
+    astar_max_expansions: int | None = None
 
     @property
     def actions(self):
@@ -173,6 +179,21 @@ def load_route(path):
         if "max_errand_size" in metadata
         else None
     )
+    astar_feelers = (
+        int(metadata["astar_feelers"])
+        if "astar_feelers" in metadata
+        else None
+    )
+    astar_fuzzy_scale = (
+        float(metadata["astar_fuzzy_scale"])
+        if "astar_fuzzy_scale" in metadata
+        else None
+    )
+    astar_max_expansions = (
+        int(metadata["astar_max_expansions"])
+        if "astar_max_expansions" in metadata
+        else None
+    )
 
     if target <= 0:
         raise ValueError(f"{path}: target must be greater than zero")
@@ -196,6 +217,14 @@ def load_route(path):
         raise ValueError(
             f"{path}: route cannot have both errand search parameters"
         )
+    if astar_feelers is not None and astar_feelers <= 0:
+        raise ValueError(f"{path}: astar_feelers must be greater than zero")
+    if astar_fuzzy_scale is not None and astar_fuzzy_scale < 0:
+        raise ValueError(f"{path}: astar_fuzzy_scale cannot be negative")
+    if astar_max_expansions is not None and astar_max_expansions <= 0:
+        raise ValueError(
+            f"{path}: astar_max_expansions must be greater than zero"
+        )
     if not errands_enabled and any(len(errand) != 1 for errand in errands):
         raise ValueError(
             f"{path}: disabled errands require singleton route groups"
@@ -216,6 +245,9 @@ def load_route(path):
         errands=tuple(errands),
         errand_queue_depth=errand_queue_depth,
         max_errand_size=max_errand_size,
+        astar_feelers=astar_feelers,
+        astar_fuzzy_scale=astar_fuzzy_scale,
+        astar_max_expansions=astar_max_expansions,
     )
 
 
@@ -258,6 +290,12 @@ def write_route(
         lines.append(f"errand_queue_depth = {plan.errand_queue_depth}")
     if plan.max_errand_size is not None:
         lines.append(f"max_errand_size = {plan.max_errand_size}")
+    if plan.astar_feelers is not None:
+        lines.append(f"astar_feelers = {plan.astar_feelers}")
+    if plan.astar_fuzzy_scale is not None:
+        lines.append(f"astar_fuzzy_scale = {plan.astar_fuzzy_scale:g}")
+    if plan.astar_max_expansions is not None:
+        lines.append(f"astar_max_expansions = {plan.astar_max_expansions}")
     lines.append("")
 
     for errand in plan.errands:

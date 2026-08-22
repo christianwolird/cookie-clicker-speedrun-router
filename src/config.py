@@ -3,7 +3,11 @@
 from pathlib import Path
 
 from .algorithms import DEFAULT_ALGORITHM, available_algorithms
-from .algorithms.errand_queueing import DEFAULT_QUEUE_POPS
+from .algorithms.errand_queueing import DEFAULT_FEELERS, DEFAULT_QUEUE_POPS
+from .algorithms.fuzzy_astar import (
+    DEFAULT_FUZZY_SCALE,
+    DEFAULT_MAX_EXPANSIONS,
+)
 from .data import DEFAULT_VERSION, SUPPORTED_VERSIONS
 from .gamestate import (
     DEFAULT_CLICK_RATE,
@@ -23,6 +27,9 @@ DEFAULT_SETTINGS = {
     "errand_duration": DEFAULT_ERRAND_DURATION,
     "purchase_click_rate": DEFAULT_PURCHASE_CLICK_RATE,
     "errand_queue_depth": DEFAULT_QUEUE_POPS,
+    "astar_feelers": DEFAULT_FEELERS,
+    "astar_fuzzy_scale": DEFAULT_FUZZY_SCALE,
+    "astar_max_expansions": DEFAULT_MAX_EXPANSIONS,
     "price_horizon_multiplier": 2.0,
     "initial_state": "fresh",
     "upgrades_enabled": True,
@@ -46,6 +53,9 @@ CATEGORY_VALUE_PARSERS = {
     "errand_duration": float,
     "purchase_click_rate": float,
     "errand_queue_depth": int,
+    "astar_feelers": int,
+    "astar_fuzzy_scale": float,
+    "astar_max_expansions": int,
     "price_horizon_multiplier": float,
     "initial_state": str,
     "upgrades_enabled": _boolean,
@@ -99,6 +109,9 @@ def validate_settings(settings, source="settings"):
         ("errand_duration", 0, True),
         ("purchase_click_rate", 0, False),
         ("errand_queue_depth", 0, False),
+        ("astar_feelers", 0, False),
+        ("astar_fuzzy_scale", 0, True),
+        ("astar_max_expansions", 0, False),
         ("price_horizon_multiplier", 0, False),
     )
     for key, lower, inclusive in bounds:
@@ -107,8 +120,6 @@ def validate_settings(settings, source="settings"):
         if not valid:
             comparison = "at least" if inclusive else "greater than"
             raise ValueError(f"{source}: {key} must be {comparison} {lower}")
-
-
 def local_route_path(destination):
     path = Path(destination)
     if path.suffix != ".route":

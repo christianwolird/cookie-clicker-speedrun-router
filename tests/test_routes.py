@@ -121,9 +121,19 @@ class RouteTests(unittest.TestCase):
     def test_categories_are_data_driven(self):
         self.assertEqual(
             set(available_categories()),
-            {"one_million", "neverclick", "hardcore", "heavenly_chip"},
+            {
+                "10k",
+                "100k",
+                "one_million",
+                "neverclick",
+                "hardcore",
+                "heavenly_chip",
+            },
         )
         self.assertEqual(load_category("neverclick")["algorithm"], "singleton_errands")
+        self.assertEqual(load_category("10k")["algorithm"], "fuzzy_astar")
+        self.assertEqual(load_category("10k")["astar_fuzzy_scale"], 1.0)
+        self.assertEqual(load_category("100k")["target"], 100_000)
         self.assertFalse(load_category("hardcore")["upgrades_enabled"])
 
     def test_output_format_has_one_done_row(self):

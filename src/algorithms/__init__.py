@@ -1,4 +1,4 @@
-from . import errand_queueing
+from . import errand_queueing, fuzzy_astar
 
 
 DEFAULT_ALGORITHM = "errand_queueing"
@@ -6,6 +6,7 @@ DEFAULT_ALGORITHM = "errand_queueing"
 
 ALGORITHMS = {
     "errand_queueing": errand_queueing.find_route,
+    "fuzzy_astar": fuzzy_astar.find_route,
     "singleton_errands": errand_queueing.find_singleton_route,
 }
 

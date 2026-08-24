@@ -1,0 +1,176 @@
+# Grouped by tools/errandifier.py.
+name = one_million: Lily2_ (Ultra clicks (200 cps))
+source = dha spreadsheet: one million row 5
+category = one_million
+player_profile = default_200_cps
+version = 2.031
+target = 1000000
+click_rate = 200
+initial_state = fresh
+algorithm = errandifier
+upgrades_enabled = true
+for_quickster = false
+errand_delay = 0.8
+item_delay = 0.2
+max_errand_size = 100
+
+errand
+buy Cursor
+upgrade Reinforced index finger
+
+errand
+upgrade Carpal tunnel prevention cream
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Ambidextrous
+
+errand
+buy Cursor
+buy Cursor
+buy Grandma
+buy Cursor
+buy Grandma
+buy Cursor
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+upgrade Forwards from grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Cursor
+buy Grandma
+buy Farm
+upgrade Steel-plated rolling pins
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Cursor
+buy Grandma
+buy Farm
+
+errand
+upgrade Plastic mouse
+
+errand
+buy Cursor
+buy Grandma
+buy Mine
+buy Farm
+
+errand
+upgrade Cheap hoes
+buy Farm
+buy Farm
+buy Farm
+
+errand
+buy Farm
+buy Farm
+buy Cursor
+buy Grandma
+buy Mine
+buy Farm
+
+errand
+upgrade Fertilizer
+
+errand
+buy Farm
+buy Farm
+buy Farm
+
+errand
+buy Farm
+buy Farm
+buy Mine
+
+errand
+upgrade Farmer grandmas
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+
+errand
+buy Grandma
+upgrade Lubricated dentures
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Thousand fingers
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+
+errand
+buy Cursor
+buy Grandma
+buy Mine
+buy Farm
+buy Cursor
+buy Grandma
+buy Mine
+
+errand
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+buy Cursor
+buy Farm
+buy Grandma
+
+errand
+upgrade Sugar gas
+buy Mine
+
+errand
+buy Mine
+buy Mine
+buy Cursor
+buy Grandma
+buy Cursor

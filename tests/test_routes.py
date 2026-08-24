@@ -2,14 +2,20 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from scripts.errandify import (
+from scripts.extract_online_routes import extract_routes
+from tools.errandifier import (
+    _default_output,
     errandify_plan,
     save_errandified_route,
 )
-from scripts.extract_public_routes import extract_routes
-from src.config import available_categories, load_category, local_route_path
-from src.presentation import format_route, format_time
-from src.routes import (
+from ccsr.config import (
+    available_categories,
+    available_player_profiles,
+    create_initial_gamestate,
+    load_category,
+    load_player_profile,
+)
+from ccsr.routes import (
     RouteAction,
     RoutePlan,
     execute_route,
@@ -19,145 +25,197 @@ from src.routes import (
 
 
 REPOSITORY = Path(__file__).resolve().parents[1]
-ONLINE_SINGLETONS = REPOSITORY / "routes" / "from_online" / "singletons"
+ONLINE_QUICKSTER = REPOSITORY / "routes/online/quickster_originals"
+ONLINE_ERRANDED = REPOSITORY / "routes/online/erranded"
 
 
 class RouteTests(unittest.TestCase):
-    def test_all_stored_routes_parse_and_reach_their_targets(self):
+    def test_errandifier_defaults_to_erranded_directory(self):
+        source = ONLINE_QUICKSTER / "hardcore_left_clicks_10_cps_dha.route"
+
+        self.assertEqual(_default_output(ONLINE_QUICKSTER), ONLINE_ERRANDED)
+        self.assertEqual(_default_output(source), ONLINE_ERRANDED / source.name)
+
+    def test_all_stored_routes_parse_and_reach_targets(self):
         paths = sorted((REPOSITORY / "routes").glob("**/*.route"))
-        self.assertTrue(paths)
+        self.assertEqual(len(tuple(ONLINE_QUICKSTER.glob("*.route"))), 9)
+        self.assertGreaterEqual(len(paths), 9)
 
         for path in paths:
             with self.subTest(path=path):
                 plan = load_route(path)
                 result = execute_route(plan)
                 self.assertEqual(result.final_gamestate.lifetime_cookies, plan.target)
+                if path.parent == ONLINE_QUICKSTER:
+                    self.assertTrue(plan.for_quickster)
+                elif path.parent == ONLINE_ERRANDED:
+                    self.assertFalse(plan.for_quickster)
+                    self.assertEqual(plan.max_errand_size, 100)
 
-    def test_route_round_trip_preserves_metadata_and_errands(self):
+        self.assertEqual(len(tuple(ONLINE_ERRANDED.glob("*.route"))), 8)
+        neverclick = ONLINE_ERRANDED / "neverclick_neverclick_36champ.route"
+        self.assertFalse(neverclick.exists())
+
+    def test_route_round_trip_preserves_metadata(self):
         source = load_route(
-            ONLINE_SINGLETONS / "one_million_fast_clicks_15_cps_dha.route"
+            ONLINE_QUICKSTER / "one_million_fast_clicks_15_cps_dha.route"
         )
         with tempfile.TemporaryDirectory() as directory:
             path = write_route(
                 Path(directory) / "copy.route",
                 source,
-                comment="test",
                 explicit_errands=False,
             )
             loaded = load_route(path)
 
         self.assertEqual(loaded, source)
 
-    def test_replay_uses_recorded_errand_grouping(self):
+    def test_online_routes_record_player_profiles_and_omit_delays(self):
+        expected = {
+            "neverclick_neverclick_36champ.route": "default_neverclick",
+            "one_million_left_clicks_10_cps_iwer_sonsch.route": (
+                "default_10_cps"
+            ),
+            "one_million_fast_clicks_15_cps_dha.route": "default_15_cps",
+            "one_million_ultra_clicks_200_cps_lily2.route": (
+                "default_200_cps"
+            ),
+        }
+        for path in ONLINE_QUICKSTER.glob("*.route"):
+            plan = load_route(path)
+            contents = path.read_text()
+            self.assertTrue(plan.for_quickster)
+            self.assertNotIn("errand_delay", contents)
+            self.assertNotIn("item_delay", contents)
+            if path.name in expected:
+                self.assertEqual(plan.player_profile, expected[path.name])
+
+    def test_online_extractor_reproduces_canonical_routes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            output = Path(directory)
+            paths = extract_routes(
+                REPOSITORY / "routes/online/spreadsheets",
+                output,
+            )
+
+            self.assertEqual(len(paths), 9)
+            for path in paths:
+                self.assertEqual(
+                    path.read_text(),
+                    (ONLINE_QUICKSTER / path.name).read_text(),
+                )
+
+    def test_errandifier_uses_selected_player_profile(self):
+        source = load_route(
+            ONLINE_QUICKSTER / "hardcore_left_clicks_10_cps_lookas123.route"
+        )
+        casual = load_player_profile("casual")
+        errands = errandify_plan(source, casual)
+
+        self.assertTrue(any(len(errand) > 1 for errand in errands))
+        with tempfile.TemporaryDirectory() as directory:
+            path = save_errandified_route(
+                Path(directory) / "errandified.route",
+                source,
+                casual,
+                errands,
+            )
+            saved = load_route(path)
+
+        self.assertFalse(saved.for_quickster)
+        self.assertEqual(saved.algorithm, "errandifier")
+        self.assertEqual(saved.player_profile, "casual")
+        self.assertEqual(saved.errand_delay, 1.0)
+        self.assertEqual(saved.item_delay, 0.3)
+
+    def test_human_route_replay_can_override_player(self):
         plan = RoutePlan(
             name="grouped",
             source="test",
+            category="10k",
+            player_profile="default_10_cps",
             version="2.031",
             target=1_000,
             click_rate=10,
             initial_state="fresh",
             algorithm="test",
-            errand_duration=1,
-            purchase_click_rate=5,
             upgrades_enabled=True,
-            errands_enabled=True,
+            for_quickster=False,
             errands=(
                 (
                     RouteAction("buy", "Cursor"),
                     RouteAction("upgrade", "Reinforced index finger"),
                 ),
             ),
+            errand_delay=0.8,
+            item_delay=0.2,
+        )
+        casual = load_player_profile("casual")
+
+        default_result = execute_route(plan)
+        casual_result = execute_route(plan, player=casual)
+
+        self.assertNotEqual(
+            default_result.final_gamestate.age,
+            casual_result.final_gamestate.age,
         )
 
-        result = execute_route(plan)
+    def test_category_and_player_configuration_are_separate(self):
+        category = load_category("one_million")
+        casual = load_player_profile("casual")
+        gamestate = create_initial_gamestate(category, casual)
 
-        self.assertEqual(len(result.errands[0]), 2)
-        self.assertAlmostEqual(result.final_gamestate.cookies_per_click(), 2)
-
-    def test_online_extractor_produces_canonical_singletons(self):
-        with tempfile.TemporaryDirectory() as directory:
-            paths = extract_routes(
-                REPOSITORY / "routes" / "dha_spreadsheets",
-                directory,
-            )
-
-            self.assertEqual(len(paths), 9)
-            for path in paths:
-                plan = load_route(path)
-                self.assertFalse(plan.errands_enabled)
-                self.assertTrue(all(len(errand) == 1 for errand in plan.errands))
-                self.assertEqual(plan.errand_duration, 1.0)
-                self.assertEqual(plan.purchase_click_rate, 5.0)
-
-    def test_errandifier_preserves_order_and_keeps_sales_singleton(self):
-        source = load_route(
-            ONLINE_SINGLETONS / "hardcore_left_clicks_10_cps_lookas123.route"
-        )
-        errands = errandify_plan(source)
-
-        self.assertEqual(
-            tuple(action for errand in errands for action in errand),
-            source.actions,
-        )
-        self.assertTrue(any(len(errand) > 1 for errand in errands))
-        self.assertTrue(
-            all(
-                len(errand) == 1
-                for errand in errands
-                if any(action.operation == "sell" for action in errand)
-            )
-        )
-
-        with tempfile.TemporaryDirectory() as directory:
-            path = save_errandified_route(
-                Path(directory) / "errandified.route",
-                source,
-                errands,
-            )
-            saved = load_route(path)
-        self.assertEqual(saved.algorithm, "contiguous_errand_dp")
-        self.assertEqual(saved.max_errand_size, 100)
-
-    def test_categories_are_data_driven(self):
         self.assertEqual(
             set(available_categories()),
-            {
-                "10k",
-                "100k",
-                "one_million",
-                "neverclick",
-                "hardcore",
-                "heavenly_chip",
-            },
+            {"10k", "100k", "one_million", "neverclick", "hardcore", "heavenly_chip"},
         )
-        self.assertEqual(load_category("neverclick")["algorithm"], "singleton_errands")
-        self.assertEqual(load_category("10k")["algorithm"], "fuzzy_astar")
-        self.assertEqual(
-            load_category("10k")["astar_inner_search"],
-            "bounded_beam",
-        )
-        self.assertEqual(
-            load_category("10k")["astar_heuristic"],
-            "measuring_stick",
-        )
-        self.assertEqual(load_category("10k")["astar_fuzzy_scale"], 1.0)
-        self.assertEqual(load_category("100k")["target"], 100_000)
-        self.assertFalse(load_category("hardcore")["upgrades_enabled"])
+        self.assertEqual(gamestate.click_rate, 7)
+        self.assertEqual(gamestate.errand_delay, 1.0)
+        self.assertEqual(gamestate.item_delay, 0.3)
 
-    def test_output_format_has_one_done_row(self):
-        plan = load_route(
-            ONLINE_SINGLETONS / "neverclick_neverclick_36champ.route"
-        )
-        result = execute_route(plan)
-        output = format_route(result, plan.target, include_purchases=False)
+    def test_method_and_default_player_profiles(self):
+        profiles = set(available_player_profiles())
+        self.assertNotIn("amateur", profiles)
+        self.assertNotIn("veteran", profiles)
+        self.assertNotIn("fast_click", profiles)
+        self.assertFalse(any(name.startswith("community_") for name in profiles))
 
-        self.assertEqual(format_time(59.96), "1:00.0")
-        self.assertEqual(output.count("Cookies produced"), 1)
-        self.assertIn("Done!", output.splitlines()[-1])
+        method_rates = {
+            "scroll_click": 50,
+            "strum_click": 25,
+            "mouse_move_click": 100,
+        }
+        for name, click_rate in method_rates.items():
+            with self.subTest(name=name):
+                profile = load_player_profile(name)
+                self.assertEqual(profile.click_rate, click_rate)
+                self.assertEqual(profile.errand_delay, 0.8)
+                self.assertEqual(profile.item_delay, 0.2)
 
-    def test_local_route_destination_is_restricted(self):
-        with self.assertRaisesRegex(ValueError, "routes/local"):
-            local_route_path("routes/from_online/not-local.route")
+        for name in (
+            "default_10_cps",
+            "default_15_cps",
+            "default_200_cps",
+        ):
+            with self.subTest(name=name):
+                self.assertEqual(load_player_profile(name).item_delay, 0.2)
+
+        default = load_player_profile("default_10_cps")
+        self.assertEqual(default.click_rate, 10)
+        self.assertEqual(default.errand_delay, 0.8)
+        self.assertEqual(default.item_delay, 0.2)
+
+        neverclick = load_player_profile("default_neverclick")
+        self.assertEqual(neverclick.errand_delay, 0.0)
+        self.assertEqual(neverclick.item_delay, 0.0)
+
+    def test_neverclick_category_disables_profile_clicking(self):
+        category = load_category("neverclick")
+        fast = load_player_profile("mouse_move_click")
+
+        gamestate = create_initial_gamestate(category, fast)
+
+        self.assertEqual(gamestate.click_rate, 0)
 
 
 if __name__ == "__main__":

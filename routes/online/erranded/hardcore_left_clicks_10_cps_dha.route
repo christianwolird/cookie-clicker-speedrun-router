@@ -1,0 +1,442 @@
+# Grouped by tools/errandifier.py.
+name = hardcore: dha (Left clicks (10 cps))
+source = dha spreadsheet: hardcore row 3
+category = hardcore
+player_profile = default_10_cps
+version = 1.0466
+target = 1000000000
+click_rate = 10
+initial_state = fresh
+algorithm = errandifier
+upgrades_enabled = false
+for_quickster = false
+errand_delay = 0.8
+item_delay = 0.2
+max_errand_size = 100
+
+errand
+buy Farm
+
+errand
+buy Farm
+
+errand
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+buy Cursor
+buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Farm
+buy Grandma
+buy Cursor
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Farm
+buy Grandma
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Farm
+buy Grandma
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Farm
+buy Grandma
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Alchemy Lab
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Time Machine
+
+errand
+buy Time Machine
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+
+errand
+buy Time Machine
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Shipment
+
+errand
+buy Shipment
+
+errand
+buy Shipment

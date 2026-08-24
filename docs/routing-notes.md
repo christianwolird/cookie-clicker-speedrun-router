@@ -1,41 +1,45 @@
 # Routing research notes
 
 This file records the durable conclusions behind the current algorithm and the
-next planning work. Historical timing tables are kept as `.route` files rather
-than duplicated here.
+next planning work. Historical timing measurements remain in the research
+documents even when the obsolete routes that produced them are removed.
 
 ## Local purchase ordering
 
-Suppose two independent purchases have prices and CpS gains `(A, a)` and
-`(B, b)`, and current CpS is `c`. Buying A first is faster than buying B first
-when:
+Suppose two exchangeable errands have acquisition times and resulting CpS
+values `(A, a)` and `(B, b)`, and their common ancestor has CpS `c`. Acquisition
+time is the time to save from a zero bank and execute the errand. Doing A first
+takes:
 
 ```text
-A/c + B/(c+a) < B/c + A/(c+b)
+A + B × c/a
 ```
 
-Rearranging gives:
+Doing B first takes `B + A × c/b`. A-first is faster exactly when:
 
 ```text
-A × (a+c) / a < B × (b+c) / b
+A + B × c/a < B + A × c/b
+A × (1 - c/b) < B × (1 - c/a)
+A × a/(a-c) < B × b/(b-c)
 ```
 
 This motivates the local score:
 
 ```text
-score(A, a) = A × (a+c) / a
+score(A, a) = A × a/(a-c)
 ```
 
-For a descendant containing several errands, sticker price is the wrong `A`.
-Its effective price is the time actually spent reaching that descendant,
-denominated at the ancestor's CpS:
+For a generated descendant, `A` is measured directly from gamestate ages:
 
 ```text
-A = (descendant age - ancestor age) × ancestor CpS
+A = descendant age - ancestor age
 ```
 
-This age-based cost sees purchase downtime and any production gained between
-errands. Cookie cost does neither.
+The previous implementation multiplied `A` by the common ancestor CpS. That
+factor is identical for every child being compared, so omitting it preserves
+their ordering and leaves the score in units of time. Acquisition time sees
+purchase downtime and any production gained between errands; sticker price
+does neither.
 
 ## Preconditions that matter
 
@@ -59,11 +63,11 @@ intermediate states much more valuable.
 The current generator searches unordered single-errand children. It starts
 with each building and each upgrade core, then uses an age-score priority queue
 to add purchases. Aggregate errand price is bounded by the moving price
-horizon. Effective cost supplies a safe lower bound for pruning because:
+horizon. Acquisition time supplies a safe lower bound for pruning because:
 
 ```text
-age score = effective cost × descendant CpS / CpS gain
-age score >= effective cost
+age score = acquisition time × descendant CpS / CpS gain
+age score >= acquisition time
 ```
 
 This is a practical way to search the combinatorial space of one errand, but it
@@ -83,43 +87,45 @@ alternatives are partitions:
 {A}, {B}, {C}
 ```
 
-For a fixed action order and a maximum errand length, `errandify.py` evaluates
+For a fixed action order and a maximum errand length, the Errandifier evaluates
 those partitions with prefix dynamic programming. It saves the fastest
 gamestate and predecessor choice for each prefix, then reconstructs the fastest
-bounded contiguous partition. Measurements from the greedy and DP experiments
-are recorded in `errandification.md`. Fixed-order errandification remains
-separate from the harder problem of generating the purchase order itself.
+bounded contiguous partition. The model and current comparison measurements
+are recorded in
+[`erranding_and_quicksters.md`](erranding_and_quicksters.md). Fixed-order
+errandification remains separate from the harder problem of generating the
+purchase order itself.
 
-## Inventory best-first prototype
+## Beam search
 
-`fuzzy_astar` now evaluates selected multi-errand paths. A vertex key contains
-building counts and purchased upgrades. A queue entry retains the full
+The Beam Search router evaluates selected multi-errand paths. A vertex key
+contains building counts and purchased upgrades. A queue entry retains the full
 gamestate so its age and lifetime-cookie count remain available; when an entry
 is popped, it is stale if a younger gamestate has since reached the same
-inventory. Achievement differences are intentionally ignored for dominance.
+inventory. Lifetime-cookie differences, including their effect on a kitten's
+curve-derived milk multiplier, are intentionally ignored for dominance.
 
 Each expansion asks the bounded errand queue for its top-k candidates, then
 relaxes their destination inventories. Priority is:
 
 ```text
-state age + fuzzy scale × estimated remaining time
+state age + heuristic scale × estimated remaining time
 ```
 
-The default remaining-time estimate generates one greedy singleton route with
-zero shop delay from the initial state to the target. Every searched state maps
-its lifetime cookies onto that route and interpolates the remaining duration.
-The alternative `individual` mode recalculates a complete zero-delay fuzzy
-route from the actual state.
+The remaining-time estimate uses a specified route as its Ruler. If none is
+specified, the tool generates a temporary Greedy route using the same category,
+player profile, and Quickster setting. Every searched state interpolates its
+remaining duration from the Ruler's lifetime-cookie-to-age map. The default
+Ruler scale is 0.9.
 
-The default inner errand generator is a bounded best-first beam. Its width is
-the requested feeler count, and a separate roster retains the best popped
-errands. Before the roster is full its cutoff is infinite. Afterward the search
+The inner errand generator uses a bounded best-first queue. Its beam width is
+also the number of outgoing errands, and a separate roster retains the best
+popped errands. Before the roster is full its cutoff is infinite. Afterward the search
 stops when the best queued score is strictly worse than the roster's worst
-score. The older fixed-pop inner queue remains selectable.
+score.
 
-The method remains empirical. Beam candidate generation does not make the graph
-complete, measuring-stick interpolation is approximate, and treating it at its
-full 1.0 scale is not mechanically guaranteed to be admissible. Beam width,
-inner method, heuristic method and scale, and maximum expansions expose the
-intended runtime/quality tradeoff. Mixed sell-and-buy edges are not generated
-yet.
+The method remains empirical. Candidate generation does not make the graph
+complete, and scaling a feasible Ruler route does not mechanically guarantee
+an admissible estimate. Beam width, Ruler scale, and maximum expansions expose
+the intended runtime/quality tradeoff. Mixed sell-and-buy edges are not
+generated yet.

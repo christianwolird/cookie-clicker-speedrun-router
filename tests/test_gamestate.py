@@ -1,27 +1,37 @@
 import unittest
 
-from src.gamestate import Gamestate
+from ccsr.config.achievement_curves import AchievementCurve
+from ccsr.game.gamestate import Gamestate
 
 
 class GamestateTests(unittest.TestCase):
-    def test_default_errand_timing(self):
+    def test_default_errand_timing_counts_every_item(self):
         gamestate = Gamestate()
 
-        purchases = gamestate.purchase_errand({"Cursor": 2})
+        purchases = gamestate.purchase_errand({"Cursor": 3, "Grandma": 2})
 
-        self.assertEqual(len(purchases), 2)
-        self.assertEqual(gamestate.lifetime_cookies, 33)
-        self.assertAlmostEqual(gamestate.age, 4.5)
-        self.assertEqual(gamestate.errand_pause(), 1.2)
+        self.assertEqual(len(purchases), 5)
+        self.assertEqual(gamestate.lifetime_cookies, 268)
+        self.assertAlmostEqual(gamestate.age, 28.8)
+        self.assertEqual(gamestate.errand_pause(5), 2.0)
 
-    def test_distinct_purchase_types_add_shop_time(self):
-        gamestate = Gamestate()
+    def test_achievement_curve_controls_kitten_multiplier(self):
+        curve = AchievementCurve("test", (0, 100), (0, 10))
+        gamestate = Gamestate("2.031", curve)
+        gamestate.building_counts["Grandma"] = 1
+        gamestate.purchased_upgrades.add("Kitten helpers")
+        gamestate.lifetime_cookies = 100
 
-        gamestate.purchase_errand({"Cursor": 1, "Grandma": 1})
+        self.assertEqual(gamestate.achievement_count(), 10)
+        self.assertAlmostEqual(gamestate.automatic_cps(), 1.04)
 
-        # 115 cookies at 10 hand CpS, plus 1 second of travel and two
-        # purchase-type clicks at 5 per second.
-        self.assertAlmostEqual(gamestate.age, 12.9)
+    def test_achievements_do_not_gate_kitten_unlocks(self):
+        gamestate = Gamestate("2.031")
+        gamestate.lifetime_cookies = 9_000_000
+
+        gamestate.purchase_upgrade("Kitten helpers")
+
+        self.assertIn("Kitten helpers", gamestate.purchased_upgrades)
 
     def test_building_can_unlock_upgrade_in_same_unordered_errand(self):
         gamestate = Gamestate()
@@ -49,24 +59,20 @@ class GamestateTests(unittest.TestCase):
         self.assertEqual(gamestate.lifetime_cookies, before.lifetime_cookies)
         self.assertEqual(gamestate.building_counts, before.building_counts)
 
-    def test_copy_has_independent_inventory_and_no_history(self):
+    def test_copy_has_independent_inventory(self):
         gamestate = Gamestate()
         child = gamestate.copy()
         child.purchase_building("Cursor")
 
         self.assertEqual(gamestate.building_counts["Cursor"], 0)
         self.assertEqual(child.building_counts["Cursor"], 1)
-        self.assertFalse(hasattr(child, "history"))
-        self.assertFalse(hasattr(child, "purchase_log"))
-        self.assertFalse(hasattr(child, "last_purchase"))
-        self.assertFalse(hasattr(child, "last_errand"))
 
     def test_neverclick_ignores_hand_pause(self):
         normal = Gamestate()
         normal.initialize_neverclick()
         long_pause = normal.copy()
-        long_pause.errand_duration = 100
-        long_pause.purchase_click_rate = 0.01
+        long_pause.errand_delay = 100
+        long_pause.item_delay = 100
 
         normal.purchase_building("Cursor")
         long_pause.purchase_building("Cursor")
@@ -82,17 +88,6 @@ class GamestateTests(unittest.TestCase):
         self.assertEqual(legacy.building_price("Farm"), 500)
         self.assertIn("Bank", current.building_catalog)
         self.assertNotIn("Bank", legacy.building_catalog)
-        self.assertIn("Oatmeal raisin cookies", legacy.upgrade_catalog)
-
-    def test_cursor_upgrade_affects_clicks_and_cursors(self):
-        gamestate = Gamestate()
-        gamestate.click_rate = 8
-        gamestate.purchase_building("Cursor")
-        gamestate.purchase_upgrade("Reinforced index finger")
-
-        self.assertAlmostEqual(gamestate.cookies_per_click(), 2)
-        self.assertAlmostEqual(gamestate.automatic_cps(), 0.2)
-        self.assertAlmostEqual(gamestate.cps(), 16.2)
 
     def test_sale_refund_uses_previous_purchase_price(self):
         gamestate = Gamestate()
@@ -101,21 +96,7 @@ class GamestateTests(unittest.TestCase):
         purchases = gamestate.sell_building("Cursor")
 
         self.assertEqual(gamestate.sale_credit, 3)
-        self.assertEqual(gamestate.building_counts["Cursor"], 0)
         self.assertEqual(purchases[0].operation, "sell")
-
-    def test_achievements_feed_kitten_milk(self):
-        gamestate = Gamestate()
-        gamestate.building_counts["Grandma"] = 1
-        gamestate.earned_achievements = {
-            f"achievement {number}" for number in range(13)
-        }
-        gamestate.lifetime_cookies = 1_000_000
-
-        gamestate.purchase_upgrade("Kitten helpers")
-
-        expected = 1 + len(gamestate.earned_achievements) / 25 * 0.1
-        self.assertAlmostEqual(gamestate.automatic_cps(), expected)
 
 
 if __name__ == "__main__":

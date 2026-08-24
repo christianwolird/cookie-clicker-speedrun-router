@@ -1,0 +1,152 @@
+#!/usr/bin/env python3
+
+"""Generate a route by repeatedly selecting the best scored errand."""
+
+import argparse
+import sys
+from pathlib import Path
+
+
+REPOSITORY = Path(__file__).resolve().parents[1]
+SOURCE = REPOSITORY / "src"
+if str(SOURCE) not in sys.path:
+    sys.path.insert(0, str(SOURCE))
+
+from ccsr.config import (
+    available_categories,
+    available_player_profiles,
+    create_initial_gamestate,
+    load_category,
+    load_player_profile,
+)
+from ccsr.errands.generator import DEFAULT_QUEUE_EXPANSIONS
+from ccsr.presentation import LiveRouteTable, format_route
+from ccsr.routes import RoutePlan, action_errands, write_route
+from ccsr.routing_algorithms.greedy_router import find_route
+
+
+DEFAULT_PRICE_HORIZON_MULTIPLIER = 2.0
+OUTPUT_DIRECTORY = REPOSITORY / "routes" / "generated" / "greedy_routes"
+
+
+def _save_path(destination):
+    path = Path(destination)
+    if path.suffix != ".route":
+        raise ValueError("Route destination must end in .route")
+    if not path.is_absolute():
+        path = OUTPUT_DIRECTORY / path
+    path = path.resolve()
+    if not path.is_relative_to(OUTPUT_DIRECTORY.resolve()):
+        raise ValueError(f"Route destination must be inside {OUTPUT_DIRECTORY}")
+    return path
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--category",
+        choices=available_categories(),
+        default="one_million",
+    )
+    parser.add_argument(
+        "--player",
+        choices=available_player_profiles(),
+        default="default_10_cps",
+    )
+    parser.add_argument(
+        "--quickster",
+        action="store_true",
+        help="offer only single-item errands and apply zero purchase delay",
+    )
+    parser.add_argument(
+        "--price-horizon-multiplier",
+        type=float,
+        default=DEFAULT_PRICE_HORIZON_MULTIPLIER,
+    )
+    parser.add_argument(
+        "--queue-expansions",
+        type=int,
+        default=DEFAULT_QUEUE_EXPANSIONS,
+        help="maximum priority-queue expansions per gamestate",
+    )
+    parser.add_argument("--save", metavar="NAME.route")
+    parser.add_argument("--overwrite", action="store_true")
+    parser.add_argument("--verbose", action="store_true")
+    args = parser.parse_args(argv)
+
+    if args.price_horizon_multiplier <= 0:
+        parser.error("--price-horizon-multiplier must be greater than zero")
+    if args.queue_expansions <= 0:
+        parser.error("--queue-expansions must be greater than zero")
+    if args.overwrite and not args.save:
+        parser.error("--overwrite requires --save")
+
+    try:
+        category = load_category(args.category)
+        player = load_player_profile(args.player)
+        destination = _save_path(args.save) if args.save else None
+        if destination and destination.exists() and not args.overwrite:
+            raise FileExistsError(f"Route already exists: {destination}")
+    except (FileExistsError, ValueError) as error:
+        parser.error(str(error))
+
+    gamestate = create_initial_gamestate(
+        category,
+        player,
+        for_quickster=args.quickster,
+    )
+    print(f"Category: {category.name}")
+    print(f"Player: {player.name}")
+    print(f"For Quickster: {args.quickster}")
+    print(f"Click rate: {gamestate.click_rate:g}")
+    if not args.quickster:
+        print(f"Errand delay: {gamestate.errand_delay:g}")
+        print(f"Item delay: {gamestate.item_delay:g}")
+    print(f"Queue expansions: {args.queue_expansions}")
+    print(f"\nCalculating route to {category.target:,} cookies...", flush=True)
+
+    table = LiveRouteTable() if args.verbose else None
+    result = find_route(
+        gamestate,
+        category.target,
+        on_errand=table.print_errand if table else None,
+        price_horizon_multiplier=args.price_horizon_multiplier,
+        queue_expansions=args.queue_expansions,
+        for_quickster=args.quickster,
+    )
+    if table:
+        table.print_done(result.final_gamestate, category.target)
+    else:
+        print(format_route(result, category.target, include_purchases=False))
+
+    if destination:
+        plan = RoutePlan(
+            name=destination.stem,
+            source="this codebase",
+            category=category.name,
+            player_profile=player.name,
+            version=category.version,
+            target=category.target,
+            click_rate=gamestate.click_rate,
+            initial_state=category.initial_state,
+            algorithm="greedy_router",
+            upgrades_enabled=category.upgrades_enabled,
+            for_quickster=args.quickster,
+            errands=action_errands(result),
+            errand_delay=player.errand_delay,
+            item_delay=player.item_delay,
+            price_horizon_multiplier=args.price_horizon_multiplier,
+            errand_queue_depth=args.queue_expansions,
+        )
+        write_route(
+            destination,
+            plan,
+            comment="Generated by tools/greedy_router.py.",
+            explicit_errands=not args.quickster,
+            overwrite=args.overwrite,
+        )
+        print(f"Saved route: {destination.relative_to(REPOSITORY)}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,131 @@
+# Extracted from the workbook's hidden Routes sheet.
+name = neverclick: 36champ (Neverclick)
+source = dha spreadsheet: neverclick row 3
+category = neverclick
+player_profile = default_neverclick
+version = 2.031
+target = 1000000
+click_rate = 0
+initial_state = neverclick
+algorithm = community_route
+upgrades_enabled = true
+for_quickster = true
+
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Reinforced index finger
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Forwards from grandma
+buy Grandma
+buy Grandma
+buy Farm
+buy Grandma
+buy Farm
+buy Grandma
+buy Farm
+buy Cursor
+buy Cursor
+upgrade Carpal tunnel prevention cream
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Grandma
+buy Grandma
+upgrade Steel-plated rolling pins
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Farm
+buy Cursor
+buy Farm
+upgrade Cheap hoes
+buy Farm
+buy Farm
+buy Farm
+buy Farm
+buy Grandma
+buy Farm
+buy Mine
+buy Cursor
+buy Grandma
+buy Farm
+buy Mine
+buy Grandma
+buy Farm
+upgrade Fertilizer
+buy Farm
+buy Farm
+buy Farm
+buy Farm
+upgrade Farmer grandmas
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Lubricated dentures
+buy Grandma
+buy Grandma
+buy Grandma
+buy Farm
+buy Grandma
+buy Farm
+buy Mine
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+buy Cursor
+buy Farm
+buy Mine
+buy Mine
+upgrade Sugar gas
+buy Mine
+buy Mine
+buy Mine
+buy Grandma
+buy Cursor
+buy Mine
+buy Farm
+buy Grandma
+buy Cursor
+buy Mine
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Grandma
+buy Cursor
+upgrade Ambidextrous
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor

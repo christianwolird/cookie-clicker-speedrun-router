@@ -1,0 +1,636 @@
+# Grouped by tools/errandifier.py.
+name = heavenly_chip: dha (Fast clicks (15 cps))
+source = dha spreadsheet: heavenly chip row 4
+category = heavenly_chip
+player_profile = default_15_cps
+version = 1.0466
+target = 1000000000000
+click_rate = 15
+initial_state = fresh
+algorithm = errandifier
+upgrades_enabled = true
+for_quickster = false
+errand_delay = 0.8
+item_delay = 0.2
+max_errand_size = 100
+
+errand
+buy Cursor
+upgrade Reinforced index finger
+
+errand
+upgrade Carpal tunnel prevention cream
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+buy Farm
+
+errand
+buy Grandma
+buy Cursor
+buy Farm
+
+errand
+upgrade Cheap hoes
+
+errand
+buy Farm
+
+errand
+upgrade Ambidextrous
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+
+errand
+buy Mine
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Grandma
+buy Factory
+buy Cursor
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Grandma
+buy Factory
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Shipment
+
+errand
+upgrade Sugar gas
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+upgrade Sturdier conveyor belts
+
+errand
+buy Factory
+
+errand
+buy Factory
+buy Grandma
+buy Cursor
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Grandma
+buy Farm
+buy Cursor
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Alchemy Lab
+
+errand
+buy Grandma
+buy Farm
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+upgrade Vanilla nebulae
+
+errand
+buy Shipment
+
+errand
+buy Portal
+
+errand
+upgrade Plastic mouse
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+upgrade Ancient tablet
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Shipment
+buy Factory
+buy Portal
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+upgrade Antimony
+
+errand
+buy Alchemy Lab
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+upgrade Thousand fingers
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Factory
+buy Alchemy Lab
+buy Grandma
+buy Mine
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Time Machine
+
+errand
+buy Factory
+buy Time Machine
+
+errand
+upgrade Iron mouse
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+upgrade Fertilizer
+buy Shipment
+buy Portal
+
+errand
+buy Time Machine
+
+errand
+buy Factory
+upgrade Cookie trees
+buy Alchemy Lab
+buy Mine
+buy Grandma
+
+errand
+buy Time Machine
+
+errand
+buy Farm
+buy Cursor
+buy Portal
+buy Shipment
+buy Factory
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+upgrade Oatmeal raisin cookies
+
+errand
+upgrade Peanut butter cookies
+
+errand
+upgrade Plain cookies
+
+errand
+upgrade Sugar cookies
+
+errand
+buy Mine
+buy Grandma
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+buy Factory
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+upgrade Forwards from grandma
+upgrade Steel-plated rolling pins
+upgrade Farmer grandmas
+upgrade Lubricated dentures
+buy Grandma
+upgrade Worker grandmas
+buy Grandma
+buy Grandma
+upgrade Miner grandmas
+buy Factory
+
+errand
+buy Time Machine
+upgrade Child labor
+
+errand
+upgrade Flux capacitors
+buy Grandma
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+buy Grandma
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Portal
+upgrade Megadrill
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+upgrade Insane oatling workers
+
+errand
+upgrade Coconut cookies
+
+errand
+upgrade White chocolate cookies
+
+errand
+upgrade Macadamia nut cookies
+buy Factory
+buy Grandma
+
+errand
+buy Time Machine
+
+errand
+upgrade Ultradrill
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+upgrade Soul bond
+buy Factory
+
+errand
+buy Antimatter Condenser
+
+errand
+upgrade Sweatshop
+buy Time Machine
+buy Grandma
+
+errand
+buy Antimatter Condenser
+
+errand
+upgrade Titanium mouse
+
+errand
+upgrade Cosmic grandmas
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Antimatter Condenser
+
+errand
+upgrade Wormholes
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+
+errand
+buy Antimatter Condenser
+
+errand
+upgrade Frequent flyer
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Time Machine
+buy Factory
+buy Grandma
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Alchemy Lab
+upgrade Essence of dough
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Time Machine
+buy Factory
+buy Grandma
+upgrade True chocolate
+
+errand
+buy Antimatter Condenser
+
+errand
+upgrade Sugar bosons
+
+errand
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Time Machine
+buy Factory
+
+errand
+buy Prism
+buy Grandma
+
+errand
+buy Prism
+
+errand
+buy Antimatter Condenser
+buy Alchemy Lab
+
+errand
+buy Prism
+
+errand
+buy Prism
+
+errand
+buy Prism
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Prism
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Antimatter Condenser
+
+errand
+buy Time Machine
+buy Time Machine
+buy Time Machine
+buy Time Machine
+buy Time Machine
+buy Time Machine

@@ -1,28 +1,21 @@
 import unittest
 
-from src.algorithms import available_algorithms, get_algorithm
-from src.algorithms.contiguous_errand_dp import partition_contiguous_actions
-from src.algorithms.errand_queueing import (
-    BOUNDED_BEAM_INNER_SEARCH,
-    ErrandPlan,
-    FIXED_POP_INNER_SEARCH,
-    beam_promising_errands,
+from ccsr.errands.errandifier import partition_contiguous_actions
+from ccsr.errands.generator import (
+    Errand,
+    acquisition_time,
     best_errand,
-    effective_cost,
     errand_price,
+    generate_neighbors,
     initial_errands,
     price_horizon,
-    promising_errands,
 )
-from src.algorithms.fuzzy_astar import (
-    INDIVIDUAL_FUZZY_HEURISTIC,
-    MeasuringStickHeuristic,
-    SharedFuzzyHeuristic,
-    find_route as find_fuzzy_astar_route,
-)
-from src.algorithms.scoring import age_score
-from src.gamestate import Gamestate
-from src.routes import RouteAction
+from ccsr.errands.scoring import age_score
+from ccsr.game.gamestate import Gamestate
+from ccsr.routes import RouteAction
+from ccsr.routing_algorithms.beam_search_router import find_route as find_beam
+from ccsr.routing_algorithms.greedy_router import find_route as find_greedy
+from ccsr.routing_algorithms.route_ruler import RouteRuler
 
 
 class SyntheticState:
@@ -39,31 +32,99 @@ class AlgorithmTests(unittest.TestCase):
         self.gamestate = Gamestate()
         self.gamestate.click_rate = 8
 
-    def test_only_active_generators_are_exposed(self):
-        self.assertEqual(
-            available_algorithms(),
-            ("errand_queueing", "fuzzy_astar", "singleton_errands"),
-        )
-
     def test_age_score_uses_elapsed_acquisition_time(self):
         ancestor = SyntheticState(5, 10)
         faster = SyntheticState(12, 25)
         slower = SyntheticState(13, 25)
 
         self.assertLess(age_score(ancestor, faster), age_score(ancestor, slower))
+        self.assertAlmostEqual(age_score(ancestor, faster), 35 / 3)
 
-    def test_dp_partition_can_start_with_one_multi_item_errand(self):
-        gamestate = Gamestate("1.0466")
-        gamestate.click_rate = 10
-        gamestate.upgrades_allowed = False
-        actions = (
-            RouteAction("buy", "Cursor"),
-            RouteAction("buy", "Farm"),
+    def test_errand_price_and_item_count(self):
+        self.gamestate.lifetime_cookies = 10_000
+        quantities = tuple(
+            2 if name == "Farm" else 0
+            for name in self.gamestate.building_catalog
+        )
+        errand = Errand(quantities)
+
+        self.assertEqual(errand.item_count, 2)
+        self.assertEqual(price_horizon(self.gamestate, 2), 20_000)
+        self.assertEqual(errand_price(self.gamestate, errand), 2_365)
+
+    def test_upgrade_seed_can_include_prerequisite_buildings(self):
+        errand = next(
+            errand
+            for errand in initial_errands(self.gamestate)
+            if errand.upgrades == {"Forwards from grandma"}
+        )
+        grandma_index = list(self.gamestate.building_catalog).index("Grandma")
+
+        self.assertEqual(errand.building_quantities[grandma_index], 1)
+        self.assertEqual(errand.item_count, 2)
+
+    def test_best_errand_can_group_purchases(self):
+        neighbor = best_errand(self.gamestate, 100_000)
+
+        self.assertGreater(len(neighbor.purchases), 1)
+        self.assertLessEqual(
+            acquisition_time(self.gamestate, neighbor.gamestate),
+            neighbor.score,
         )
 
-        errands = partition_contiguous_actions(gamestate, actions)
+    def test_quickster_neighbors_are_single_item(self):
+        self.gamestate.errand_delay = 0
+        self.gamestate.item_delay = 0
 
-        self.assertEqual(errands, (actions,))
+        neighbors = generate_neighbors(
+            self.gamestate,
+            10_000,
+            width=100,
+            singleton_only=True,
+        )
+
+        self.assertTrue(neighbors)
+        self.assertTrue(all(len(neighbor.purchases) == 1 for neighbor in neighbors))
+
+    def test_greedy_supports_human_and_quickster_modes(self):
+        human = find_greedy(self.gamestate, 1_000)
+        quickster = find_greedy(self.gamestate, 1_000, for_quickster=True)
+
+        self.assertTrue(human.errands)
+        self.assertTrue(all(len(errand) == 1 for errand in quickster.errands))
+        self.assertEqual(quickster.final_gamestate.errand_delay, 0)
+        self.assertEqual(quickster.final_gamestate.item_delay, 0)
+
+    def test_beam_generates_a_greedy_ruler_by_default(self):
+        result = find_beam(self.gamestate, 1_000, beam_width=3)
+
+        self.assertEqual(result.final_gamestate.lifetime_cookies, 1_000)
+        self.assertTrue(result.search_stats.ruler_generated)
+        self.assertTrue(result.ruler_route.errands)
+
+    def test_beam_accepts_a_supplied_route_ruler(self):
+        greedy = find_greedy(self.gamestate, 1_000)
+        ruler = RouteRuler(greedy, scale=0.9)
+        result = find_beam(
+            self.gamestate,
+            1_000,
+            beam_width=3,
+            ruler_route=greedy,
+        )
+
+        self.assertAlmostEqual(ruler(self.gamestate), greedy.final_gamestate.age * 0.9)
+        self.assertFalse(result.search_stats.ruler_generated)
+
+    def test_beam_supports_quickster_mode(self):
+        result = find_beam(
+            self.gamestate,
+            1_000,
+            beam_width=3,
+            for_quickster=True,
+        )
+
+        self.assertTrue(all(len(errand) == 1 for errand in result.errands))
+        self.assertEqual(result.final_gamestate.errand_delay, 0)
 
     def test_dp_partition_respects_maximum_errand_size(self):
         actions = tuple(RouteAction("buy", "Cursor") for _ in range(3))
@@ -75,156 +136,6 @@ class AlgorithmTests(unittest.TestCase):
         )
 
         self.assertEqual(errands, tuple((action,) for action in actions))
-
-    def test_price_horizon_and_aggregate_errand_price(self):
-        self.gamestate.lifetime_cookies = 10_000
-        quantities = tuple(
-            2 if name == "Farm" else 0
-            for name in self.gamestate.building_catalog
-        )
-
-        self.assertEqual(price_horizon(self.gamestate, 2), 20_000)
-        self.assertEqual(errand_price(self.gamestate, ErrandPlan(quantities)), 2_365)
-
-    def test_locked_upgrade_seed_includes_prerequisite_buildings(self):
-        plan = next(
-            plan
-            for plan in initial_errands(self.gamestate)
-            if plan.upgrades == {"Forwards from grandma"}
-        )
-        grandma_index = list(self.gamestate.building_catalog).index("Grandma")
-
-        self.assertEqual(plan.building_quantities[grandma_index], 1)
-        self.assertEqual(plan.purchase_count, 2)
-
-    def test_queue_finds_multi_purchase_errand(self):
-        candidate = best_errand(self.gamestate, 100_000, queue_pops=100)
-
-        self.assertGreater(len(candidate.purchases), 1)
-        self.assertLessEqual(
-            effective_cost(self.gamestate, candidate.gamestate),
-            candidate.score,
-        )
-
-    def test_queue_returns_requested_number_of_promising_errands(self):
-        candidates = promising_errands(
-            self.gamestate,
-            10_000,
-            limit=3,
-            queue_pops=20,
-        )
-
-        self.assertEqual(len(candidates), 3)
-        self.assertEqual(
-            list(map(lambda candidate: candidate.score, candidates)),
-            sorted(candidate.score for candidate in candidates),
-        )
-
-    def test_bounded_beam_returns_a_full_sorted_roster(self):
-        candidates = beam_promising_errands(
-            self.gamestate,
-            10_000,
-            limit=5,
-        )
-
-        self.assertEqual(len(candidates), 5)
-        self.assertEqual(
-            list(map(lambda candidate: candidate.score, candidates)),
-            sorted(candidate.score for candidate in candidates),
-        )
-
-    def test_fuzzy_astar_reaches_target_and_reports_search_stats(self):
-        progress_updates = []
-        heuristic_updates = []
-        result = find_fuzzy_astar_route(
-            self.gamestate,
-            1_000,
-            feelers=3,
-            inner_search=BOUNDED_BEAM_INNER_SEARCH,
-            fuzzy_scale=1.05,
-            max_expansions=100,
-            on_progress=progress_updates.append,
-            progress_interval=0.000001,
-            on_heuristic=lambda state, remaining: heuristic_updates.append(
-                (state, remaining)
-            ),
-        )
-
-        self.assertEqual(result.final_gamestate.lifetime_cookies, 1_000)
-        self.assertGreater(result.search_stats.expanded, 0)
-        self.assertGreaterEqual(result.search_stats.elapsed_seconds, 0)
-        self.assertTrue(result.errands)
-        self.assertTrue(progress_updates)
-        self.assertLessEqual(len(progress_updates[-1].frontier), 3)
-        self.assertEqual(
-            len(heuristic_updates),
-            result.search_stats.heuristic_evaluations,
-        )
-        self.assertEqual(result.search_stats.fuzzy_route_evaluations, 1)
-
-    def test_individual_fuzzy_heuristic_remains_selectable(self):
-        result = find_fuzzy_astar_route(
-            self.gamestate,
-            1_000,
-            feelers=2,
-            fuzzy_heuristic=INDIVIDUAL_FUZZY_HEURISTIC,
-            max_expansions=20,
-        )
-
-        self.assertGreater(result.search_stats.fuzzy_route_evaluations, 1)
-
-    def test_fixed_pop_inner_search_remains_selectable(self):
-        result = find_fuzzy_astar_route(
-            self.gamestate,
-            1_000,
-            feelers=2,
-            queue_pops=5,
-            inner_search=FIXED_POP_INNER_SEARCH,
-            max_expansions=20,
-        )
-
-        self.assertTrue(result.errands)
-
-    def test_measuring_stick_uses_one_complete_fuzzy_route(self):
-        heuristic = MeasuringStickHeuristic(self.gamestate, 10_000)
-        initial_remaining = heuristic(self.gamestate)
-        later = self.gamestate.copy()
-        later.lifetime_cookies = 500
-
-        self.assertAlmostEqual(initial_remaining, heuristic.final_age)
-        self.assertLess(heuristic(later), initial_remaining)
-        self.assertEqual(heuristic.route_evaluations, 1)
-
-    def test_fuzzy_heuristic_shares_geometric_checkpoint_tail(self):
-        heuristic = SharedFuzzyHeuristic(self.gamestate, 20_000)
-
-        remaining = heuristic(self.gamestate)
-
-        self.assertGreater(remaining, 0)
-        self.assertEqual(heuristic.checkpoints, (100, 1_000, 10_000))
-        self.assertEqual(set(heuristic.shared_tails), {100})
-        self.assertEqual(heuristic.route_evaluations, 2)
-
-    def test_singleton_mode_never_groups(self):
-        result = get_algorithm("singleton_errands")(
-            self.gamestate,
-            10_000,
-        )
-
-        self.assertTrue(result.errands)
-        self.assertTrue(all(len(errand) == 1 for errand in result.errands))
-
-    def test_route_generation_reaches_target_and_streams_errands(self):
-        streamed = []
-
-        result = get_algorithm("errand_queueing")(
-            self.gamestate,
-            10_000,
-            on_errand=streamed.append,
-        )
-
-        self.assertEqual(result.final_gamestate.lifetime_cookies, 10_000)
-        self.assertEqual(streamed, list(result.errands))
 
 
 if __name__ == "__main__":

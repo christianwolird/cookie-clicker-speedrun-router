@@ -2,20 +2,8 @@
 
 from dataclasses import dataclass
 
-from ..game.gamestate import DEFAULT_ERRAND_DELAY, DEFAULT_ITEM_DELAY
-
-
-@dataclass(frozen=True, slots=True)
-class RouteAction:
-    operation: str
-    item: str
-
-    @classmethod
-    def from_purchase(cls, purchase):
-        return cls(purchase.operation, purchase.item)
-
-    def __str__(self):
-        return f"{self.operation} {self.item}"
+from ..game.gamestate import DEFAULT_ERRAND_DELAY, DEFAULT_ACTION_DELAY
+from ..game.actions import RouteAction
 
 
 @dataclass(frozen=True, slots=True)
@@ -33,7 +21,7 @@ class RoutePlan:
     for_quickster: bool
     errands: tuple[tuple[RouteAction, ...], ...]
     errand_delay: float = DEFAULT_ERRAND_DELAY
-    item_delay: float = DEFAULT_ITEM_DELAY
+    action_delay: float = DEFAULT_ACTION_DELAY
     price_horizon_multiplier: float | None = None
     errand_queue_depth: int | None = None
     max_errand_size: int | None = None
@@ -41,6 +29,17 @@ class RoutePlan:
     ruler_scale: float | None = None
     ruler_route: str | None = None
     beam_max_expansions: int | None = None
+    errand_profile: str | None = None
+    bulk_size: int = 1
+    selling_allowed: bool = True
+    errand_search_width: int | None = None
+    max_errand_actions: int | None = None
+    errand_state_width: int | None = None
+
+    @property
+    def item_delay(self):
+        """Compatibility alias for reading older plans."""
+        return self.action_delay
 
     @property
     def actions(self):

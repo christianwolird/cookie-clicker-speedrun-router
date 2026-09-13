@@ -20,8 +20,12 @@ from ccsr.config import (
     create_initial_gamestate,
     load_category,
     load_player_profile,
+    available_errand_profiles,
+    load_errand_profile,
 )
-from ccsr.errands.generator import DEFAULT_BEAM_WIDTH
+from ccsr.errands.generator import (
+    DEFAULT_BEAM_WIDTH, DEFAULT_QUEUE_EXPANSIONS, DEFAULT_MAX_ERRAND_ACTIONS,
+)
 from ccsr.presentation import LiveRouteTable, format_route, format_time
 from ccsr.routes import (
     RoutePlan,
@@ -57,7 +61,9 @@ def _save_path(destination):
 def _format_incoming_errand(errand):
     if not errand:
         return "start"
-    counts = Counter((purchase.operation, purchase.item) for purchase in errand)
+    counts = Counter()
+    for purchase in errand:
+        counts[purchase.operation, purchase.item] += purchase.quantity
     parts = []
     for (operation, item), quantity in counts.items():
         label = f"{operation} {item}"
@@ -100,7 +106,7 @@ def _print_progress(progress):
         )
 
 
-def _load_ruler(path, category, player, for_quickster):
+def _load_ruler(path, category, player, for_quickster, errand_profile):
     plan = load_route(path)
     if plan.version != category.version:
         raise ValueError("Ruler route uses a different game version")
@@ -108,6 +114,8 @@ def _load_ruler(path, category, player, for_quickster):
         raise ValueError(
             "Ruler route and Beam search must use the same Quickster mode"
         )
+    if plan.bulk_size != errand_profile.bulk_size:
+        raise ValueError("Ruler route uses a different fixed bulk size")
     plan = replace(
         plan,
         category=category.name,
@@ -117,9 +125,11 @@ def _load_ruler(path, category, player, for_quickster):
         initial_state=category.initial_state,
         upgrades_enabled=category.upgrades_enabled,
         errand_delay=player.errand_delay,
-        item_delay=player.item_delay,
+        action_delay=player.action_delay,
     )
-    return execute_route(plan, player=player, for_quickster=for_quickster)
+    return execute_route(
+        plan, player=player, for_quickster=for_quickster, errand_profile=errand_profile,
+    )
 
 
 def main(argv=None):
@@ -127,7 +137,7 @@ def main(argv=None):
     parser.add_argument(
         "--category",
         choices=available_categories(),
-        default="one_million",
+        default="one_million_v2",
     )
     parser.add_argument(
         "--player",
@@ -137,8 +147,15 @@ def main(argv=None):
     parser.add_argument(
         "--quickster",
         action="store_true",
-        help="offer only single-item errands and apply zero purchase delay",
+        help="offer only single-click errands and apply zero action delay",
     )
+    parser.add_argument("--errand-profile", choices=available_errand_profiles(), default="single")
+    parser.add_argument("--max-errand-actions", type=int, default=DEFAULT_MAX_ERRAND_ACTIONS)
+    parser.add_argument(
+        "--errand-search-width", type=int,
+        help="inner queue width (defaults to --beam-width)",
+    )
+    parser.add_argument("--errand-queue-expansions", type=int, default=DEFAULT_QUEUE_EXPANSIONS)
     parser.add_argument(
         "--price-horizon-multiplier",
         type=float,
@@ -171,10 +188,15 @@ def main(argv=None):
         "--beam-width": args.beam_width,
         "--max-expansions": args.max_expansions,
         "--progress-interval": args.progress_interval,
+        "--max-errand-actions": args.max_errand_actions,
+        "--errand-search-width": args.errand_search_width or args.beam_width,
+        "--errand-queue-expansions": args.errand_queue_expansions,
     }
     for option, value in positive.items():
         if value <= 0:
             parser.error(f"{option} must be greater than zero")
+    if args.errand_search_width == 0:
+        parser.error("--errand-search-width must be greater than zero")
     if args.ruler_scale < 0:
         parser.error("--ruler-scale cannot be negative")
     if args.overwrite and not args.save:
@@ -183,6 +205,7 @@ def main(argv=None):
     try:
         category = load_category(args.category)
         player = load_player_profile(args.player)
+        errand_profile = load_errand_profile(args.errand_profile)
         destination = _save_path(args.save) if args.save else None
         if destination and destination.exists() and not args.overwrite:
             raise FileExistsError(f"Route already exists: {destination}")
@@ -192,6 +215,7 @@ def main(argv=None):
                 category,
                 player,
                 args.quickster,
+                errand_profile,
             )
             if args.ruler_route
             else None
@@ -203,16 +227,18 @@ def main(argv=None):
         category,
         player,
         for_quickster=args.quickster,
+        errand_profile=errand_profile,
     )
     print(f"Category: {category.name}")
     print(f"Player: {player.name}")
+    print(f"Errand profile: {errand_profile.name} (x{errand_profile.bulk_size})")
     print(f"For Quickster: {args.quickster}")
     print(f"Beam width: {args.beam_width}")
     print(f"Ruler route: {args.ruler_route or 'temporary greedy route'}")
     print(f"Ruler scale: {args.ruler_scale:g}")
     print(f"\nCalculating route to {category.target:,} cookies...", flush=True)
 
-    table = LiveRouteTable() if args.verbose else None
+    table = LiveRouteTable(gamestate.lifetime_cookies) if args.verbose else None
     result = find_route(
         gamestate,
         category.target,
@@ -225,6 +251,9 @@ def main(argv=None):
         on_progress=_print_progress,
         progress_interval=args.progress_interval,
         for_quickster=args.quickster,
+        errand_search_width=args.errand_search_width,
+        errand_queue_expansions=args.errand_queue_expansions,
+        max_errand_actions=args.max_errand_actions,
     )
     if table:
         table.print_done(result.final_gamestate, category.target)
@@ -258,7 +287,13 @@ def main(argv=None):
             for_quickster=args.quickster,
             errands=action_errands(result),
             errand_delay=player.errand_delay,
-            item_delay=player.item_delay,
+            action_delay=player.action_delay,
+            errand_profile=errand_profile.name,
+            bulk_size=errand_profile.bulk_size,
+            selling_allowed=errand_profile.selling_allowed,
+            errand_search_width=args.errand_search_width or args.beam_width,
+            errand_queue_depth=args.errand_queue_expansions,
+            max_errand_actions=args.max_errand_actions,
             price_horizon_multiplier=args.price_horizon_multiplier,
             beam_width=args.beam_width,
             ruler_scale=args.ruler_scale,

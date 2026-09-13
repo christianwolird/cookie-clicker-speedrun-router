@@ -1,7 +1,7 @@
 # Extracted from the workbook's hidden Routes sheet.
 name = one_million: Lily2_ (Ultra clicks (200 cps))
 source = dha spreadsheet: one million row 5
-category = one_million
+category = one_million_v2
 player_profile = default_200_cps
 version = 2.031
 target = 1000000

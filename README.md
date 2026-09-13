@@ -12,11 +12,11 @@ Python 3.10 or newer is sufficient.
 
 ## Quick start
 
-Every router run selects a category and player profile independently:
+Every router run selects a category, player profile, and errand profile independently:
 
 ```sh
 python3 tools/greedy_router.py \
-  --category one_million
+  --category one_million_v2
 
 python3 tools/beam_search_router.py \
   --category 100k \
@@ -26,39 +26,70 @@ python3 tools/beam_search_router.py \
 
 Category files under `config/categories/` define game rules such as version,
 target, initial state, upgrades, clicking restrictions, and the optional
-achievement curve. Player profiles under `config/player_profiles/` define:
+achievement curve. Use `one_million_v1` for game version 1.0466 or
+`one_million_v2` for version 2.031; both target one million cookies. Routers
+default to `one_million_v2`.
+
+Player profiles under `config/player_profiles/` define:
 
 ```text
 click_rate = 7
 errand_delay = 1.0
-item_delay = 0.3
+action_delay = 0.3
 ```
 
 Built-in profiles include `casual`, `scroll_click`, `strum_click`, and
 `mouse_move_click`, plus the `default_*` profiles used by imported community
 routes. Omitting `--player` selects `default_10_cps`: 10 CPS, 0.8 seconds
-per errand, and 0.2 seconds per item.
+per errand, and 0.2 seconds per shop action. Old `item_delay` settings remain
+readable as an alias; specifying both names is an error.
+
+Errand profiles under `config/errand_profiles/` select fixed buying behavior:
+`single` (the default), `single_with_sales`, `bulk10`, or `bulk10_with_sales`.
+There is no switching between x1 and x10 during a run.
+
+```sh
+python3 tools/beam_search_router.py \
+  --category one_million_v2 --player default_250_cps \
+  --errand-profile bulk10 --beam-width 10 \
+  --errand-search-width 10 --errand-queue-expansions 100
+
+python3 tools/greedy_router.py \
+  --category neverclick --player default_neverclick \
+  --errand-profile single_with_sales
+```
+
+See [fixed bulk errands](docs/fixed_bulk_errands.md) for action semantics,
+sales, search budgets, and route compatibility. The old `quick_buy_250_cps`
+profile is retained for reproducing its approximate timing; use realistic
+action delays with `bulk10` for new bulk routes.
 
 ## Simulation model
 
 A `Gamestate` records elapsed time, lifetime cookies, handmade cookies,
-inventory, purchased upgrades, and production. All purchases in an errand
-close simultaneously with an empty bank.
+inventory, purchased upgrades, bank, and production. Errands retain grouped
+production timing: the ancestor's buildings produce until all actions close.
 
-Every purchased item contributes its own item delay. Two Grandmas and three
-Cursors therefore incur:
+Every interface action contributes one action delay. Five x1 building
+purchases therefore incur:
 
 ```text
-pause = errand_delay + 5 × item_delay
+pause = errand_delay + 5 × action_delay
 ```
 
-If `A` is automatic CpS, `H` is hand CpS, `P` is the errand price, and `T` is
-the time until the errand closes:
+If `A` is automatic CpS, `H` is hand CpS, `P` is the additional cookies needed
+after refunds and existing bank, and `T` is the time until the errand closes:
 
 ```text
 (A + H) × (T - pause) + A × pause = P
-T = (P + H × pause) / (A + H)
+T = max(pause, (P + H × pause) / (A + H))
 ```
+
+Surplus refunds and unavoidable pause production stay in the bank. Fixed x1
+errands are unordered sets; fixed x10 purchases are ordered clicks checked
+against the remaining bank. Upgrades always take one click. Sales precede
+purchases and pay for switching into sell mode and back into buy mode.
+Legacy route files retain their original timing and sale behavior.
 
 Achievement objects and repeated catalog scans are not simulated. Categories
 may instead select a provisional lifetime-cookie-to-achievement-count curve.
@@ -95,7 +126,7 @@ Its main controls are:
 
 ```sh
 python3 tools/greedy_router.py \
-  --category one_million \
+  --category one_million_v2 \
   --player casual \
   --queue-expansions 100 \
   --price-horizon-multiplier 2
@@ -104,15 +135,17 @@ python3 tools/greedy_router.py \
 ## Beam search and the Ruler
 
 Beam search treats inventories as graph nodes and generated errands as edges.
-It retains the youngest known gamestate for each inventory and prioritizes
-states using their age plus a scaled remaining-time estimate.
+It retains the youngest known equivalent gamestate and prioritizes states
+using their age plus a scaled remaining-time estimate. Profiled states also
+distinguish bank and cookie progress, so sale-funded inventories are not merged
+incorrectly. The complete reference route is retained as an incumbent.
 
 The estimate comes from a Ruler route. Supply an existing route with
 `--ruler-route`:
 
 ```sh
 python3 tools/beam_search_router.py \
-  --category one_million \
+  --category one_million_v2 \
   --player casual \
   --beam-width 20 \
   --ruler-route routes/generated/greedy_routes/reference.route \
@@ -120,7 +153,7 @@ python3 tools/beam_search_router.py \
 ```
 
 When no Ruler route is supplied, the tool generates a temporary Greedy route
-using the same category, player, and Quickster mode. The default scale is 0.9.
+using the same category, player, errand profile, and Quickster mode. The default scale is 0.9.
 This is intended to make the estimate conservative, but it is not a proof that
 the heuristic is admissible.
 
@@ -134,8 +167,8 @@ python3 tools/greedy_router.py --category 10k --player scroll_click --quickster
 python3 tools/beam_search_router.py --category 10k --player scroll_click --quickster
 ```
 
-Quickster mode offers only single-item errands and applies zero errand and item
-delay. Quickster route files set `for_quickster = true` and omit both delay
+Quickster mode offers only single-click errands and applies zero errand and action
+delay. A bulk click may buy up to ten buildings. Quickster route files set `for_quickster = true` and omit both delay
 fields.
 
 ## Errandification and replay
@@ -160,7 +193,14 @@ python3 tools/route_replayer.py \
   routes/online/quickster_originals/one_million_left_clicks_10_cps_iwer_sonsch.route
 
 python3 tools/route_replayer.py ROUTE_FILE --player casual
+
+# Print purchases at their simulated times, measured from command startup.
+python3 tools/route_replayer.py ROUTE_FILE --realtime
 ```
+
+`--realtime` automatically shows purchase rows and waits until the target time
+to print `Done!`. Purchases in the same errand print together. Without this
+flag, replay finishes immediately; `--verbose` shows all purchases immediately.
 
 Routes record both the profile name and resolved timing values. This preserves
 replay behavior if a profile is later edited. Quickster routes retain only the

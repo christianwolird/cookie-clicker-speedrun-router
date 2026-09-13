@@ -7,6 +7,7 @@ from .data import DEFAULT_VERSION, get_version_data
 DEFAULT_CLICK_RATE = 10.0
 DEFAULT_ERRAND_DELAY = 1.0
 DEFAULT_ITEM_DELAY = 0.2
+DEFAULT_ACTION_DELAY = DEFAULT_ITEM_DELAY
 
 
 @dataclass(frozen=True, slots=True)
@@ -17,6 +18,10 @@ class Purchase:
     lifetime_cookies: float
     current_cps: float = 0.0
     label: str | None = None
+    quantity: int = 1
+    required_cookies: float | None = None
+    bank_after: float | None = None
+    shop_actions: int | None = None
 
     @property
     def display_item(self):
@@ -28,10 +33,9 @@ class Gamestate:
 
     ``version`` selects one complete data catalog for the lifetime of the run.
     ``lifetime_cookies`` is total cookies baked, not the current bank; the
-    current model assumes the bank is empty at each snapshot. An errand applies
-    an unordered set of purchases simultaneously after hand-clicking pauses for
-    ``errand_delay`` seconds of travel plus ``item_delay`` seconds per purchased
-    item.
+    legacy purchase methods assume an empty bank after purchases. Profiled
+    errands use ``game.shop`` to carry unspent cookies and apply fixed bulk
+    rules, while retaining simultaneous, grouped production timing.
     """
 
     def __init__(self, version=DEFAULT_VERSION, achievement_curve=None):
@@ -43,8 +47,11 @@ class Gamestate:
 
         self.click_rate = DEFAULT_CLICK_RATE
         self.errand_delay = DEFAULT_ERRAND_DELAY
-        self.item_delay = DEFAULT_ITEM_DELAY
+        self.action_delay = DEFAULT_ACTION_DELAY
         self.upgrades_allowed = True
+        self.bulk_size = 1
+        self.selling_allowed = False
+        self.legacy_errands = True
 
         self.age = 0.0
         self.lifetime_cookies = 0.0
@@ -60,8 +67,11 @@ class Gamestate:
         copied_gamestate = Gamestate(self.version, self.achievement_curve)
         copied_gamestate.click_rate = self.click_rate
         copied_gamestate.errand_delay = self.errand_delay
-        copied_gamestate.item_delay = self.item_delay
+        copied_gamestate.action_delay = self.action_delay
         copied_gamestate.upgrades_allowed = self.upgrades_allowed
+        copied_gamestate.bulk_size = self.bulk_size
+        copied_gamestate.selling_allowed = self.selling_allowed
+        copied_gamestate.legacy_errands = self.legacy_errands
         copied_gamestate.age = self.age
         copied_gamestate.lifetime_cookies = self.lifetime_cookies
         copied_gamestate.handmade_cookies = self.handmade_cookies
@@ -73,6 +83,32 @@ class Gamestate:
             self._automatic_cps_cache_achievement_count
         )
         return copied_gamestate
+
+    @property
+    def item_delay(self):
+        """Compatibility alias for legacy per-item timing."""
+        return self.action_delay
+
+    @item_delay.setter
+    def item_delay(self, value):
+        self.action_delay = value
+
+    @property
+    def bank(self):
+        """Unspent cookies; sale_credit remains a legacy compatibility alias."""
+        return self.sale_credit
+
+    @bank.setter
+    def bank(self, value):
+        self.sale_credit = value
+
+    def building_sale_refund(self, name, quantity=1):
+        if quantity < 1 or quantity > self.building_counts[name]:
+            raise ValueError(f"Cannot sell {quantity} owned {name}")
+        return sum(
+            floor(self.building_price(name, -offset) * 0.25 / 1.15)
+            for offset in range(quantity)
+        )
 
     def initialize_neverclick(self):
         """Start immediately after the category's 15 clicks and first Cursor."""
@@ -313,7 +349,7 @@ class Gamestate:
 
         # The current buy price is 15% above the price of the last building
         # purchased. Selling returns 25% of that previous purchase price.
-        refund = floor(self.building_price(name) * 0.25 / 1.15)
+        refund = self.building_sale_refund(name)
         self.building_counts[name] -= 1
         self.sale_credit += refund
         self._automatic_cps_cache = None
@@ -350,6 +386,8 @@ class Gamestate:
         if rate <= 0:
             raise ValueError("Cannot reach target with zero CpS")
         duration = (target - finished.lifetime_cookies) / rate
+        if not finished.legacy_errands:
+            finished.bank += target - finished.lifetime_cookies
         finished.age += duration
         finished.lifetime_cookies = float(target)
         finished.handmade_cookies += finished.hand_cps() * duration

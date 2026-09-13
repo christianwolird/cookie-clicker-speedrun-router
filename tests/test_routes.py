@@ -148,7 +148,7 @@ class RouteTests(unittest.TestCase):
                 ),
             ),
             errand_delay=0.8,
-            item_delay=0.2,
+            action_delay=0.2,
         )
         casual = load_player_profile("casual")
 
@@ -161,17 +161,37 @@ class RouteTests(unittest.TestCase):
         )
 
     def test_category_and_player_configuration_are_separate(self):
-        category = load_category("one_million")
+        category = load_category("one_million_v2")
         casual = load_player_profile("casual")
         gamestate = create_initial_gamestate(category, casual)
 
         self.assertEqual(
             set(available_categories()),
-            {"10k", "100k", "one_million", "neverclick", "hardcore", "heavenly_chip"},
+            {
+                "10k", "100k", "one_million_v1", "one_million_v2",
+                "neverclick", "hardcore", "heavenly_chip",
+            },
         )
         self.assertEqual(gamestate.click_rate, 7)
         self.assertEqual(gamestate.errand_delay, 1.0)
         self.assertEqual(gamestate.item_delay, 0.3)
+
+    def test_one_million_categories_select_versioned_game_rules(self):
+        player = load_player_profile("default_10_cps")
+        for name, version, farm_price in (
+            ("one_million_v1", "1.0466", 500),
+            ("one_million_v2", "2.031", 1_100),
+        ):
+            with self.subTest(category=name):
+                category = load_category(name)
+                self.assertEqual(category.version, version)
+                self.assertEqual(category.target, 1_000_000)
+                self.assertEqual(category.initial_state, "fresh")
+                self.assertTrue(category.upgrades_enabled)
+                self.assertTrue(category.clicking_enabled)
+                self.assertIsNone(category.achievement_curve)
+                gamestate = create_initial_gamestate(category, player)
+                self.assertEqual(gamestate.building_price("Farm"), farm_price)
 
     def test_method_and_default_player_profiles(self):
         profiles = set(available_player_profiles())

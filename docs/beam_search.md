@@ -41,7 +41,7 @@ and Quickster setting. The Ruler scale defaults to 0.9:
 
 ```sh
 python3 tools/beam_search_router.py \
-  --category one_million \
+  --category one_million_v2 \
   --player casual \
   --beam-width 20 \
   --ruler-scale 0.9

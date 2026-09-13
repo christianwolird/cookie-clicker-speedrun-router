@@ -1,11 +1,11 @@
 """Terminal formatting shared by route generation and replay."""
 
+from dataclasses import replace
 
 ITEM_WIDTH = 20
-ERRAND_WIDTH = 8
+ERRAND_WIDTH = 14
 TIME_WIDTH = 13
 COOKIES_WIDTH = 18
-CPS_WIDTH = 15
 
 
 def format_time(seconds):
@@ -16,11 +16,10 @@ def format_time(seconds):
 
 def _header():
     labels = (
-        ("Errand", ERRAND_WIDTH, "<"),
+        ("Errand cookies", ERRAND_WIDTH, ">"),
         ("Item", ITEM_WIDTH, "<"),
         ("Time (m:ss.s)", TIME_WIDTH, ">"),
         ("Cookies produced", COOKIES_WIDTH, ">"),
-        ("Current CpS", CPS_WIDTH, ">"),
     )
     header = "  ".join(f"{label:{align}{width}}" for label, width, align in labels)
     divider = "  ".join("-" * width for _, width, _ in labels)
@@ -31,50 +30,69 @@ def _item_label(item):
     return item if len(item) <= ITEM_WIDTH else f"{item[:ITEM_WIDTH - 3]}..."
 
 
-def _marker(errand_number, purchase_index, purchase_count):
-    if purchase_index == 0:
-        return f"#{errand_number}"
-    return "└─" if purchase_index == purchase_count - 1 else "│"
-
-
-def _purchase_row(marker, purchase):
+def _purchase_row(required_cookies, purchase):
+    show_stats = required_cookies is not None
+    required = f"{required_cookies:,.0f}" if show_stats else ""
+    age = format_time(purchase.age) if show_stats else ""
+    produced = f"{purchase.lifetime_cookies:,.0f}" if show_stats else ""
     return (
-        f"{marker:<{ERRAND_WIDTH}}  "
+        f"{required:>{ERRAND_WIDTH}}  "
         f"{_item_label(purchase.display_item):<{ITEM_WIDTH}}  "
-        f"{format_time(purchase.age):>{TIME_WIDTH}}  "
-        f"{purchase.lifetime_cookies:>{COOKIES_WIDTH},.1f}  "
-        f"{purchase.current_cps:>{CPS_WIDTH},.3f}"
+        f"{age:>{TIME_WIDTH}}  "
+        f"{produced:>{COOKIES_WIDTH}}"
     )
+
+
+def _errand_rows(errand, previous_cookies):
+    if errand and errand[0].required_cookies is not None and any(
+        purchase.operation == "sell" for purchase in errand
+    ):
+        sales = [purchase for purchase in errand if purchase.operation == "sell"]
+        purchases = [purchase for purchase in errand if purchase.operation != "sell"]
+        errand = (
+            replace(errand[0], label="Switch to sell"),
+            *sales,
+            replace(errand[0], label="Switch to buy"),
+            *purchases,
+        )
+    for purchase_index, purchase in enumerate(errand):
+        required = (
+            (purchase.required_cookies if purchase.required_cookies is not None
+             else purchase.lifetime_cookies - previous_cookies)
+            if purchase_index == 0
+            else None
+        )
+        yield _purchase_row(required, purchase)
 
 
 def _done_row(final_gamestate, target):
     return (
         f"{'':<{ERRAND_WIDTH}}  {'Done!':<{ITEM_WIDTH}}  "
         f"{format_time(final_gamestate.age):>{TIME_WIDTH}}  "
-        f"{target:>{COOKIES_WIDTH},.1f}  "
-        f"{final_gamestate.cps():>{CPS_WIDTH},.3f}"
+        f"{target:>{COOKIES_WIDTH},.0f}"
     )
 
 
 def format_route(result, target, include_purchases=True):
     lines = list(_header())
     if include_purchases:
-        for errand_number, errand in enumerate(result.errands, 1):
-            for purchase_index, purchase in enumerate(errand):
-                lines.append(
-                    _purchase_row(
-                        _marker(errand_number, purchase_index, len(errand)),
-                        purchase,
-                    )
-                )
+        previous_cookies = result.initial_gamestate.lifetime_cookies
+        for errand in result.errands:
+            if not errand:
+                continue
+            if len(lines) > 2:
+                lines.append("")
+            lines.extend(_errand_rows(errand, previous_cookies))
+            previous_cookies = errand[-1].lifetime_cookies
     lines.append(_done_row(result.final_gamestate, target))
     return "\n".join(lines)
 
 
 class LiveRouteTable:
-    def __init__(self):
-        self.errand_count = 0
+    def __init__(self, initial_cookies=0.0):
+        self.previous_cookies = initial_cookies
         self.started = False
+        self.has_errands = False
 
     def _start(self):
         if not self.started:
@@ -83,19 +101,14 @@ class LiveRouteTable:
 
     def print_errand(self, errand):
         self._start()
-        self.errand_count += 1
-        for purchase_index, purchase in enumerate(errand):
-            print(
-                _purchase_row(
-                    _marker(
-                        self.errand_count,
-                        purchase_index,
-                        len(errand),
-                    ),
-                    purchase,
-                ),
-                flush=True,
-            )
+        if not errand:
+            return
+        if self.has_errands:
+            print()
+        for row in _errand_rows(errand, self.previous_cookies):
+            print(row, flush=True)
+        self.previous_cookies = errand[-1].lifetime_cookies
+        self.has_errands = True
 
     def print_done(self, final_gamestate, target):
         self._start()

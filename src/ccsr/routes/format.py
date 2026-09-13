@@ -1,6 +1,8 @@
 """Plain-text route parsing, validation, and serialization."""
 
 from pathlib import Path
+import re
+from math import isfinite
 
 from ..game.data import SUPPORTED_VERSIONS
 from .models import RouteAction, RoutePlan
@@ -20,9 +22,14 @@ COMMON_METADATA_FIELDS = {
     "upgrades_enabled",
     "for_quickster",
 }
-DELAY_METADATA_FIELDS = {"errand_delay", "item_delay"}
+DELAY_METADATA_FIELDS = {"errand_delay", "item_delay", "action_delay"}
+ERRAND_METADATA_FIELDS = {"errand_profile", "bulk_size", "selling_allowed", "errand_model"}
 OPTIONAL_METADATA_FIELDS = {
     *DELAY_METADATA_FIELDS,
+    *ERRAND_METADATA_FIELDS,
+    "errand_search_width",
+    "max_errand_actions",
+    "errand_state_width",
     "price_horizon_multiplier",
     "errand_queue_depth",
     "max_errand_size",
@@ -46,7 +53,14 @@ def _parse_action(path, line_number, line):
     operation, separator, item = line.partition(" ")
     if not separator or operation not in ROUTE_OPERATIONS:
         raise ValueError(f"{path}:{line_number}: invalid route action: {line}")
-    return RouteAction(operation, item)
+    quantity = 1
+    match = re.fullmatch(r"(.+) x(\d+)", item)
+    if match:
+        item, quantity = match.group(1), int(match.group(2))
+    try:
+        return RouteAction(operation, item, quantity)
+    except ValueError as error:
+        raise ValueError(f"{path}:{line_number}: {error}") from error
 
 
 def load_route(path):
@@ -125,15 +139,32 @@ def load_route(path):
                 f"{path}: Quickster routes cannot specify purchase delays"
             )
         errand_delay = 0.0
-        item_delay = 0.0
+        action_delay = 0.0
     else:
-        missing_delays = sorted(DELAY_METADATA_FIELDS - metadata.keys())
+        missing_delays = []
+        if "errand_delay" not in metadata:
+            missing_delays.append("errand_delay")
+        if not {"item_delay", "action_delay"} & metadata.keys():
+            missing_delays.append("action_delay")
         if missing_delays:
             raise ValueError(
                 f"{path}: missing metadata: {', '.join(missing_delays)}"
             )
         errand_delay = float(metadata["errand_delay"])
-        item_delay = float(metadata["item_delay"])
+        if {"item_delay", "action_delay"} <= metadata.keys():
+            raise ValueError(f"{path}: specify action_delay or legacy item_delay, not both")
+        action_delay = float(metadata.get("action_delay", metadata.get("item_delay")))
+
+    present_errand_fields = ERRAND_METADATA_FIELDS & metadata.keys()
+    if present_errand_fields and present_errand_fields != ERRAND_METADATA_FIELDS:
+        raise ValueError(f"{path}: incomplete errand profile metadata")
+    if present_errand_fields and metadata["errand_model"] != "fixed_bulk_v1":
+        raise ValueError(f"{path}: unsupported errand_model")
+    bulk_size = int(metadata.get("bulk_size", "1"))
+    if bulk_size not in (1, 10):
+        raise ValueError(f"{path}: bulk_size must be 1 or 10")
+    if not present_errand_fields and any(action.quantity != 1 for errand in errands for action in errand):
+        raise ValueError(f"{path}: bulk actions require errand profile metadata")
 
     def optional_int(key):
         return int(metadata[key]) if key in metadata else None
@@ -155,7 +186,7 @@ def load_route(path):
         for_quickster=for_quickster,
         errands=tuple(errands),
         errand_delay=errand_delay,
-        item_delay=item_delay,
+        action_delay=action_delay,
         price_horizon_multiplier=optional_float("price_horizon_multiplier"),
         errand_queue_depth=optional_int("errand_queue_depth"),
         max_errand_size=optional_int("max_errand_size"),
@@ -163,12 +194,18 @@ def load_route(path):
         ruler_scale=optional_float("ruler_scale"),
         ruler_route=metadata.get("ruler_route"),
         beam_max_expansions=optional_int("beam_max_expansions"),
+        errand_profile=metadata.get("errand_profile"),
+        bulk_size=bulk_size,
+        selling_allowed=_parse_boolean(path, metadata, "selling_allowed") if present_errand_fields else True,
+        errand_search_width=optional_int("errand_search_width"),
+        max_errand_actions=optional_int("max_errand_actions"),
+        errand_state_width=optional_int("errand_state_width"),
     )
     if plan.target <= 0:
         raise ValueError(f"{path}: target must be greater than zero")
-    if plan.click_rate < 0:
+    if not isfinite(plan.click_rate) or plan.click_rate < 0:
         raise ValueError(f"{path}: click_rate cannot be negative")
-    if plan.errand_delay < 0 or plan.item_delay < 0:
+    if any(not isfinite(value) or value < 0 for value in (plan.errand_delay, plan.action_delay)):
         raise ValueError(f"{path}: purchase delays cannot be negative")
     positive_fields = {
         "price_horizon_multiplier": plan.price_horizon_multiplier,
@@ -176,15 +213,29 @@ def load_route(path):
         "max_errand_size": plan.max_errand_size,
         "beam_width": plan.beam_width,
         "beam_max_expansions": plan.beam_max_expansions,
+        "errand_search_width": plan.errand_search_width,
+        "max_errand_actions": plan.max_errand_actions,
+        "errand_state_width": plan.errand_state_width,
     }
     for key, value in positive_fields.items():
         if value is not None and value <= 0:
             raise ValueError(f"{path}: {key} must be greater than zero")
     if plan.ruler_scale is not None and plan.ruler_scale < 0:
         raise ValueError(f"{path}: ruler_scale cannot be negative")
+    _validate_profile_actions(plan)
     if plan.for_quickster and any(len(errand) != 1 for errand in plan.errands):
-        raise ValueError(f"{path}: Quickster routes require single-item errands")
+        raise ValueError(f"{path}: Quickster routes require single-transaction errands")
     return plan
+
+
+def _validate_profile_actions(plan):
+    if plan.errand_profile is None:
+        return
+    for action in plan.actions:
+        if action.quantity > plan.bulk_size:
+            raise ValueError("Action quantity exceeds the route's fixed bulk size")
+        if action.operation == "sell" and not plan.selling_allowed:
+            raise ValueError("Route contains sales but its errand profile disables selling")
 
 
 def write_route(
@@ -201,10 +252,17 @@ def write_route(
         raise ValueError("Route destination must end in .route")
     if path.exists() and not overwrite:
         raise FileExistsError(f"Route already exists: {path}")
+    _validate_profile_actions(plan)
+    if plan.bulk_size not in (1, 10):
+        raise ValueError("bulk_size must be 1 or 10")
+    if plan.errand_profile is None and (plan.bulk_size != 1 or any(
+        action.quantity != 1 for action in plan.actions
+    )):
+        raise ValueError("Bulk actions require errand profile metadata")
     if plan.for_quickster and any(len(errand) != 1 for errand in plan.errands):
-        raise ValueError("Quickster routes require single-item errands")
+        raise ValueError("Quickster routes require single-transaction errands")
     if not explicit_errands and any(len(errand) != 1 for errand in plan.errands):
-        raise ValueError("Markerless routes require single-item errands")
+        raise ValueError("Markerless routes require single-transaction errands")
 
     lines = []
     if comment:
@@ -228,9 +286,16 @@ def write_route(
         lines.extend(
             [
                 f"errand_delay = {float(plan.errand_delay)}",
-                f"item_delay = {float(plan.item_delay)}",
+                f"action_delay = {float(plan.action_delay)}",
             ]
         )
+    if plan.errand_profile is not None:
+        lines.extend([
+            "errand_model = fixed_bulk_v1",
+            f"errand_profile = {plan.errand_profile}",
+            f"bulk_size = {plan.bulk_size}",
+            f"selling_allowed = {str(plan.selling_allowed).lower()}",
+        ])
     optional = (
         ("price_horizon_multiplier", plan.price_horizon_multiplier),
         ("errand_queue_depth", plan.errand_queue_depth),
@@ -239,6 +304,9 @@ def write_route(
         ("ruler_scale", plan.ruler_scale),
         ("ruler_route", plan.ruler_route),
         ("beam_max_expansions", plan.beam_max_expansions),
+        ("errand_search_width", plan.errand_search_width),
+        ("max_errand_actions", plan.max_errand_actions),
+        ("errand_state_width", plan.errand_state_width),
     )
     for key, value in optional:
         if value is not None:

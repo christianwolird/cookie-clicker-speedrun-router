@@ -229,7 +229,12 @@ def extract_routes(spreadsheet_directory, output_directory):
             plan = RoutePlan(
                 name=route_name,
                 source=source,
-                category=category_name,
+                # Preserve workbook-derived names while selecting the game category.
+                category=(
+                    "one_million_v2"
+                    if category_name == "one_million"
+                    else category_name
+                ),
                 player_profile=_player_profile(click_rate),
                 version=version,
                 target=target,

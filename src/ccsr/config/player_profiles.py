@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 from pathlib import Path
+from math import isfinite
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[3]
@@ -13,13 +14,18 @@ class PlayerProfile:
     name: str
     click_rate: float
     errand_delay: float
-    item_delay: float
+    action_delay: float
+
+    @property
+    def item_delay(self):
+        """Compatibility alias for older callers."""
+        return self.action_delay
 
 
 PARSERS = {
     "click_rate": float,
     "errand_delay": float,
-    "item_delay": float,
+    "action_delay": float,
 }
 
 
@@ -42,6 +48,8 @@ def load_player_profile(name, profile_directory=PLAYER_PROFILE_DIRECTORY):
             continue
         key, separator, value = line.partition("=")
         key, value = key.strip(), value.strip()
+        if key == "item_delay":
+            key = "action_delay"
         if not separator or not key or not value:
             raise ValueError(f"{path}:{line_number}: expected key = value")
         if key not in PARSERS:
@@ -57,6 +65,6 @@ def load_player_profile(name, profile_directory=PLAYER_PROFILE_DIRECTORY):
     if missing:
         raise ValueError(f"{path}: missing settings: {', '.join(missing)}")
     for key, value in values.items():
-        if value < 0:
+        if not isfinite(value) or value < 0:
             raise ValueError(f"{path}: {key} cannot be negative")
     return PlayerProfile(name=name, **values)

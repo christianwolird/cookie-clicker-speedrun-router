@@ -1,5 +1,9 @@
 # Erranding and Quickster routes
 
+This page describes legacy route timing and the historical comparisons below.
+For new fixed x1/x10 profiles, action delays, and mixed sale/purchase errands,
+see [fixed bulk errands](fixed_bulk_errands.md).
+
 ## Quickster routes
 
 A Quickster route is a purchase order that assumes zero human delay in the

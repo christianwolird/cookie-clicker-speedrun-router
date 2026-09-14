@@ -1,0 +1,76 @@
+{
+  "common": {
+    "workers": 3,
+    "horizon": 0,
+    "anchor": 4,
+    "macro": 1,
+    "order": 1,
+    "prune": 0.9,
+    "heap": 750000,
+    "nodes": 6000000,
+    "compact": 1,
+    "harvest": 384,
+    "future-mask": 32768,
+    "canonical-partials": 1,
+    "quantity-children": 4,
+    "age-bound": 1,
+    "seed-prefixes": 0,
+    "persistent-workers": 1,
+    "stage-balance": 1,
+    "hand-dominance": 1,
+    "rollout-weight": 0.5,
+    "hint-slack": 1.5,
+    "target-rollout": 1,
+    "retain-closed": 1,
+    "harvest-strategy": 3,
+    "harvest-order-limit": 8,
+    "harvest-slack": 6,
+    "report-generated": 1,
+    "completion-cache": 200000,
+    "refresh-hints": 1
+  },
+  "trials": {
+    "long_root_forecast": {
+      "width": 2500,
+      "inner": 3000,
+      "pops": 10000,
+      "future-inventory": 0.03,
+      "rollout-keep": 320,
+      "rollout-raw": 80
+    },
+    "long_wide_diverse": {
+      "width": 8000,
+      "inner": 6000,
+      "pops": 30000,
+      "future-inventory": 0.1,
+      "start-prefix": 4,
+      "strategy-bins": 2,
+      "rollout-keep": 320,
+      "rollout-raw": 80,
+      "rollout-diverse": 80
+    },
+    "long_upgrade_bonus": {
+      "width": 3000,
+      "inner": 4000,
+      "pops": 15000,
+      "upgrade-bonus": 0.1,
+      "max-actions": 16,
+      "order": 0.98,
+      "prune": 0.85,
+      "strategy-bins": 2,
+      "rollout-keep": 480,
+      "rollout-raw": 120,
+      "rollout-diverse": 80
+    },
+    "long_inventory_restricted": {
+      "workers": 1,
+      "width": 2500,
+      "inner": 3000,
+      "pops": 10000,
+      "future-inventory": 0.03,
+      "inventory-cap": 0,
+      "rollout-keep": 320,
+      "rollout-raw": 80
+    }
+  }
+}

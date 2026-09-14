@@ -1,0 +1,472 @@
+name = heavenly_chip: Bluestonex64 (Fast clicks (15 cps))
+source = dha spreadsheet: heavenly chip row 2
+goal = heavenly_chip
+player_profile = default_15_cps
+version = 1.0466
+target = 1000000000000
+click_rate = 15
+initial_state = fresh
+algorithm = community_route
+upgrades_enabled = true
+for_quickster = true
+route_profile = heavenly-chip-15cps
+achievement_curve = heavenly_chip_estimate
+
+buy Cursor
+upgrade Reinforced index finger
+upgrade Carpal tunnel prevention cream
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Cursor
+buy Farm
+upgrade Cheap hoes
+buy Farm
+upgrade Ambidextrous
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+buy Cursor
+buy Farm
+buy Factory
+buy Mine
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+buy Mine
+buy Grandma
+buy Cursor
+buy Factory
+buy Farm
+buy Mine
+buy Grandma
+buy Factory
+buy Cursor
+buy Farm
+buy Mine
+buy Shipment
+buy Grandma
+buy Factory
+buy Cursor
+buy Mine
+buy Farm
+buy Shipment
+upgrade Sugar gas
+buy Mine
+buy Mine
+buy Shipment
+buy Factory
+upgrade Sturdier conveyor belts
+buy Factory
+buy Factory
+buy Grandma
+buy Cursor
+buy Farm
+buy Mine
+buy Factory
+buy Shipment
+buy Alchemy Lab
+buy Grandma
+buy Farm
+buy Cursor
+buy Alchemy Lab
+buy Mine
+buy Shipment
+buy Factory
+buy Alchemy Lab
+buy Grandma
+buy Farm
+buy Cursor
+buy Mine
+buy Shipment
+upgrade Vanilla nebulae
+buy Shipment
+buy Portal
+upgrade Plastic mouse
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+buy Portal
+upgrade Ancient tablet
+buy Portal
+buy Portal
+buy Alchemy Lab
+buy Portal
+buy Shipment
+buy Factory
+buy Portal
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+buy Portal
+buy Alchemy Lab
+upgrade Antimony
+buy Alchemy Lab
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+upgrade Thousand fingers
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Factory
+buy Alchemy Lab
+buy Grandma
+buy Mine
+buy Farm
+buy Cursor
+buy Shipment
+buy Portal
+buy Time Machine
+buy Factory
+buy Time Machine
+upgrade Iron mouse
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Cursor
+upgrade Fertilizer
+buy Shipment
+buy Portal
+buy Time Machine
+buy Factory
+upgrade Cookie trees
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Time Machine
+buy Farm
+buy Cursor
+buy Portal
+buy Shipment
+buy Factory
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+buy Factory
+buy Time Machine
+upgrade Flux capacitors
+buy Alchemy Lab
+buy Mine
+buy Grandma
+buy Time Machine
+buy Farm
+buy Portal
+buy Cursor
+buy Shipment
+upgrade Forwards from grandma
+upgrade Steel-plated rolling pins
+upgrade Farmer grandmas
+upgrade Lubricated dentures
+buy Grandma
+upgrade Worker grandmas
+buy Grandma
+buy Grandma
+upgrade Miner grandmas
+buy Factory
+upgrade Child labor
+buy Grandma
+buy Alchemy Lab
+buy Time Machine
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+buy Grandma
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+upgrade Megadrill
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+upgrade Insane oatling workers
+buy Factory
+buy Grandma
+upgrade Ultradrill
+buy Time Machine
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Factory
+upgrade Sweatshop
+upgrade Soul bond
+buy Grandma
+buy Time Machine
+buy Antimatter Condenser
+upgrade Cosmic grandmas
+buy Alchemy Lab
+buy Mine
+buy Antimatter Condenser
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+upgrade Wormholes
+upgrade Titanium mouse
+buy Factory
+buy Antimatter Condenser
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+upgrade Frequent flyer
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Factory
+buy Time Machine
+buy Grandma
+buy Alchemy Lab
+upgrade Essence of dough
+buy Mine
+buy Portal
+buy Farm
+buy Antimatter Condenser
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+upgrade True chocolate
+upgrade Sugar bosons
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Time Machine
+buy Factory
+buy Grandma
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Antimatter Condenser
+buy Prism
+upgrade Transmuted grandmas
+buy Prism
+buy Time Machine
+buy Prism
+buy Factory
+buy Grandma
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Prism
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+buy Prism
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Grandma
+buy Prism
+buy Antimatter Condenser
+buy Alchemy Lab
+buy Mine
+buy Portal
+buy Farm
+buy Cursor
+buy Shipment
+buy Time Machine
+buy Factory
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Million fingers
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+upgrade Billion fingers
+buy Cursor
+buy Cursor

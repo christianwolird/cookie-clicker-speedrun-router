@@ -16,10 +16,11 @@ if str(SOURCE_DIRECTORY) not in sys.path:
 from ccsr.config import (
     available_player_profiles, load_player_profile,
     available_errand_profiles, load_errand_profile,
+    available_route_profiles, load_route_profile,
 )
 from ccsr.game.data import SUPPORTED_VERSIONS
 from ccsr.presentation import LiveRouteTable, format_route
-from ccsr.routes import execute_route, initial_gamestate, load_route
+from ccsr.routes import execute_route, initial_gamestate, load_route, use_route_profile
 
 
 def _wait_until(started_at, age):
@@ -32,6 +33,7 @@ def main(argv=None):
     started_at = monotonic()
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("route_file")
+    parser.add_argument("--route-profile", choices=available_route_profiles())
     parser.add_argument("--version", choices=SUPPORTED_VERSIONS)
     parser.add_argument("--player", choices=available_player_profiles())
     parser.add_argument(
@@ -48,6 +50,8 @@ def main(argv=None):
 
     try:
         plan = load_route(args.route_file)
+        if args.route_profile:
+            plan = use_route_profile(plan, load_route_profile(args.route_profile))
         player = load_player_profile(args.player) if args.player else None
         errand_profile = (
             load_errand_profile(args.errand_profile) if args.errand_profile else None
@@ -56,7 +60,8 @@ def main(argv=None):
         parser.error(str(error))
 
     active_profile = player.name if player else plan.player_profile
-    print(f"Replaying {plan.category} route for {active_profile}...", flush=True)
+    print(f"Replaying {plan.goal} route for {active_profile}...", flush=True)
+    print(f"Game version: {args.version or plan.version}", flush=True)
     print(f"Errand profile: {args.errand_profile or plan.errand_profile or 'legacy x1'}", flush=True)
     table = (
         LiveRouteTable(

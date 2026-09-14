@@ -1,0 +1,169 @@
+name = default
+source = this codebase
+goal = one_million
+player_profile = default_200_cps
+version = 2.031
+target = 1000000
+click_rate = 200
+initial_state = fresh
+algorithm = greedy_router
+upgrades_enabled = true
+for_quickster = false
+route_profile = million-200cps
+achievement_curve = none
+errand_delay = 0.8
+action_delay = 0.2
+price_horizon_multiplier = 2
+errand_queue_depth = 100
+
+errand
+buy Cursor
+upgrade Reinforced index finger
+
+errand
+upgrade Carpal tunnel prevention cream
+
+errand
+buy Farm
+
+errand
+buy Farm
+buy Farm
+
+errand
+buy Farm
+buy Farm
+upgrade Forwards from grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+
+errand
+upgrade Ambidextrous
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+
+errand
+upgrade Cheap hoes
+buy Farm
+buy Farm
+buy Farm
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Mine
+upgrade Steel-plated rolling pins
+
+errand
+buy Farm
+upgrade Plastic mouse
+
+errand
+buy Farm
+buy Grandma
+buy Mine
+
+errand
+buy Farm
+buy Grandma
+buy Mine
+
+errand
+buy Farm
+buy Farm
+upgrade Fertilizer
+
+errand
+buy Farm
+buy Farm
+
+errand
+buy Farm
+buy Farm
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Cursor
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+upgrade Thousand fingers
+
+errand
+upgrade Farmer grandmas
+buy Grandma
+buy Grandma
+buy Grandma
+buy Grandma
+
+errand
+buy Grandma
+buy Grandma
+upgrade Lubricated dentures
+
+errand
+buy Farm
+buy Grandma
+buy Grandma
+
+errand
+buy Cursor
+buy Cursor
+buy Cursor
+buy Farm
+buy Grandma
+buy Grandma
+
+errand
+buy Cursor
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+
+errand
+buy Cursor
+buy Cursor
+buy Farm
+buy Grandma
+buy Mine
+
+errand
+buy Farm
+buy Mine
+buy Mine
+buy Mine
+upgrade Sugar gas

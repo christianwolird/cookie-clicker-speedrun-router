@@ -10,7 +10,7 @@ from ..game.actions import RouteAction
 class RoutePlan:
     name: str
     source: str
-    category: str
+    goal: str
     player_profile: str
     version: str
     target: int
@@ -35,6 +35,8 @@ class RoutePlan:
     errand_search_width: int | None = None
     max_errand_actions: int | None = None
     errand_state_width: int | None = None
+    route_profile: str | None = None
+    achievement_curve: str | None = None
 
     @property
     def item_delay(self):

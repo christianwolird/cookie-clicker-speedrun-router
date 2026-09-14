@@ -4,10 +4,10 @@ Select `--errand-profile` independently of `--player`:
 
 | Profile | Fixed bulk size | Sales |
 |---|---:|---|
-| `single` | 1 | Disabled |
-| `single_with_sales` | 1 | Enabled |
-| `bulk10` | 10 | Disabled |
-| `bulk10_with_sales` | 10 | Enabled |
+| `single_no_selling` | 1 | Disabled |
+| `single_with_selling` | 1 | Enabled |
+| `bulk10_no_selling` | 10 | Disabled |
+| `bulk10_with_selling` | 10 | Enabled |
 
 Profiles contain `bulk_size` and `selling_allowed`. Player profiles contain
 `click_rate`, `errand_delay`, and `action_delay`. Legacy `item_delay` is accepted
@@ -99,9 +99,9 @@ Replay validates it and reports an error if the new mode buys different quantiti
 
 ```sh
 python3 tools/route_replayer.py ROUTE_FILE --verbose
-python3 tools/route_replayer.py ROUTE_FILE --errand-profile single_with_sales
+python3 tools/route_replayer.py ROUTE_FILE --errand-profile single_with_selling
 python3 tools/errandifier.py QUICKSTER_FILE OUTPUT_FILE \
-  --player default_250_cps --errand-profile bulk10 --state-width 10
+  --player default_250_cps --errand-profile bulk10_no_selling --state-width 10
 ```
 
 With an explicit profile, errandification compresses adjacent identical building
@@ -112,8 +112,8 @@ prefix; this mode is a bounded optimization, not an exact optimum claim.
 
 Files without errand-profile metadata replay with legacy x1 timing, including
 legacy isolated sales. Errandification without an override preserves the source
-execution model. Existing stored routes and historical comparison tables are
-not rewritten.
+execution model. Retained historical routes keep their timing model when moved to type folders;
+historical comparison tables are preserved.
 
 ## Small budget comparison
 
@@ -124,10 +124,10 @@ illustrate cost and quality tradeoffs, not recommended speedrun records.
 
 | Category / player | Profile | Finish (seconds) | Runtime (seconds, approximate) |
 |---|---|---:|---:|
-| 100k / default_250_cps | single | 102.934 | 0.28 |
-| 100k / default_250_cps | bulk10 | 63.527 | 2.63 |
-| Neverclick / default_neverclick | single | 2,475.470 | 1.64 |
-| Neverclick / default_neverclick | single_with_sales | 2,479.949 | 2.98 |
+| 100k / default_250_cps | single_no_selling | 102.934 | 0.28 |
+| 100k / default_250_cps | bulk10_no_selling | 63.527 | 2.63 |
+| Neverclick / neverclick | single_no_selling | 2,475.470 | 1.64 |
+| Neverclick / neverclick | single_with_selling | 2,479.949 | 2.98 |
 
 The sales-enabled result used two sales but was slightly slower at this budget.
 More available errands do not guarantee a better route under the same search

@@ -16,6 +16,7 @@ from ccsr.routes import RouteAction
 from ccsr.routing_algorithms.beam_search_router import find_route as find_beam
 from ccsr.routing_algorithms.greedy_router import find_route as find_greedy
 from ccsr.routing_algorithms.route_ruler import RouteRuler
+from ccsr.routing_algorithms.parallel_neighbors import NeighborExecutor
 
 
 class SyntheticState:
@@ -125,6 +126,41 @@ class AlgorithmTests(unittest.TestCase):
 
         self.assertTrue(all(len(errand) == 1 for errand in result.errands))
         self.assertEqual(result.final_gamestate.errand_delay, 0)
+
+    def test_parallel_beam_preserves_serial_search_and_route(self):
+        for bulk_size in (1, 10):
+            with self.subTest(bulk_size=bulk_size):
+                initial = Gamestate("2.031")
+                initial.click_rate = 250
+                initial.bulk_size = bulk_size
+                initial.legacy_errands = False
+                ruler = find_greedy(initial, 10_000, queue_expansions=10)
+                options = dict(beam_width=5, errand_search_width=10,
+                               errand_queue_expansions=20, max_expansions=100,
+                               ruler_route=ruler)
+                serial = find_beam(initial, 10_000, **options)
+                parallel = find_beam(initial, 10_000, workers=2, **options)
+                self.assertEqual(serial.errands, parallel.errands)
+                self.assertEqual(serial.final_gamestate.age, parallel.final_gamestate.age)
+                for field in ("expanded", "generated", "relaxed", "stale_skipped",
+                              "heuristic_evaluations", "maximum_queue_size", "termination"):
+                    self.assertEqual(getattr(serial.search_stats, field),
+                                     getattr(parallel.search_stats, field))
+
+    def test_parallel_beam_rejects_invalid_worker_count(self):
+        with self.assertRaisesRegex(ValueError, "workers"):
+            find_beam(self.gamestate, 1_000, workers=0)
+
+    def test_parallel_neighbors_share_catalogs_without_mutating_parent(self):
+        before = self.gamestate.copy()
+        with NeighborExecutor(2, 10_000, dict(width=3, queue_expansions=10)) as executor:
+            neighbors = executor.neighbors(self.gamestate)
+        self.assertTrue(neighbors)
+        for neighbor in neighbors:
+            self.assertIs(neighbor.gamestate.building_catalog, self.gamestate.building_catalog)
+            self.assertIs(neighbor.gamestate.upgrade_catalog, self.gamestate.upgrade_catalog)
+        self.assertEqual(self.gamestate.building_counts, before.building_counts)
+        self.assertEqual(self.gamestate.age, before.age)
 
     def test_dp_partition_respects_maximum_errand_size(self):
         actions = tuple(RouteAction("buy", "Cursor") for _ in range(3))

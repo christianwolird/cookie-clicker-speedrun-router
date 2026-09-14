@@ -60,7 +60,7 @@ it is not a search for a different purchase order.
 
 ## Online Quickster routes
 
-The normalized originals under `routes/online/quickster_originals/` were
+The normalized originals under `routes/<type>/community_quickster_*.route` were
 extracted from the hidden Routes sheets in the DHA community workbooks.
 
 | Category | Author | Click method | CPS | Version | Target | Actions | Player profile |
@@ -69,7 +69,7 @@ extracted from the hidden Routes sheets in the DHA community workbooks.
 | Hardcore | Lookas123 | Left clicks | 10 | 1.0466 | 1 billion | 518 | `default_10_cps` |
 | Heavenly Chip | Bluestonex64 | Fast clicks | 15 | 1.0466 | 1 trillion | 458 | `default_15_cps` |
 | Heavenly Chip | dha | Fast clicks | 15 | 1.0466 | 1 trillion | 337 | `default_15_cps` |
-| Neverclick | 36champ | Neverclick | 0 | 2.031 | 1 million | 118 | `default_neverclick` |
+| Neverclick | 36champ | Neverclick | 0 | 2.031 | 1 million | 118 | `neverclick` |
 | One Million | dha | Fast clicks | 15 | 2.031 | 1 million | 123 | `default_15_cps` |
 | One Million | Iwer Sonsch | Left clicks | 10 | 2.031 | 1 million | 119 | `default_10_cps` |
 | One Million | k4l3b0 | Left clicks | 10 | 2.031 | 1 million | 119 | `default_10_cps` |
@@ -78,7 +78,7 @@ extracted from the hidden Routes sheets in the DHA community workbooks.
 ## Replay and erranding comparison
 
 The eight non-Neverclick originals were errandified into
-`routes/online/erranded/` with a 100-action history window. The delayed replays
+`routes/<type>/community_errandified_*.route` with a 100-action history window. The delayed replays
 use the recorded player profile: an errand delay of 0.8 seconds and an item
 delay of 0.2 seconds. Neverclick is excluded because it has no continuing hand
 CpS, so grouping shop trips cannot recover lost hand-clicking time.

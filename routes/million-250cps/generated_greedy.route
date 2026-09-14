@@ -1,0 +1,93 @@
+# Twelve-hour search, 2026-09-14; replay and generation provenance: experiments/million_trained_250cps_12hour_search/docs/trained-250cps-search-results.json; reproduction: experiments/million_trained_250cps_12hour_search/README.md.
+name = million-250cps generated_greedy
+source = this codebase
+goal = one_million
+player_profile = trained_250_cps
+version = 2.031
+target = 1000000
+click_rate = 250
+initial_state = fresh
+algorithm = experimental_policy_greedy
+upgrades_enabled = true
+for_quickster = false
+route_profile = million-250cps
+achievement_curve = none
+errand_delay = 0.4
+action_delay = 0.1
+errand_model = fixed_bulk_v1
+errand_profile = bulk10_no_selling
+bulk_size = 10
+selling_allowed = false
+errand_queue_depth = 5000
+errand_search_width = 1500
+max_errand_actions = 12
+
+errand
+buy Cursor
+
+errand
+upgrade Reinforced index finger
+
+errand
+upgrade Carpal tunnel prevention cream
+buy Grandma
+
+errand
+buy Cursor x10
+upgrade Ambidextrous
+
+errand
+buy Cursor x10
+buy Grandma x10
+upgrade Forwards from grandma
+upgrade Steel-plated rolling pins
+buy Farm x6
+buy Grandma x4
+
+errand
+upgrade Cheap hoes
+buy Farm x3
+buy Grandma x3
+
+errand
+upgrade Plastic mouse
+
+errand
+buy Farm x4
+buy Grandma x2
+
+errand
+buy Mine x2
+
+errand
+upgrade Fertilizer
+
+errand
+buy Farm x4
+
+errand
+upgrade Farmer grandmas
+buy Grandma x5
+
+errand
+upgrade Lubricated dentures
+buy Grandma x5
+
+errand
+buy Cursor x10
+upgrade Thousand fingers
+
+errand
+buy Mine x4
+
+errand
+buy Farm x4
+buy Grandma x2
+
+errand
+buy Mine x2
+buy Grandma x3
+buy Cursor x4
+
+errand
+upgrade Sugar gas

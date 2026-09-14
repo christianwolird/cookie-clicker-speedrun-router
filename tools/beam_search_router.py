@@ -15,14 +15,16 @@ if str(SOURCE) not in sys.path:
     sys.path.insert(0, str(SOURCE))
 
 from ccsr.config import (
-    available_categories,
+    available_route_profiles,
     available_player_profiles,
     create_initial_gamestate,
-    load_category,
+    load_route_profile,
     load_player_profile,
     available_errand_profiles,
     load_errand_profile,
 )
+from ccsr.game.data import SUPPORTED_VERSIONS
+from ccsr.routes.layout import generated_route_path
 from ccsr.errands.generator import (
     DEFAULT_BEAM_WIDTH, DEFAULT_QUEUE_EXPANSIONS, DEFAULT_MAX_ERRAND_ACTIONS,
 )
@@ -43,20 +45,11 @@ from ccsr.routing_algorithms.route_ruler import DEFAULT_RULER_SCALE
 
 
 DEFAULT_PRICE_HORIZON_MULTIPLIER = 2.0
-OUTPUT_DIRECTORY = REPOSITORY / "routes" / "generated" / "beam_routes"
+OUTPUT_DIRECTORY = REPOSITORY / "routes"
 
 
-def _save_path(destination):
-    path = Path(destination)
-    if path.suffix != ".route":
-        raise ValueError("Route destination must end in .route")
-    if not path.is_absolute():
-        path = OUTPUT_DIRECTORY / path
-    path = path.resolve()
-    if not path.is_relative_to(OUTPUT_DIRECTORY.resolve()):
-        raise ValueError(f"Route destination must be inside {OUTPUT_DIRECTORY}")
-    return path
-
+def _save_path(destination, route_type):
+    return generated_route_path(destination, route_type, "generated_beam", OUTPUT_DIRECTORY)
 
 def _format_incoming_errand(errand):
     if not errand:
@@ -106,9 +99,9 @@ def _print_progress(progress):
         )
 
 
-def _load_ruler(path, category, player, for_quickster, errand_profile):
+def _load_ruler(path, route_profile, player, for_quickster, errand_profile):
     plan = load_route(path)
-    if plan.version != category.version:
+    if plan.version != route_profile.version:
         raise ValueError("Ruler route uses a different game version")
     if plan.for_quickster != for_quickster:
         raise ValueError(
@@ -118,12 +111,14 @@ def _load_ruler(path, category, player, for_quickster, errand_profile):
         raise ValueError("Ruler route uses a different fixed bulk size")
     plan = replace(
         plan,
-        category=category.name,
+        goal=route_profile.goal,
+        route_profile=route_profile.name,
+        achievement_curve=route_profile.achievement_curve,
         player_profile=player.name,
-        target=category.target,
-        click_rate=player.click_rate if category.clicking_enabled else 0.0,
-        initial_state=category.initial_state,
-        upgrades_enabled=category.upgrades_enabled,
+        target=route_profile.target,
+        click_rate=player.click_rate,
+        initial_state=player.initial_state,
+        upgrades_enabled=route_profile.upgrades_enabled,
         errand_delay=player.errand_delay,
         action_delay=player.action_delay,
     )
@@ -135,21 +130,21 @@ def _load_ruler(path, category, player, for_quickster, errand_profile):
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--category",
-        choices=available_categories(),
-        default="one_million_v2",
+        "--route-profile",
+        choices=available_route_profiles(),
+        default="million-25cps",
     )
+    parser.add_argument("--version", choices=SUPPORTED_VERSIONS, help="override the route profile game version")
     parser.add_argument(
         "--player",
         choices=available_player_profiles(),
-        default="default_10_cps",
     )
     parser.add_argument(
         "--quickster",
         action="store_true",
         help="offer only single-click errands and apply zero action delay",
     )
-    parser.add_argument("--errand-profile", choices=available_errand_profiles(), default="single")
+    parser.add_argument("--errand-profile", choices=available_errand_profiles())
     parser.add_argument("--max-errand-actions", type=int, default=DEFAULT_MAX_ERRAND_ACTIONS)
     parser.add_argument(
         "--errand-search-width", type=int,
@@ -162,6 +157,8 @@ def main(argv=None):
         default=DEFAULT_PRICE_HORIZON_MULTIPLIER,
     )
     parser.add_argument("--beam-width", type=int, default=DEFAULT_BEAM_WIDTH)
+    parser.add_argument("--workers", type=int, default=1,
+                        help="processes for speculative errand generation; preserves serial search order")
     parser.add_argument("--ruler-route", type=Path)
     parser.add_argument(
         "--ruler-scale",
@@ -178,7 +175,7 @@ def main(argv=None):
         type=float,
         default=DEFAULT_PROGRESS_INTERVAL,
     )
-    parser.add_argument("--save", metavar="NAME.route")
+    parser.add_argument("--save", nargs="?", const="generated_beam.route", metavar="NAME.route")
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args(argv)
@@ -186,6 +183,7 @@ def main(argv=None):
     positive = {
         "--price-horizon-multiplier": args.price_horizon_multiplier,
         "--beam-width": args.beam_width,
+        "--workers": args.workers,
         "--max-expansions": args.max_expansions,
         "--progress-interval": args.progress_interval,
         "--max-errand-actions": args.max_errand_actions,
@@ -203,16 +201,17 @@ def main(argv=None):
         parser.error("--overwrite requires --save")
 
     try:
-        category = load_category(args.category)
-        player = load_player_profile(args.player)
-        errand_profile = load_errand_profile(args.errand_profile)
-        destination = _save_path(args.save) if args.save else None
+        route_profile = load_route_profile(args.route_profile)
+        route_profile = replace(route_profile, version=args.version or route_profile.version)
+        player = load_player_profile(args.player or route_profile.player_profile)
+        errand_profile = load_errand_profile(args.errand_profile or route_profile.errand_profile)
+        destination = _save_path(args.save, args.route_profile) if args.save else None
         if destination and destination.exists() and not args.overwrite:
             raise FileExistsError(f"Route already exists: {destination}")
         ruler_route = (
             _load_ruler(
                 args.ruler_route,
-                category,
+                route_profile,
                 player,
                 args.quickster,
                 errand_profile,
@@ -224,24 +223,27 @@ def main(argv=None):
         parser.error(str(error))
 
     gamestate = create_initial_gamestate(
-        category,
+        route_profile,
         player,
         for_quickster=args.quickster,
         errand_profile=errand_profile,
     )
-    print(f"Category: {category.name}")
+    print(f"Route profile: {route_profile.name}")
+    print(f"Goal: {route_profile.goal}")
+    print(f"Game version: {route_profile.version}")
     print(f"Player: {player.name}")
     print(f"Errand profile: {errand_profile.name} (x{errand_profile.bulk_size})")
     print(f"For Quickster: {args.quickster}")
     print(f"Beam width: {args.beam_width}")
+    print(f"Workers: {args.workers}")
     print(f"Ruler route: {args.ruler_route or 'temporary greedy route'}")
     print(f"Ruler scale: {args.ruler_scale:g}")
-    print(f"\nCalculating route to {category.target:,} cookies...", flush=True)
+    print(f"\nCalculating route to {route_profile.target:,} cookies...", flush=True)
 
     table = LiveRouteTable(gamestate.lifetime_cookies) if args.verbose else None
     result = find_route(
         gamestate,
-        category.target,
+        route_profile.target,
         on_errand=table.print_errand if table else None,
         price_horizon_multiplier=args.price_horizon_multiplier,
         beam_width=args.beam_width,
@@ -254,11 +256,12 @@ def main(argv=None):
         errand_search_width=args.errand_search_width,
         errand_queue_expansions=args.errand_queue_expansions,
         max_errand_actions=args.max_errand_actions,
+        workers=args.workers,
     )
     if table:
-        table.print_done(result.final_gamestate, category.target)
+        table.print_done(result.final_gamestate, route_profile.target)
     else:
-        print(format_route(result, category.target, include_purchases=False))
+        print(format_route(result, route_profile.target, include_purchases=False))
     stats = result.search_stats
     print(
         "Search: "
@@ -276,14 +279,16 @@ def main(argv=None):
         plan = RoutePlan(
             name=destination.stem,
             source="this codebase",
-            category=category.name,
+            goal=route_profile.goal,
+            route_profile=route_profile.name,
+            achievement_curve=route_profile.achievement_curve,
             player_profile=player.name,
-            version=category.version,
-            target=category.target,
+            version=route_profile.version,
+            target=route_profile.target,
             click_rate=gamestate.click_rate,
-            initial_state=category.initial_state,
+            initial_state=player.initial_state,
             algorithm="beam_search_router",
-            upgrades_enabled=category.upgrades_enabled,
+            upgrades_enabled=route_profile.upgrades_enabled,
             for_quickster=args.quickster,
             errands=action_errands(result),
             errand_delay=player.errand_delay,

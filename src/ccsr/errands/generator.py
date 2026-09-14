@@ -103,11 +103,22 @@ def initial_errands(gamestate, singleton_only=False):
 
 def added_purchase_errands(gamestate, errand):
     sales = errand.sales or (0,) * len(errand.building_quantities)
+    partial_buildings = set()
+    if gamestate.bulk_size == 10 and not any(sales) and not any(
+        action.operation == "sell" for action in errand.purchase_order
+    ):
+        # With no sales, a later partial buy of the same building would have
+        # been affordable during its first partial buy, forcing an overbuy.
+        partial_buildings = {
+            action.item for action in errand.purchase_order
+            if action.operation == "buy" and action.quantity < 10
+        }
     for index, name in enumerate(gamestate.building_catalog):
         # Buying back a building in the same grouped errand adds no production.
         if sales[index]:
             continue
-        for quantity in range(1, gamestate.bulk_size + 1):
+        first_quantity = gamestate.bulk_size if name in partial_buildings else 1
+        for quantity in range(first_quantity, gamestate.bulk_size + 1):
             quantities = list(errand.building_quantities)
             quantities[index] += quantity
             order = errand.purchase_order

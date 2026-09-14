@@ -9,7 +9,7 @@ from dataclasses import replace
 from pathlib import Path
 
 from ccsr.config import (
-    ErrandProfile, create_initial_gamestate, load_category,
+    ErrandProfile, create_initial_gamestate, load_route_profile,
     load_errand_profile, load_player_profile,
 )
 from ccsr.errands.errandifier import partition_contiguous_actions
@@ -28,16 +28,16 @@ from ccsr.routing_algorithms.beam_search_router import find_route as beam_route,
 from ccsr.routing_algorithms.greedy_router import find_route as greedy_route
 
 
-def state(profile="single", category="10k"):
+def state(profile="single_no_selling", route_profile="10k-10cps"):
     return create_initial_gamestate(
-        load_category(category), load_player_profile("default_250_cps"),
+        load_route_profile(route_profile), load_player_profile("neverclick" if route_profile == "neverclick-0cps" else "default_250_cps"),
         errand_profile=load_errand_profile(profile),
     )
 
 
 def plan_for(initial, errands):
     return RoutePlan(
-        name="test", source="test", category="10k", player_profile="default_250_cps",
+        name="test", source="test", goal="10k", player_profile="default_250_cps",
         version=initial.version, target=10_000, click_rate=initial.click_rate,
         initial_state="fresh", algorithm="test", upgrades_enabled=True,
         for_quickster=False, errands=errands, errand_delay=initial.errand_delay,
@@ -49,8 +49,8 @@ def plan_for(initial, errands):
 class ShopProfileTests(unittest.TestCase):
     def test_profiles_are_independent_of_player(self):
         for name, bulk, sales in (
-            ("single", 1, False), ("single_with_sales", 1, True),
-            ("bulk10", 10, False), ("bulk10_with_sales", 10, True),
+            ("single_no_selling", 1, False), ("single_with_selling", 1, True),
+            ("bulk10_no_selling", 10, False), ("bulk10_with_selling", 10, True),
         ):
             gamestate = state(name)
             self.assertEqual((gamestate.bulk_size, gamestate.selling_allowed), (bulk, sales))
@@ -88,7 +88,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertTrue(all(result[1] == results[0][1] for result in results))
 
     def test_bulk_partial_batches_obey_order(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         actions = (Action("buy", "Grandma", 10), Action("buy", "Farm", 3), Action("buy", "Cursor", 2))
         child, purchases = execute_shop_errand(gamestate, actions)
         self.assertEqual([purchase.quantity for purchase in purchases], [10, 3, 2])
@@ -101,7 +101,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertEqual(gamestate.lifetime_cookies, 0)
 
     def test_bulk_search_keeps_distinct_executable_orders(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         gamestate.lifetime_cookies = 1_000
         cursor = next(e for e in initial_errands(gamestate) if e.purchase_order == (Action("buy", "Cursor", 10),))
         grandma = next(e for e in initial_errands(gamestate) if e.purchase_order == (Action("buy", "Grandma", 10),))
@@ -113,7 +113,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertIsNotNone(_evaluate(gamestate, 100_000, gc, 10))
 
     def test_bulk_counts_clicks_not_copies(self):
-        bulk = state("bulk10")
+        bulk = state("bulk10_no_selling")
         single = state()
         child_bulk, purchases = execute_shop_errand(bulk, (Action("buy", "Cursor", 10),))
         child_single, _ = execute_shop_errand(single, (Action("buy", "Cursor"),) * 10)
@@ -122,7 +122,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertEqual(purchases[0].shop_actions, 1)
 
     def test_sale_child_uses_refunds_and_all_action_delays(self):
-        gamestate = state("single_with_sales")
+        gamestate = state("single_with_selling")
         gamestate.building_counts["Cursor"] = 3
         gamestate.lifetime_cookies = 53
         grandma = next(e for e in initial_errands(gamestate) if e.building_quantities[1] == 1 and not e.upgrades)
@@ -138,7 +138,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertAlmostEqual(neighbor.acquisition_time, expected)
 
     def test_fully_sale_funded_improvement_has_finite_score(self):
-        gamestate = state("single_with_sales")
+        gamestate = state("single_with_selling")
         gamestate.errand_delay = gamestate.action_delay = 0
         quantities = tuple(1 if name == "Grandma" else 0 for name in gamestate.building_catalog)
         # A free production-improving transaction is eligible, even at zero elapsed time.
@@ -151,7 +151,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertEqual(neighbor.score, 0)
 
     def test_sale_surplus_is_banked_and_not_counted_as_production(self):
-        gamestate = state("single_with_sales")
+        gamestate = state("single_with_selling")
         gamestate.errand_delay = gamestate.action_delay = 0
         gamestate.building_counts["Farm"] = 1
         child, purchases = execute_shop_errand(gamestate, (Action("buy", "Cursor"), Action("sell", "Farm")))
@@ -167,7 +167,7 @@ class ShopProfileTests(unittest.TestCase):
         gamestate.building_counts["Cursor"] = 13
         with self.assertRaisesRegex(ValueError, "disabled"):
             execute_shop_errand(gamestate, (Action("sell", "Cursor"),))
-        gamestate = state("bulk10_with_sales")
+        gamestate = state("bulk10_with_selling")
         gamestate.building_counts["Cursor"] = 13
         with self.assertRaisesRegex(ValueError, "sale"):
             execute_shop_errand(gamestate, (Action("sell", "Cursor", 3),))
@@ -176,7 +176,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertEqual(child.building_counts["Cursor"], 0)
 
     def test_bank_affects_bulk_affordability_and_search_identity(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         funded = gamestate.copy()
         funded.bank = 1_000
         self.assertNotEqual(inventory_key(gamestate), inventory_key(funded))
@@ -184,14 +184,14 @@ class ShopProfileTests(unittest.TestCase):
             execute_shop_errand(funded, (Action("buy", "Cursor"),))
 
     def test_bulk_upgrade_requires_prior_building_click(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         child, _ = execute_shop_errand(gamestate, (Action("buy", "Cursor", 10), Action("upgrade", "Reinforced index finger")))
         self.assertIn("Reinforced index finger", child.purchased_upgrades)
         with self.assertRaisesRegex(ValueError, "locked"):
             execute_shop_errand(gamestate, (Action("upgrade", "Reinforced index finger"), Action("buy", "Cursor", 10)))
 
     def test_generation_round_trip_matches_replay_for_all_profiles(self):
-        for profile in ("single", "single_with_sales", "bulk10", "bulk10_with_sales"):
+        for profile in ("single_no_selling", "single_with_selling", "bulk10_no_selling", "bulk10_with_selling"):
             for router in (greedy_route, beam_route):
                 with self.subTest(profile=profile, router=router.__module__):
                     gamestate = state(profile)
@@ -212,7 +212,7 @@ class ShopProfileTests(unittest.TestCase):
                     self.assertEqual(replayed.final_gamestate.age, result.final_gamestate.age)
 
     def test_new_metadata_does_not_depend_on_profile_file(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         plan = plan_for(gamestate, ((Action("buy", "Cursor", 10),),))
         self.assertEqual(execute_route(plan).errands[0][0].quantity, 10)
         with tempfile.TemporaryDirectory() as directory:
@@ -222,7 +222,7 @@ class ShopProfileTests(unittest.TestCase):
                 load_route(path)
 
     def test_target_reached_before_mixed_errand_is_not_overshot(self):
-        initial = state("single_with_sales", "neverclick")
+        initial = state("single_with_selling", "neverclick-0cps")
         plan = replace(
             plan_for(initial, ((Action("sell", "Cursor"), Action("buy", "Grandma")),)),
             initial_state="neverclick", target=16,
@@ -238,12 +238,12 @@ class ShopProfileTests(unittest.TestCase):
             ("beam_search_router.py", ["--beam-width", "3", "--errand-search-width", "4", "--errand-queue-expansions", "8", "--max-expansions", "20"]),
         ):
             output = subprocess.run(
-                [sys.executable, f"tools/{tool}", "--category", "10k", "--player", "default_250_cps", "--errand-profile", "bulk10", "--verbose", *options],
+                [sys.executable, f"tools/{tool}", "--route-profile", "10k-10cps", "--player", "default_250_cps", "--errand-profile", "bulk10_no_selling", "--verbose", *options],
                 cwd=repository, text=True, capture_output=True, check=True,
             ).stdout
-            self.assertIn("Errand profile: bulk10 (x10)", output)
+            self.assertIn("Errand profile: bulk10_no_selling (x10)", output)
             self.assertIn("Cursor ×10", output)
-        plan = plan_for(state("bulk10"), ((Action("buy", "Cursor", 10),),))
+        plan = plan_for(state("bulk10_no_selling"), ((Action("buy", "Cursor", 10),),))
         with tempfile.TemporaryDirectory() as directory:
             path = write_route(Path(directory) / "bulk.route", plan)
             output = subprocess.run(
@@ -254,7 +254,7 @@ class ShopProfileTests(unittest.TestCase):
         self.assertIn("recorded-settings", output)
 
     def test_errandifier_compiles_bulk_clicks_and_rejects_impossible_order(self):
-        gamestate = state("bulk10")
+        gamestate = state("bulk10_no_selling")
         actions = (Action("buy", "Cursor"),) * 10
         errands = partition_contiguous_actions(gamestate, actions, state_width=2)
         self.assertEqual(errands, ((Action("buy", "Cursor", 10),),))
@@ -264,7 +264,7 @@ class ShopProfileTests(unittest.TestCase):
             partition_contiguous_actions(funded, (Action("buy", "Cursor"),))
 
     def test_printout_has_explicit_bank_and_sale_mode_instructions(self):
-        gamestate = state("single_with_sales")
+        gamestate = state("single_with_selling")
         gamestate.errand_delay = gamestate.action_delay = 0
         gamestate.building_counts["Farm"] = 1
         child, first = execute_shop_errand(gamestate, (Action("sell", "Farm"), Action("buy", "Cursor")))

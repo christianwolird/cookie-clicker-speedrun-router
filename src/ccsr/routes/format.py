@@ -5,6 +5,8 @@ import re
 from math import isfinite
 
 from ..game.data import SUPPORTED_VERSIONS
+from ..config.goals import legacy_goal
+from ..config.achievement_curves import load_achievement_curve
 from .models import RouteAction, RoutePlan
 
 
@@ -12,7 +14,6 @@ ROUTE_OPERATIONS = frozenset({"buy", "sell", "upgrade"})
 COMMON_METADATA_FIELDS = {
     "name",
     "source",
-    "category",
     "player_profile",
     "version",
     "target",
@@ -25,6 +26,10 @@ COMMON_METADATA_FIELDS = {
 DELAY_METADATA_FIELDS = {"errand_delay", "item_delay", "action_delay"}
 ERRAND_METADATA_FIELDS = {"errand_profile", "bulk_size", "selling_allowed", "errand_model"}
 OPTIONAL_METADATA_FIELDS = {
+    "category",  # Legacy files only; new files use goal and route_profile.
+    "goal",
+    "route_profile",
+    "achievement_curve",
     *DELAY_METADATA_FIELDS,
     *ERRAND_METADATA_FIELDS,
     "errand_search_width",
@@ -116,6 +121,10 @@ def load_route(path):
     missing = sorted(COMMON_METADATA_FIELDS - metadata.keys())
     if missing:
         raise ValueError(f"{path}: missing metadata: {', '.join(missing)}")
+    if not {"goal", "category"} & metadata.keys():
+        raise ValueError(f"{path}: missing metadata: goal")
+    if {"goal", "category"} <= metadata.keys():
+        raise ValueError(f"{path}: specify goal or legacy category, not both")
     unexpected = sorted(
         metadata.keys() - COMMON_METADATA_FIELDS - OPTIONAL_METADATA_FIELDS
     )
@@ -172,13 +181,22 @@ def load_route(path):
     def optional_float(key):
         return float(metadata[key]) if key in metadata else None
 
+    target = int(metadata["target"])
+    goal = metadata.get("goal") or legacy_goal(metadata["category"], target)
+    curve = metadata.get("achievement_curve", (
+        "heavenly_chip_estimate" if metadata.get("category") == "heavenly_chip" else "none"
+    ))
+    load_achievement_curve(curve)
     plan = RoutePlan(
         name=metadata["name"],
         source=metadata["source"],
-        category=metadata["category"],
-        player_profile=metadata["player_profile"],
+        goal=goal,
+        route_profile=metadata.get("route_profile"),
+        achievement_curve=None if curve == "none" else curve,
+        player_profile=("neverclick" if metadata["player_profile"] == "default_neverclick"
+                        else metadata["player_profile"]),
         version=version,
-        target=int(metadata["target"]),
+        target=target,
         click_rate=float(metadata["click_rate"]),
         initial_state=initial_state,
         algorithm=metadata["algorithm"],
@@ -194,7 +212,10 @@ def load_route(path):
         ruler_scale=optional_float("ruler_scale"),
         ruler_route=metadata.get("ruler_route"),
         beam_max_expansions=optional_int("beam_max_expansions"),
-        errand_profile=metadata.get("errand_profile"),
+        errand_profile={
+            "single": "single_no_selling", "single_with_sales": "single_with_selling",
+            "bulk10": "bulk10_no_selling", "bulk10_with_sales": "bulk10_with_selling",
+        }.get(metadata.get("errand_profile"), metadata.get("errand_profile")),
         bulk_size=bulk_size,
         selling_allowed=_parse_boolean(path, metadata, "selling_allowed") if present_errand_fields else True,
         errand_search_width=optional_int("errand_search_width"),
@@ -271,7 +292,7 @@ def write_route(
         [
             f"name = {plan.name}",
             f"source = {plan.source}",
-            f"category = {plan.category}",
+            f"goal = {plan.goal}",
             f"player_profile = {plan.player_profile}",
             f"version = {plan.version}",
             f"target = {plan.target}",
@@ -282,6 +303,9 @@ def write_route(
             f"for_quickster = {str(plan.for_quickster).lower()}",
         ]
     )
+    if plan.route_profile is not None:
+        lines.append(f"route_profile = {plan.route_profile}")
+    lines.append(f"achievement_curve = {plan.achievement_curve or 'none'}")
     if not plan.for_quickster:
         lines.extend(
             [

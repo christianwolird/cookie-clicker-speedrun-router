@@ -1,28 +1,40 @@
 """Route execution against the Cookie Clicker simulator."""
 
 from collections import Counter
+from dataclasses import replace
 
-from ..config import load_achievement_curve, load_category
+from ..config import load_achievement_curve, load_player_profile, load_errand_profile
 from ..game.gamestate import Gamestate
 from ..game.shop import execute_shop_errand
 from .models import RouteResult
 
 
+def use_route_profile(plan, profile):
+    """Apply a named setup while retaining the source action list and timing mode."""
+    player = load_player_profile(profile.player_profile)
+    errands = load_errand_profile(profile.errand_profile)
+    return replace(
+        plan, goal=profile.goal, route_profile=profile.name, target=profile.target,
+        version=profile.version, player_profile=player.name, click_rate=player.click_rate,
+        initial_state=player.initial_state, errand_delay=player.errand_delay,
+        action_delay=player.action_delay, errand_profile=errands.name,
+        bulk_size=errands.bulk_size, selling_allowed=errands.selling_allowed,
+        upgrades_enabled=profile.upgrades_enabled, achievement_curve=profile.achievement_curve,
+    )
+
+
 def initial_gamestate(plan, *, player=None, for_quickster=None, version=None, errand_profile=None):
-    try:
-        category = load_category(plan.category)
-        curve = load_achievement_curve(category.achievement_curve)
-    except ValueError:
-        curve = None
+    curve = load_achievement_curve(plan.achievement_curve)
     gamestate = Gamestate(version or plan.version, curve)
-    if plan.initial_state == "neverclick":
+    initial_state = plan.initial_state if player is None else player.initial_state
+    if initial_state == "neverclick":
         gamestate.initialize_neverclick()
 
     effective_quickster = (
         plan.for_quickster if for_quickster is None else for_quickster
     )
     click_rate = plan.click_rate if player is None else player.click_rate
-    gamestate.click_rate = 0.0 if plan.initial_state == "neverclick" else click_rate
+    gamestate.click_rate = 0.0 if initial_state == "neverclick" else click_rate
     gamestate.upgrades_allowed = plan.upgrades_enabled
     gamestate.bulk_size = plan.bulk_size if errand_profile is None else errand_profile.bulk_size
     gamestate.selling_allowed = (

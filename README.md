@@ -1,68 +1,65 @@
 # Cookie Clicker speedrun router
 
 A dependency-free simulator and route-planning toolkit for no-golden-cookie
-Cookie Clicker speedruns. The project exposes four primary tools:
+Cookie Clicker speedruns. The project exposes five primary tools:
 
 - `greedy_router.py` repeatedly executes the best locally scored errand.
 - `beam_search_router.py` searches inventory states with a route-based Ruler.
 - `errandifier.py` groups a Quickster purchase order into human errands.
 - `route_replayer.py` deterministically replays an existing route.
+- `route_catalog.py` browses saved routes and named route types.
 
 Python 3.10 or newer is sufficient.
 
-## Quick start
+## Quick start and catalog
 
-Every router run selects a category, player profile, and errand profile independently:
-
-```sh
-python3 tools/greedy_router.py \
-  --category one_million_v2
-
-python3 tools/beam_search_router.py \
-  --category 100k \
-  --player casual \
-  --beam-width 10
-```
-
-Category files under `config/categories/` define game rules such as version,
-target, initial state, upgrades, clicking restrictions, and the optional
-achievement curve. Use `one_million_v1` for game version 1.0466 or
-`one_million_v2` for version 2.031; both target one million cookies. Routers
-default to `one_million_v2`.
-
-Player profiles under `config/player_profiles/` define:
-
-```text
-click_rate = 7
-errand_delay = 1.0
-action_delay = 0.3
-```
-
-Built-in profiles include `casual`, `scroll_click`, `strum_click`, and
-`mouse_move_click`, plus the `default_*` profiles used by imported community
-routes. Omitting `--player` selects `default_10_cps`: 10 CPS, 0.8 seconds
-per errand, and 0.2 seconds per shop action. Old `item_delay` settings remain
-readable as an alias; specifying both names is an error.
-
-Errand profiles under `config/errand_profiles/` select fixed buying behavior:
-`single` (the default), `single_with_sales`, `bulk10`, or `bulk10_with_sales`.
-There is no switching between x1 and x10 during a run.
+Choose a named route type, configured in `config/route_profiles/`:
 
 ```sh
-python3 tools/beam_search_router.py \
-  --category one_million_v2 --player default_250_cps \
-  --errand-profile bulk10 --beam-width 10 \
-  --errand-search-width 10 --errand-queue-expansions 100
+python3 tools/route_catalog.py profiles
+python3 tools/route_catalog.py list --route-type hardcore-10cps
+python3 tools/route_catalog.py list --goal one_million --version 2.031
 
-python3 tools/greedy_router.py \
-  --category neverclick --player default_neverclick \
-  --errand-profile single_with_sales
+python3 tools/greedy_router.py --route-profile million-250cps --save
+python3 tools/beam_search_router.py --route-profile million-25cps --beam-width 10 --save
 ```
 
-See [fixed bulk errands](docs/fixed_bulk_errands.md) for action semantics,
-sales, search budgets, and route compatibility. The old `quick_buy_250_cps`
-profile is retained for reproducing its approximate timing; use realistic
-action delays with `bulk10` for new bulk routes.
+A route profile combines a goal, game version, player profile, and errand
+profile. The default is `million-25cps`. `--player`, `--errand-profile`,
+and `--version` can override individual settings for experiments; saved files
+record their actual values. Each `<category>-<rate>cps` profile holds the chosen
+player, errand, and version settings for that category and click rate. Update
+that profile when a better setup is established.
+
+| Route type | Goal | Version | Player | Errands |
+|---|---|---|---|---|
+| `million-250cps` | One million | 2.031 | 250 CPS | x10, no selling |
+| `million-25cps` | One million | 2.031 | 25 CPS | x1, no selling |
+| `neverclick-0cps` | One million | 2.031 | No ongoing clicks | x1, selling |
+| `hardcore-250cps` | One billion, no upgrades | 2.031 | 250 CPS | x10, no selling |
+
+Community comparison types preserve the source workbooks' settings:
+`hardcore-10cps`, `heavenly-chip-15cps`, `million-10cps`,
+`million-15cps`, and `million-200cps`.
+
+Goals are defined in `src/ccsr/config/goals.py` and have no game version or
+clicking method. Neverclick is the one-million goal with the `neverclick`
+player profile; that profile supplies the initial 15 clicks and first Cursor.
+Hardcore's no-upgrade restriction belongs to its route profile.
+
+The retained player profiles are `default_10_cps`, `default_15_cps`, and
+`default_200_cps` for the imported routes, plus `neverclick`, `casual`,
+`default_25_cps`, `default_250_cps`, and `trained_250_cps`. The million-250cps
+route profile uses the trained profile, with a 0.4-second errand delay and a
+0.1-second action delay. Player profiles specify click rate,
+errand delay, and action delay; old `item_delay` settings remain readable.
+
+Errand profiles are `single_no_selling`, `single_with_selling`,
+`bulk10_no_selling`, and `bulk10_with_selling`.
+
+See [catalog and route organization](docs/route_catalog.md) for browsing,
+filters, and save paths, and [fixed bulk errands](docs/fixed_bulk_errands.md)
+for execution and search details.
 
 ## Simulation model
 
@@ -126,7 +123,7 @@ Its main controls are:
 
 ```sh
 python3 tools/greedy_router.py \
-  --category one_million_v2 \
+  --route-profile million-25cps \
   --player casual \
   --queue-expansions 100 \
   --price-horizon-multiplier 2
@@ -145,10 +142,10 @@ The estimate comes from a Ruler route. Supply an existing route with
 
 ```sh
 python3 tools/beam_search_router.py \
-  --category one_million_v2 \
+  --route-profile million-25cps \
   --player casual \
   --beam-width 20 \
-  --ruler-route routes/generated/greedy_routes/reference.route \
+  --ruler-route routes/million-25cps/generated_greedy_reference.route \
   --ruler-scale 0.9
 ```
 
@@ -157,14 +154,23 @@ using the same category, player, errand profile, and Quickster mode. The default
 This is intended to make the estimate conservative, but it is not a proof that
 the heuristic is admissible.
 
+For the trained 250 CPS setup, the optional
+[native search experiments](experiments/million_trained_250cps_12hour_search/README.md) include
+canonical ×10 errand generation, parallel beam search, greedy lookahead and
+route refinement. The [twelve-hour search summary](experiments/million_trained_250cps_12hour_search/docs/SUMMARY.md)
+records the measurements and provides a short recipe for reproducing the best
+route from an empty game. These experiments require a C++17 compiler and target
+that specific game/player/shop configuration; the ordinary Python tools remain
+independent of them.
+
 ## Quickster mode
 
 Quickster versus human execution is independent of routing algorithm. Both
 routers accept `--quickster`:
 
 ```sh
-python3 tools/greedy_router.py --category 10k --player scroll_click --quickster
-python3 tools/beam_search_router.py --category 10k --player scroll_click --quickster
+python3 tools/greedy_router.py --route-profile 10k-10cps --player default_25_cps --quickster
+python3 tools/beam_search_router.py --route-profile 10k-10cps --player default_25_cps --quickster
 ```
 
 Quickster mode offers only single-click errands and applies zero errand and action
@@ -181,8 +187,8 @@ Group a Quickster route for a selected player:
 
 ```sh
 python3 tools/errandifier.py \
-  routes/online/quickster_originals/one_million_fast_clicks_15_cps_dha.route \
-  routes/online/erranded/one_million_fast_clicks_15_cps_dha.route \
+  routes/million-15cps/community_quickster_dha.route \
+  routes/million-15cps/community_errandified_dha.route \
   --player casual
 ```
 
@@ -190,7 +196,7 @@ Replay with the route's recorded timing or another player profile:
 
 ```sh
 python3 tools/route_replayer.py \
-  routes/online/quickster_originals/one_million_left_clicks_10_cps_iwer_sonsch.route
+  routes/million-10cps/community_quickster_iwer_sonsch.route
 
 python3 tools/route_replayer.py ROUTE_FILE --player casual
 
@@ -210,38 +216,50 @@ zero.
 ## Repository layout
 
 ```text
-tools/                              four primary command-line tools
+tools/                                  routers, replay, errandification, catalog
 src/ccsr/
-├── game/                           gamestate and versioned game data
-├── config/                         category, player, and curve loaders
-├── errands/                        errand models, generation, and DP grouping
-├── routing_algorithms/             Greedy, Beam search, and Route Ruler
-├── routes/                         route models, text format, and replay
-└── presentation.py                 terminal route tables
+├── game/                               simulator and versioned game data
+├── config/                             goals and profile loaders
+├── errands/                            errand models, generation, and grouping
+├── routing_algorithms/                 Greedy, Beam search, and Route Ruler
+├── routes/                             format, replay, layout, and catalog
+└── presentation.py                     terminal route tables
 config/
-├── categories/
+├── route_profiles/                     named route types
 ├── player_profiles/
+├── errand_profiles/
 └── achievement_curves/
 routes/
-├── online/
-│   ├── spreadsheets/
-│   ├── quickster_originals/
-│   └── erranded/
-└── generated/
-    ├── greedy_routes/
-    └── beam_routes/
-scripts/extract_online_routes.py    community-workbook importer
-tests/                              behavioral test suite
+├── hardcore-10cps/
+│   ├── community_quickster_dha.route
+│   ├── community_quickster_lookas123.route
+│   ├── community_errandified_dha.route
+│   ├── community_errandified_lookas123.route
+│   └── generated_greedy.route
+├── million-15cps/
+│   ├── community_quickster_dha.route
+│   ├── community_errandified_dha.route
+│   ├── generated_greedy.route
+│   └── generated_beam.route
+├── million-250cps/generated_greedy.route
+├── million-25cps/generated_greedy.route
+├── hardcore-250cps/generated_greedy.route
+└── ...                                 other named route types
+community_spreadsheets/                 original workbooks and their importer
+└── extract_routes_from_spreadsheet.py
+tests/                                  behavioral test suite
 ```
 
-Legacy generated routes were removed because they used the former per-item-type
-timing rule. Historical timing measurements remain in `docs/`.
+Regenerate community originals in their type folders with
+`python3 community_spreadsheets/extract_routes_from_spreadsheet.py`. Errandification defaults to the
+same type folder with a `community_errandified_` filename prefix; routers use
+`generated_greedy_` or `generated_beam_` prefixes when `--save` is supplied.
 
-Regenerate normalized community originals with:
-
-```sh
-python3 scripts/extract_online_routes.py
-```
+The eight obsolete or superseded local variants were removed during the layout
+migration: the 50 CPS route, v1 million/250 route, old 250 CPS approximations,
+and older beam iterations. All community originals and their existing grouped
+versions were retained, along with comparable local baselines. Historical
+measurements remain in `docs/`.
 
 ## Tests
 

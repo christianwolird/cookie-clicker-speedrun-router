@@ -4,6 +4,7 @@
 
 import argparse
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 
@@ -13,14 +14,16 @@ if str(SOURCE) not in sys.path:
     sys.path.insert(0, str(SOURCE))
 
 from ccsr.config import (
-    available_categories,
+    available_route_profiles,
     available_player_profiles,
     create_initial_gamestate,
-    load_category,
+    load_route_profile,
     load_player_profile,
     available_errand_profiles,
     load_errand_profile,
 )
+from ccsr.game.data import SUPPORTED_VERSIONS
+from ccsr.routes.layout import generated_route_path
 from ccsr.errands.generator import DEFAULT_QUEUE_EXPANSIONS, DEFAULT_MAX_ERRAND_ACTIONS
 from ccsr.presentation import LiveRouteTable, format_route
 from ccsr.routes import RoutePlan, action_errands, write_route
@@ -28,39 +31,30 @@ from ccsr.routing_algorithms.greedy_router import find_route
 
 
 DEFAULT_PRICE_HORIZON_MULTIPLIER = 2.0
-OUTPUT_DIRECTORY = REPOSITORY / "routes" / "generated" / "greedy_routes"
+OUTPUT_DIRECTORY = REPOSITORY / "routes"
 
 
-def _save_path(destination):
-    path = Path(destination)
-    if path.suffix != ".route":
-        raise ValueError("Route destination must end in .route")
-    if not path.is_absolute():
-        path = OUTPUT_DIRECTORY / path
-    path = path.resolve()
-    if not path.is_relative_to(OUTPUT_DIRECTORY.resolve()):
-        raise ValueError(f"Route destination must be inside {OUTPUT_DIRECTORY}")
-    return path
-
+def _save_path(destination, route_type):
+    return generated_route_path(destination, route_type, "generated_greedy", OUTPUT_DIRECTORY)
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
-        "--category",
-        choices=available_categories(),
-        default="one_million_v2",
+        "--route-profile",
+        choices=available_route_profiles(),
+        default="million-25cps",
     )
+    parser.add_argument("--version", choices=SUPPORTED_VERSIONS, help="override the route profile game version")
     parser.add_argument(
         "--player",
         choices=available_player_profiles(),
-        default="default_10_cps",
     )
     parser.add_argument(
         "--quickster",
         action="store_true",
         help="offer only single-click errands and apply zero action delay",
     )
-    parser.add_argument("--errand-profile", choices=available_errand_profiles(), default="single")
+    parser.add_argument("--errand-profile", choices=available_errand_profiles())
     parser.add_argument("--max-errand-actions", type=int, default=DEFAULT_MAX_ERRAND_ACTIONS)
     parser.add_argument(
         "--price-horizon-multiplier",
@@ -73,7 +67,7 @@ def main(argv=None):
         default=DEFAULT_QUEUE_EXPANSIONS,
         help="maximum priority-queue expansions per gamestate",
     )
-    parser.add_argument("--save", metavar="NAME.route")
+    parser.add_argument("--save", nargs="?", const="generated_greedy.route", metavar="NAME.route")
     parser.add_argument("--overwrite", action="store_true")
     parser.add_argument("--verbose", action="store_true")
     args = parser.parse_args(argv)
@@ -88,22 +82,25 @@ def main(argv=None):
         parser.error("--overwrite requires --save")
 
     try:
-        category = load_category(args.category)
-        player = load_player_profile(args.player)
-        errand_profile = load_errand_profile(args.errand_profile)
-        destination = _save_path(args.save) if args.save else None
+        route_profile = load_route_profile(args.route_profile)
+        route_profile = replace(route_profile, version=args.version or route_profile.version)
+        player = load_player_profile(args.player or route_profile.player_profile)
+        errand_profile = load_errand_profile(args.errand_profile or route_profile.errand_profile)
+        destination = _save_path(args.save, args.route_profile) if args.save else None
         if destination and destination.exists() and not args.overwrite:
             raise FileExistsError(f"Route already exists: {destination}")
     except (FileExistsError, ValueError) as error:
         parser.error(str(error))
 
     gamestate = create_initial_gamestate(
-        category,
+        route_profile,
         player,
         for_quickster=args.quickster,
         errand_profile=errand_profile,
     )
-    print(f"Category: {category.name}")
+    print(f"Route profile: {route_profile.name}")
+    print(f"Goal: {route_profile.goal}")
+    print(f"Game version: {route_profile.version}")
     print(f"Player: {player.name}")
     print(f"Errand profile: {errand_profile.name} (x{errand_profile.bulk_size})")
     print(f"For Quickster: {args.quickster}")
@@ -112,12 +109,12 @@ def main(argv=None):
         print(f"Errand delay: {gamestate.errand_delay:g}")
         print(f"Action delay: {gamestate.action_delay:g}")
     print(f"Queue expansions: {args.queue_expansions}")
-    print(f"\nCalculating route to {category.target:,} cookies...", flush=True)
+    print(f"\nCalculating route to {route_profile.target:,} cookies...", flush=True)
 
     table = LiveRouteTable(gamestate.lifetime_cookies) if args.verbose else None
     result = find_route(
         gamestate,
-        category.target,
+        route_profile.target,
         on_errand=table.print_errand if table else None,
         price_horizon_multiplier=args.price_horizon_multiplier,
         queue_expansions=args.queue_expansions,
@@ -125,22 +122,24 @@ def main(argv=None):
         max_errand_actions=args.max_errand_actions,
     )
     if table:
-        table.print_done(result.final_gamestate, category.target)
+        table.print_done(result.final_gamestate, route_profile.target)
     else:
-        print(format_route(result, category.target, include_purchases=False))
+        print(format_route(result, route_profile.target, include_purchases=False))
 
     if destination:
         plan = RoutePlan(
             name=destination.stem,
             source="this codebase",
-            category=category.name,
+            goal=route_profile.goal,
+            route_profile=route_profile.name,
+            achievement_curve=route_profile.achievement_curve,
             player_profile=player.name,
-            version=category.version,
-            target=category.target,
+            version=route_profile.version,
+            target=route_profile.target,
             click_rate=gamestate.click_rate,
-            initial_state=category.initial_state,
+            initial_state=player.initial_state,
             algorithm="greedy_router",
-            upgrades_enabled=category.upgrades_enabled,
+            upgrades_enabled=route_profile.upgrades_enabled,
             for_quickster=args.quickster,
             errands=action_errands(result),
             errand_delay=player.errand_delay,

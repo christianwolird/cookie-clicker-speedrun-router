@@ -43,8 +43,8 @@ class CliTests(unittest.TestCase):
             [
                 sys.executable,
                 "tools/greedy_router.py",
-                "--category",
-                "10k",
+                "--route-profile",
+                "10k-10cps",
                 "--player",
                 "casual",
                 "--quickster",
@@ -64,10 +64,12 @@ class CliTests(unittest.TestCase):
             [
                 sys.executable,
                 "tools/beam_search_router.py",
-                "--category",
-                "10k",
+                "--route-profile",
+                "10k-10cps",
                 "--beam-width",
                 "3",
+                "--workers",
+                "2",
                 "--max-expansions",
                 "100",
             ],
@@ -85,7 +87,7 @@ class CliTests(unittest.TestCase):
     def test_route_replayer_uses_stored_profile(self):
         route = (
             REPOSITORY
-            / "routes/online/quickster_originals/neverclick_neverclick_36champ.route"
+            / "routes/neverclick-0cps/community_quickster_36champ.route"
         )
         result = subprocess.run(
             [sys.executable, "tools/route_replayer.py", route],
@@ -95,13 +97,13 @@ class CliTests(unittest.TestCase):
             text=True,
         )
 
-        self.assertIn("default_neverclick", result.stdout)
+        self.assertIn("neverclick", result.stdout)
         self.assertIn("Done!", result.stdout)
 
     def test_realtime_replay_schedules_errands_and_completion_without_drift(self):
         source = load_route(
             REPOSITORY
-            / "routes/online/erranded/one_million_fast_clicks_15_cps_dha.route"
+            / "routes/million-15cps/community_errandified_dha.route"
         )
         for player_name, empty in ((None, False), ("casual", False), (None, True)):
             with self.subTest(player=player_name, empty=empty):
@@ -164,7 +166,7 @@ class CliTests(unittest.TestCase):
     def test_verbose_replay_does_not_wait_without_realtime(self):
         route = (
             REPOSITORY
-            / "routes/online/quickster_originals/neverclick_neverclick_36champ.route"
+            / "routes/neverclick-0cps/community_quickster_36champ.route"
         )
         output = io.StringIO()
         with patch.object(route_replayer, "sleep") as sleep, redirect_stdout(output):
@@ -176,8 +178,7 @@ class CliTests(unittest.TestCase):
     def test_errandifier_writes_human_route(self):
         route = (
             REPOSITORY
-            / "routes/online/quickster_originals"
-            / "one_million_fast_clicks_15_cps_dha.route"
+            / "routes/million-15cps/community_quickster_dha.route"
         )
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "errandified.route"

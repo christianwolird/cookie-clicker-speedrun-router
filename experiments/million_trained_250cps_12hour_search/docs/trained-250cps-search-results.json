@@ -1,0 +1,5565 @@
+{
+  "status": "complete",
+  "started_utc": "2026-09-14T02:24:58+00:00",
+  "planned_finish_utc": "2026-09-14T14:24:58+00:00",
+  "snapshot_utc": "2026-09-14T15:11:16.195969+00:00",
+  "model": {
+    "route_profile": "million-250cps",
+    "goal": "one_million",
+    "target": 1000000,
+    "version": "2.031",
+    "player_profile": "trained_250_cps",
+    "click_rate": 250,
+    "errand_delay": 0.4,
+    "action_delay": 0.1,
+    "bulk_size": 10,
+    "selling_allowed": false
+  },
+  "baseline": {
+    "finish": 199.09071134697444,
+    "errands": 16,
+    "actions": 25,
+    "final_inventory": {
+      "Cursor": 37,
+      "Grandma": 35,
+      "Farm": 21,
+      "Mine": 7
+    },
+    "final_upgrades": [
+      "Ambidextrous",
+      "Carpal tunnel prevention cream",
+      "Cheap hoes",
+      "Farmer grandmas",
+      "Fertilizer",
+      "Forwards from grandma",
+      "Lubricated dentures",
+      "Plastic mouse",
+      "Reinforced index finger",
+      "Steel-plated rolling pins",
+      "Sugar gas",
+      "Thousand fingers"
+    ],
+    "final_bank": 173230.0,
+    "text": "# Trained 250 CPS trial; 300.46s computation. Search retained its supplied ruler without improvement. Four workers; wall-clock cap 300s; details in docs/million-250cps-trained-search-2026-09-13.md.\nname = generated_beam\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = beam_search_router\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nprice_horizon_multiplier = 16\nerrand_queue_depth = 100\nbeam_width = 20\nruler_scale = 0.97\nruler_route = /tmp/ccsr-trained-250cps-20260914/beam_long_ruler.route\nbeam_max_expansions = 10000000\nerrand_search_width = 40\nmax_errand_actions = 100\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nbuy Farm x10\nupgrade Cheap hoes\nbuy Cursor x9\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Steel-plated rolling pins\nbuy Mine\nbuy Grandma x9\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x6\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x10\n\nerrand\nupgrade Lubricated dentures\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\n\nerrand\nbuy Grandma x6\nbuy Cursor x8\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x6\n\nerrand\nupgrade Sugar gas\n"
+  },
+  "best": {
+    "finish": 198.1407167530788,
+    "errands": 19,
+    "actions": 29,
+    "final_inventory": {
+      "Cursor": 36,
+      "Grandma": 34,
+      "Farm": 21,
+      "Mine": 9
+    },
+    "final_upgrades": [
+      "Ambidextrous",
+      "Carpal tunnel prevention cream",
+      "Cheap hoes",
+      "Farmer grandmas",
+      "Fertilizer",
+      "Forwards from grandma",
+      "Lubricated dentures",
+      "Plastic mouse",
+      "Reinforced index finger",
+      "Steel-plated rolling pins",
+      "Sugar gas",
+      "Thousand fingers"
+    ],
+    "final_bank": 118479.0,
+    "text": "# Native order/partition search; every improvement validated with Python replay.\nname = recipe_best_refined\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_native_partition_search\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nmax_errand_size = 16\nmax_errand_actions = 16\nerrand_state_width = 4\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nbuy Grandma x10\nupgrade Steel-plated rolling pins\nbuy Farm x5\nbuy Cursor x8\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Cheap hoes\nbuy Farm x4\n\nerrand\nbuy Mine\nbuy Farm x3\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x9\n\nerrand\nupgrade Lubricated dentures\nbuy Cursor x7\n\nerrand\nupgrade Thousand fingers\n\nerrand\nbuy Cursor x10\nbuy Grandma x5\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x5\n\nerrand\nupgrade Sugar gas\n\nerrand\nbuy Mine x3\n"
+  },
+  "improvement_seconds": 0.9499945938956387,
+  "best_snapshot_source": "/tmp/ccsr-trained-12h-20260914/delivery_best_refined.route",
+  "incumbent_record": {
+    "event": "improvement",
+    "finish": 198.1407167530788,
+    "source": "/tmp/ccsr-trained-12h-20260914/new_order_005.route",
+    "utc": "2026-09-14T06:46:40.853245+00:00",
+    "errands": 19,
+    "actions": 29,
+    "verified": true
+  },
+  "tracked_improvements": [
+    {
+      "event": "initial_best",
+      "finish": 198.14663645149844,
+      "source": "/tmp/ccsr-trained-12h-20260914/native_local_cool.route",
+      "utc": "2026-09-14T05:04:54.072443+00:00",
+      "errands": 20,
+      "actions": 28,
+      "verified": true
+    },
+    {
+      "event": "improvement",
+      "finish": 198.14415869142354,
+      "source": "/tmp/ccsr-trained-12h-20260914/param_guided_baseline.route",
+      "utc": "2026-09-14T06:24:55.085243+00:00",
+      "errands": 20,
+      "actions": 30,
+      "verified": true
+    },
+    {
+      "event": "improvement",
+      "finish": 198.1407167530788,
+      "source": "/tmp/ccsr-trained-12h-20260914/new_order_005.route",
+      "utc": "2026-09-14T06:46:40.853245+00:00",
+      "errands": 19,
+      "actions": 29,
+      "verified": true
+    }
+  ],
+  "excluded_timing_prefixes": [
+    "new_order_"
+  ],
+  "scope": "Best found in the stated continuous simulator; no global optimality certificate.",
+  "recipes": {
+    "fast": {
+      "elapsed": 9.143982278001204,
+      "greedy": {
+        "name": "recipe_greedy",
+        "finish": 201.48575589865823,
+        "elapsed": 4.325815896998392,
+        "statistics": {}
+      },
+      "refined": {
+        "name": "recipe_refined",
+        "finish": 198.14663645149844,
+        "elapsed": 4.622700781997992,
+        "statistics": {
+          "tried": 100000,
+          "computed": 87017,
+          "cache_hits": 12985,
+          "improvements": 64
+        },
+        "parameters": {
+          "name": "recipe_refined",
+          "source": "/tmp/ccsr-trained-12h-20260914/recipe_greedy.route",
+          "seconds": 60.0,
+          "seed": 945,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 100000
+        }
+      }
+    },
+    "best": {
+      "elapsed": 157.10540429400135,
+      "greedy": {
+        "name": "recipe_best_greedy",
+        "finish": 200.05654757669112,
+        "elapsed": 154.02123871900403,
+        "options": {
+          "pool": 1200,
+          "inner": 1500,
+          "pops": 5000,
+          "rollout-width": 40,
+          "rollout-inner": 100,
+          "rollout-pops": 300,
+          "mode": 2
+        },
+        "binary_sha256": "a60437e93b5a33d00ab607d727a9ff46c4fa57bcca170ea409d77bd4295300e6",
+        "statistics": {}
+      },
+      "refined": {
+        "name": "recipe_best_refined",
+        "finish": 198.1407167530788,
+        "elapsed": 2.9028426180011593,
+        "binary_sha256": "dec141498a636c53419bbdcd21fb91635c744cf6b47f14203f9f726e4a9371d0",
+        "statistics": {
+          "tried": 50000,
+          "computed": 42350,
+          "cache_hits": 7652,
+          "improvements": 41
+        },
+        "parameters": {
+          "name": "recipe_best_refined",
+          "source": "/tmp/ccsr-trained-optimized-build/recipe_best_greedy.route",
+          "seconds": 90.0,
+          "seed": 17945,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 50000,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_end": null
+        }
+      }
+    },
+    "validated_best": {
+      "elapsed": 179.5848687520047,
+      "greedy": {
+        "name": "recipe_best_greedy",
+        "finish": 200.05654757669112,
+        "elapsed": 177.3432859079985,
+        "options": {
+          "pool": 1200,
+          "inner": 1500,
+          "pops": 5000,
+          "rollout-width": 40,
+          "rollout-inner": 100,
+          "rollout-pops": 300,
+          "mode": 2
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "refined": {
+        "name": "recipe_best_refined",
+        "finish": 198.1407167530788,
+        "elapsed": 1.9401725930001703,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 50000,
+          "computed": 42350,
+          "cache_hits": 7652,
+          "improvements": 41
+        },
+        "parameters": {
+          "name": "recipe_best_refined",
+          "source": "/tmp/ccsr-trained-session-final-build/recipe_best_greedy.route",
+          "seconds": 90.0,
+          "seed": 17945,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 50000,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      }
+    },
+    "delivery_fast": {
+      "elapsed": 8.802655644998595,
+      "greedy": {
+        "name": "recipe_greedy",
+        "finish": 201.48575589865823,
+        "elapsed": 4.978858284004673,
+        "statistics": {}
+      },
+      "refined": {
+        "name": "recipe_refined",
+        "finish": 198.14663645149844,
+        "elapsed": 3.5986225710003055,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 100000,
+          "computed": 87017,
+          "cache_hits": 12985,
+          "improvements": 64
+        },
+        "parameters": {
+          "name": "recipe_refined",
+          "source": "/tmp/ccsr-trained-final-delivery/recipe_greedy.route",
+          "seconds": 60.0,
+          "seed": 945,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 100000,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      }
+    },
+    "delivery_best": {
+      "elapsed": 178.87501013499423,
+      "greedy": {
+        "name": "recipe_best_greedy",
+        "finish": 200.05654757669112,
+        "elapsed": 176.49290098800702,
+        "options": {
+          "pool": 1200,
+          "inner": 1500,
+          "pops": 5000,
+          "rollout-width": 40,
+          "rollout-inner": 100,
+          "rollout-pops": 300,
+          "mode": 2
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "refined": {
+        "name": "recipe_best_refined",
+        "finish": 198.1407167530788,
+        "elapsed": 2.1431616300033056,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 50000,
+          "computed": 42350,
+          "cache_hits": 7652,
+          "improvements": 41
+        },
+        "parameters": {
+          "name": "recipe_best_refined",
+          "source": "/tmp/ccsr-trained-final-delivery/recipe_best_greedy.route",
+          "seconds": 90.0,
+          "seed": 17945,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 50000,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      }
+    }
+  },
+  "forecast_comparison": [
+    {
+      "name": "param_forecast_greedy_000",
+      "initial": 201.48575589865823,
+      "finish": 198.34147688797455,
+      "elapsed": 600.2381140979996,
+      "cpu_seconds": 1080.77483,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0
+      },
+      "statistics": {
+        "expanded": 12017,
+        "generated": 1786240,
+        "termination": "wall_time_limit",
+        "improvements": 52
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_000",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.34147688797455,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "param_forecast_greedy_003",
+      "initial": 201.48575589865823,
+      "finish": 198.1689494961042,
+      "elapsed": 600.210080556004,
+      "cpu_seconds": 1105.524192,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0.03
+      },
+      "statistics": {
+        "expanded": 11501,
+        "generated": 1715274,
+        "termination": "wall_time_limit",
+        "improvements": 70
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_003",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.1689494961042,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "param_forecast_greedy_010",
+      "initial": 201.48575589865823,
+      "finish": 198.22618695799457,
+      "elapsed": 600.1977672479989,
+      "cpu_seconds": 1098.3325269999998,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0.1
+      },
+      "statistics": {
+        "expanded": 12207,
+        "generated": 1798607,
+        "termination": "wall_time_limit",
+        "improvements": 65
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_010",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.23830966585405,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "param_forecast_greedy_020",
+      "initial": 201.48575589865823,
+      "finish": 198.21163814838027,
+      "elapsed": 600.2980175650009,
+      "cpu_seconds": 1100.070145,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0.2
+      },
+      "statistics": {
+        "expanded": 11663,
+        "generated": 1742755,
+        "termination": "wall_time_limit",
+        "improvements": 66
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_020",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.21163814838027,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "param_forecast_greedy_040",
+      "initial": 201.48575589865823,
+      "finish": 198.21163814838027,
+      "elapsed": 600.2135738090001,
+      "cpu_seconds": 1098.1490350000001,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0.4
+      },
+      "binary_sha256": "7b6b947fb9a91cb0448c5140ec873bb843f55cf1342acd495feea92b86a2b4a8",
+      "statistics": {
+        "expanded": 11935,
+        "generated": 1776851,
+        "termination": "wall_time_limit",
+        "improvements": 55
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_040",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.21163814838027,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "param_forecast_greedy_010_bonus",
+      "initial": 201.48575589865823,
+      "finish": 198.21163814838027,
+      "elapsed": 600.1901803369983,
+      "cpu_seconds": 1102.521943,
+      "options": {
+        "width": 2000,
+        "inner": 2000,
+        "pops": 6000,
+        "workers": 2,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.94,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "harvest": 128,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 1,
+        "harvest-slack": 4,
+        "report-generated": 1,
+        "rollout-keep": 160,
+        "rollout-raw": 40,
+        "completion-cache": 100000,
+        "future-inventory": 0.1,
+        "upgrade-bonus": 0.1
+      },
+      "binary_sha256": "7b6b947fb9a91cb0448c5140ec873bb843f55cf1342acd495feea92b86a2b4a8",
+      "statistics": {
+        "expanded": 14077,
+        "generated": 2092755,
+        "termination": "wall_time_limit",
+        "improvements": 59
+      },
+      "parameters": {
+        "name": "param_forecast_greedy_010_bonus",
+        "source": "/tmp/ccsr-trained-12h-20260914/greedy_native_three3000_mouse.route",
+        "seconds": 600.0
+      },
+      "direct_finish": 198.21163814838027,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    }
+  ],
+  "prefetch_fixed_expansions": [
+    {
+      "name": "prefetch_batch_3",
+      "initial": 200.05654757669112,
+      "finish": 198.1998089131096,
+      "direct_finish": 198.1998089131096,
+      "elapsed": 96.12191691100452,
+      "cpu_seconds": 161.69233200000002,
+      "options": {
+        "workers": 3,
+        "width": 600,
+        "inner": 800,
+        "pops": 2000,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "seed-prefixes": 0,
+        "future-mask": 32768,
+        "future-inventory": 0.03,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "target-rollout": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "rollout-keep": 80,
+        "rollout-raw": 20,
+        "completion-cache": 100000,
+        "retain-closed": 1,
+        "age-bound": 1,
+        "report-generated": 1,
+        "expansions": 6000,
+        "batch-size": 3
+      },
+      "binary_sha256": "70b54879dd3f2f83580ae37c9ce19c9e49cd99827acc09f82fa9b200e9b05aa9",
+      "statistics": {
+        "expanded": 6000,
+        "generated": 470404,
+        "termination": "expansion_limit",
+        "improvements": 47,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "prefetch_batch_3",
+        "source": "/tmp/ccsr-trained-12h-20260914/optimized_recipe_greedy.route",
+        "seconds": 900.0
+      }
+    },
+    {
+      "name": "prefetch_batch_6",
+      "initial": 200.05654757669112,
+      "finish": 198.53141440008662,
+      "direct_finish": 198.53141440008662,
+      "elapsed": 81.38942798200151,
+      "cpu_seconds": 156.903415,
+      "options": {
+        "workers": 3,
+        "width": 600,
+        "inner": 800,
+        "pops": 2000,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "seed-prefixes": 0,
+        "future-mask": 32768,
+        "future-inventory": 0.03,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "target-rollout": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "rollout-keep": 80,
+        "rollout-raw": 20,
+        "completion-cache": 100000,
+        "retain-closed": 1,
+        "age-bound": 1,
+        "report-generated": 1,
+        "expansions": 6000,
+        "batch-size": 6
+      },
+      "binary_sha256": "70b54879dd3f2f83580ae37c9ce19c9e49cd99827acc09f82fa9b200e9b05aa9",
+      "statistics": {
+        "expanded": 6000,
+        "generated": 469038,
+        "termination": "expansion_limit",
+        "improvements": 35,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "prefetch_batch_6",
+        "source": "/tmp/ccsr-trained-12h-20260914/optimized_recipe_greedy.route",
+        "seconds": 900.0
+      }
+    },
+    {
+      "name": "prefetch_batch_12",
+      "initial": 200.05654757669112,
+      "finish": 198.32836062005723,
+      "direct_finish": 198.33737352133713,
+      "elapsed": 69.99846225299552,
+      "cpu_seconds": 154.98556200000002,
+      "options": {
+        "workers": 3,
+        "width": 600,
+        "inner": 800,
+        "pops": 2000,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "seed-prefixes": 0,
+        "future-mask": 32768,
+        "future-inventory": 0.03,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "target-rollout": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "rollout-keep": 80,
+        "rollout-raw": 20,
+        "completion-cache": 100000,
+        "retain-closed": 1,
+        "age-bound": 1,
+        "report-generated": 1,
+        "expansions": 6000,
+        "batch-size": 12
+      },
+      "binary_sha256": "70b54879dd3f2f83580ae37c9ce19c9e49cd99827acc09f82fa9b200e9b05aa9",
+      "statistics": {
+        "expanded": 6000,
+        "generated": 469994,
+        "termination": "expansion_limit",
+        "improvements": 41,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "prefetch_batch_12",
+        "source": "/tmp/ccsr-trained-12h-20260914/optimized_recipe_greedy.route",
+        "seconds": 900.0
+      }
+    }
+  ],
+  "prefetch_fixed_time": [
+    {
+      "name": "prefetch_timed_3",
+      "initial": 200.05654757669112,
+      "finish": 198.14896273586922,
+      "direct_finish": 198.1998089131096,
+      "elapsed": 120.04820612600452,
+      "cpu_seconds": 200.880272,
+      "options": {
+        "workers": 3,
+        "width": 600,
+        "inner": 800,
+        "pops": 2000,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "seed-prefixes": 0,
+        "future-mask": 32768,
+        "future-inventory": 0.03,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "target-rollout": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "rollout-keep": 80,
+        "rollout-raw": 20,
+        "completion-cache": 100000,
+        "retain-closed": 1,
+        "age-bound": 1,
+        "report-generated": 1,
+        "expansions": 0,
+        "batch-size": 3
+      },
+      "binary_sha256": "9b8e7b1d5f137de9e668973c71c9b6c48f8c9336d336f8cd1a79bd2f9e72f3ac",
+      "statistics": {
+        "expanded": 7573,
+        "generated": 593451,
+        "termination": "wall_time_limit",
+        "improvements": 49,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "prefetch_timed_3",
+        "source": "/tmp/ccsr-trained-12h-20260914/optimized_recipe_greedy.route",
+        "seconds": 120.0
+      }
+    },
+    {
+      "name": "prefetch_timed_12",
+      "initial": 200.05654757669112,
+      "finish": 198.18392455596953,
+      "direct_finish": 198.18489371836236,
+      "elapsed": 120.03554707900184,
+      "cpu_seconds": 265.272061,
+      "options": {
+        "workers": 3,
+        "width": 600,
+        "inner": 800,
+        "pops": 2000,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 300000,
+        "nodes": 3000000,
+        "compact": 1,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "seed-prefixes": 0,
+        "future-mask": 32768,
+        "future-inventory": 0.03,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "target-rollout": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "rollout-keep": 80,
+        "rollout-raw": 20,
+        "completion-cache": 100000,
+        "retain-closed": 1,
+        "age-bound": 1,
+        "report-generated": 1,
+        "expansions": 0,
+        "batch-size": 12
+      },
+      "binary_sha256": "9b8e7b1d5f137de9e668973c71c9b6c48f8c9336d336f8cd1a79bd2f9e72f3ac",
+      "statistics": {
+        "expanded": 10489,
+        "generated": 821010,
+        "termination": "wall_time_limit",
+        "improvements": 50,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "prefetch_timed_12",
+        "source": "/tmp/ccsr-trained-12h-20260914/optimized_recipe_greedy.route",
+        "seconds": 120.0
+      }
+    }
+  ],
+  "prefetch_refinement": [
+    {
+      "name": "prefetch_batch_3_locked",
+      "finish": 198.14415869142354,
+      "elapsed": 20.030555102996004,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 557958,
+        "computed": 421246,
+        "cache_hits": 136714,
+        "improvements": 4
+      },
+      "parameters": {
+        "name": "prefetch_batch_3_locked",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_3.route",
+        "seconds": 20.0,
+        "seed": 31001,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.4,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": true,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_batch_3_open",
+      "finish": 198.14663645149844,
+      "elapsed": 20.020215178999933,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 572124,
+        "computed": 514476,
+        "cache_hits": 57650,
+        "improvements": 6
+      },
+      "parameters": {
+        "name": "prefetch_batch_3_open",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_3.route",
+        "seconds": 20.0,
+        "seed": 31000,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_batch_6_locked",
+      "finish": 198.17848824344313,
+      "elapsed": 20.059442959995067,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 606590,
+        "computed": 463430,
+        "cache_hits": 143162,
+        "improvements": 10
+      },
+      "parameters": {
+        "name": "prefetch_batch_6_locked",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_6.route",
+        "seconds": 20.0,
+        "seed": 31003,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.4,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": true,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_batch_6_open",
+      "finish": 198.14663645149844,
+      "elapsed": 20.05486109499907,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 554632,
+        "computed": 496881,
+        "cache_hits": 57753,
+        "improvements": 15
+      },
+      "parameters": {
+        "name": "prefetch_batch_6_open",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_6.route",
+        "seconds": 20.0,
+        "seed": 31002,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_batch_12_locked",
+      "finish": 198.14663645149844,
+      "elapsed": 20.06835737700021,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 593097,
+        "computed": 483520,
+        "cache_hits": 109579,
+        "improvements": 20
+      },
+      "parameters": {
+        "name": "prefetch_batch_12_locked",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_12.route",
+        "seconds": 20.0,
+        "seed": 31005,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.4,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": true,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_batch_12_open",
+      "finish": 198.14663645149844,
+      "elapsed": 20.024839218000125,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 566616,
+        "computed": 510409,
+        "cache_hits": 56209,
+        "improvements": 9
+      },
+      "parameters": {
+        "name": "prefetch_batch_12_open",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_batch_12.route",
+        "seconds": 20.0,
+        "seed": 31004,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_timed_3_locked",
+      "finish": 198.14415869142354,
+      "elapsed": 20.028850105998572,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 544381,
+        "computed": 413905,
+        "cache_hits": 130478,
+        "improvements": 1
+      },
+      "parameters": {
+        "name": "prefetch_timed_3_locked",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_timed_3.route",
+        "seconds": 20.0,
+        "seed": 31007,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.4,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": true,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_timed_3_open",
+      "finish": 198.14415869142354,
+      "elapsed": 20.044014617000357,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 525990,
+        "computed": 461572,
+        "cache_hits": 64420,
+        "improvements": 1
+      },
+      "parameters": {
+        "name": "prefetch_timed_3_open",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_timed_3.route",
+        "seconds": 20.0,
+        "seed": 31006,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_timed_12_locked",
+      "finish": 198.14663645149844,
+      "elapsed": 20.04292426799657,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 586347,
+        "computed": 473447,
+        "cache_hits": 112902,
+        "improvements": 4
+      },
+      "parameters": {
+        "name": "prefetch_timed_12_locked",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_timed_12.route",
+        "seconds": 20.0,
+        "seed": 31009,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.4,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": true,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "prefetch_timed_12_open",
+      "finish": 198.14663645149844,
+      "elapsed": 20.019748869002797,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 558795,
+        "computed": 502665,
+        "cache_hits": 56132,
+        "improvements": 6
+      },
+      "parameters": {
+        "name": "prefetch_timed_12_open",
+        "source": "/tmp/ccsr-trained-12h-20260914/prefetch_timed_12.route",
+        "seconds": 20.0,
+        "seed": 31008,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 20000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null
+      }
+    }
+  ],
+  "crossover_pilots": [
+    {
+      "name": "crossover_pilot_cool",
+      "finish": 198.1407167530788,
+      "elapsed": 439.5762801219971,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 12842033,
+        "computed": 11276088,
+        "cache_hits": 1566331,
+        "improvements": 0
+      },
+      "parameters": {
+        "name": "crossover_pilot_cool",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 439.51970195770264,
+        "seed": 79200,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 200000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [
+          "/tmp/ccsr-trained-12h-20260914/long_inventory_restricted_candidates"
+        ],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.0,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null,
+        "quantity_cube_minimum": null
+      }
+    },
+    {
+      "name": "crossover_pilot_hot",
+      "finish": 198.1407167530788,
+      "elapsed": 439.57348338299926,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 13322991,
+        "computed": 11965484,
+        "cache_hits": 1357893,
+        "improvements": 0
+      },
+      "parameters": {
+        "name": "crossover_pilot_hot",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 439.5192713737488,
+        "seed": 79201,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3.0,
+        "tmin": 0.001,
+        "cycle": 1000000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [
+          "/tmp/ccsr-trained-12h-20260914/long_inventory_restricted_candidates"
+        ],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.0,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null,
+        "quantity_cube_minimum": null
+      }
+    },
+    {
+      "name": "crossover_pilot_aggregate",
+      "finish": 198.1407167530788,
+      "elapsed": 439.57418945599784,
+      "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+      "statistics": {
+        "tried": 4013454,
+        "computed": 3358556,
+        "cache_hits": 655284,
+        "improvements": 0
+      },
+      "parameters": {
+        "name": "crossover_pilot_aggregate",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 439.5190074443817,
+        "seed": 79202,
+        "width": 4,
+        "max_size": 64,
+        "tmax": 0.8,
+        "tmin": 0.001,
+        "cycle": 200000,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [
+          "/tmp/ccsr-trained-12h-20260914/long_inventory_restricted_candidates"
+        ],
+        "expand": false,
+        "blocks": true,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": true,
+        "lock_upgrades": false,
+        "restart_best": 0.0,
+        "cache_size": 100000,
+        "trials": 0,
+        "quantity_order": 0,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": false,
+        "quantity_end": null,
+        "quantity_cube_minimum": null
+      }
+    }
+  ],
+  "canonical_representative_checks": {
+    "manifest": {
+      "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+      "source_text": "# Best directly generated completion, excluding ruler-suffix rollouts.\nname = inventory_cap_none\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_native_beam\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nerrand_queue_depth = 6000\nmax_errand_size = 16\nbeam_width = 1200\nruler_scale = 0.9\nruler_route = /tmp/ccsr-trained-12h-20260914/inventory_cap_none_source.route\nerrand_search_width = 2000\nmax_errand_actions = 12\nerrand_state_width = 4\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Farm x5\nbuy Cursor x8\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Cheap hoes\nbuy Farm x4\n\nerrand\nbuy Mine\nbuy Farm x3\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x9\n\nerrand\nupgrade Lubricated dentures\nbuy Cursor x7\n\nerrand\nupgrade Thousand fingers\n\nerrand\nbuy Cursor x10\nbuy Grandma x5\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x5\n\nerrand\nupgrade Sugar gas\n\nerrand\nbuy Mine x3\n",
+      "deadline_utc": "2026-09-14T14:18:00+00:00",
+      "jobs": [
+        [
+          [
+            "canonical_order3",
+            {
+              "quantity-order": 3,
+              "quantity-start": 0,
+              "quantity-end": 18446744073709551615
+            }
+          ],
+          [
+            "canonical_order4",
+            {
+              "quantity-order": 4,
+              "quantity-start": 0,
+              "quantity-end": 18446744073709551615
+            }
+          ],
+          [
+            "canonical_deletion4",
+            {
+              "quantity-order": 4,
+              "quantity-deletions": true,
+              "quantity-start": 0,
+              "quantity-end": 18446744073709551615
+            }
+          ],
+          [
+            "canonical_order5_mid",
+            {
+              "quantity-order": 5,
+              "quantity-start": 250000000,
+              "quantity-end": 315000000
+            }
+          ]
+        ],
+        [
+          [
+            "canonical_cube",
+            {
+              "quantity-cube-minimum": 6,
+              "quantity-start": 0,
+              "quantity-end": 18446744073709551615
+            }
+          ],
+          [
+            "canonical_order5_tail",
+            {
+              "quantity-order": 5,
+              "quantity-start": 315000000,
+              "quantity-end": 18446744073709551615
+            }
+          ],
+          [
+            "canonical_order5_earlier",
+            {
+              "quantity-order": 5,
+              "quantity-start": 180000000,
+              "quantity-end": 250000000
+            }
+          ]
+        ]
+      ],
+      "completion_pass": {
+        "name": "canonical_order5_mid_resume",
+        "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+        "range_start": 313324000,
+        "range_end": 315000000,
+        "seconds": 90,
+        "started_utc": "2026-09-14T14:18:15.212193+00:00"
+      }
+    },
+    "finished_utc": "2026-09-14T14:19:22.827329+00:00",
+    "trials": [
+      {
+        "name": "canonical_order3",
+        "finish": 198.1407167530788,
+        "elapsed": 17.479945842002053,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 495720,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 495720,
+          "next_index": 495720
+        },
+        "parameters": {
+          "name": "canonical_order3",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 2487.598076581955,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 3,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": false,
+          "quantity_end": 18446744073709551615,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_order4",
+        "finish": 198.1407167530788,
+        "elapsed": 411.18452785900445,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 15615180,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 15615180,
+          "next_index": 15615180
+        },
+        "parameters": {
+          "name": "canonical_order4",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 2470.0101544857025,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 4,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": false,
+          "quantity_end": 18446744073709551615,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_deletion4",
+        "finish": 198.1407167530788,
+        "elapsed": 181.11722463000478,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 8184820,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 8184820,
+          "next_index": 8184820
+        },
+        "parameters": {
+          "name": "canonical_deletion4",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 2058.7310519218445,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 4,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": true,
+          "quantity_end": 18446744073709551615,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_order5_mid",
+        "finish": 198.1407167530788,
+        "elapsed": 1877.5464401240024,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 63324000,
+          "improvements": 0,
+          "range_finished": 0,
+          "range_start": 250000000,
+          "range_end": 315000000,
+          "next_index": 313324000
+        },
+        "parameters": {
+          "name": "canonical_order5_mid",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 1877.5190789699554,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 5,
+          "partition_age_bound": false,
+          "quantity_start": 250000000,
+          "quantity_deletions": false,
+          "quantity_end": 315000000,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_cube",
+        "finish": 198.1407167530788,
+        "elapsed": 535.8865685220007,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 25380504,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 25380504,
+          "next_index": 25380504
+        },
+        "parameters": {
+          "name": "canonical_cube",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 2487.5972929000854,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": false,
+          "quantity_end": 18446744073709551615,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "canonical_order5_tail",
+        "finish": 198.1407167530788,
+        "elapsed": 1764.7463987570009,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 50395212,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 315000000,
+          "range_end": 365395212,
+          "next_index": 365395212
+        },
+        "parameters": {
+          "name": "canonical_order5_tail",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 1951.6140100955963,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 5,
+          "partition_age_bound": false,
+          "quantity_start": 315000000,
+          "quantity_deletions": false,
+          "quantity_end": 18446744073709551615,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_order5_earlier",
+        "finish": 198.1407167530788,
+        "elapsed": 186.83241019200068,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 5201000,
+          "improvements": 0,
+          "range_finished": 0,
+          "range_start": 180000000,
+          "range_end": 250000000,
+          "next_index": 185201000
+        },
+        "parameters": {
+          "name": "canonical_order5_earlier",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 186.78866028785706,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 5,
+          "partition_age_bound": false,
+          "quantity_start": 180000000,
+          "quantity_deletions": false,
+          "quantity_end": 250000000,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_order5_mid_resume",
+        "finish": 198.1407167530788,
+        "elapsed": 67.52091202799784,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 1676000,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 313324000,
+          "range_end": 315000000,
+          "next_index": 315000000
+        },
+        "parameters": {
+          "name": "canonical_order5_mid_resume",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 90.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 5,
+          "partition_age_bound": false,
+          "quantity_start": 313324000,
+          "quantity_deletions": false,
+          "quantity_end": 315000000,
+          "quantity_cube_minimum": null
+        }
+      }
+    ],
+    "scope": "Alternate equivalent starting representation; these neighborhoods overlap the earlier scans and are not added to their distinct-vector count."
+  },
+  "canonical_lower_orders": {
+    "finished_utc": "2026-09-14T14:06:13.369864+00:00",
+    "source_text": "# Best directly generated completion, excluding ruler-suffix rollouts.\nname = inventory_cap_none\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_native_beam\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nerrand_queue_depth = 6000\nmax_errand_size = 16\nbeam_width = 1200\nruler_scale = 0.9\nruler_route = /tmp/ccsr-trained-12h-20260914/inventory_cap_none_source.route\nerrand_search_width = 2000\nmax_errand_actions = 12\nerrand_state_width = 4\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Farm x5\nbuy Cursor x8\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Cheap hoes\nbuy Farm x4\n\nerrand\nbuy Mine\nbuy Farm x3\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x9\n\nerrand\nupgrade Lubricated dentures\nbuy Cursor x7\n\nerrand\nupgrade Thousand fingers\n\nerrand\nbuy Cursor x10\nbuy Grandma x5\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x5\n\nerrand\nupgrade Sugar gas\n\nerrand\nbuy Mine x3\n",
+    "trials": [
+      {
+        "name": "canonical_lower_positive1",
+        "finish": 198.1407167530788,
+        "elapsed": 0.01590105800278252,
+        "binary_sha256": "7a90805a2fb3b66303dc4f6189d0fe9d30c9a03c1b6a4b0af501e5b91253d62c",
+        "statistics": {
+          "tried": 153,
+          "improvements": 0,
+          "exhausted": 1,
+          "passes": 1
+        },
+        "parameters": {
+          "name": "canonical_lower_positive1",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 60.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 1,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_lower_positive2",
+        "finish": 198.1407167530788,
+        "elapsed": 0.4217863550002221,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 11016,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 11016,
+          "next_index": 11016
+        },
+        "parameters": {
+          "name": "canonical_lower_positive2",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 60.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 2,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_lower_deletion1",
+        "finish": 198.1407167530788,
+        "elapsed": 0.009998214001825545,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 17,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 17,
+          "next_index": 17
+        },
+        "parameters": {
+          "name": "canonical_lower_deletion1",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 60.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 1,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": true,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_lower_deletion2",
+        "finish": 198.1407167530788,
+        "elapsed": 0.09552212800190318,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 2584,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 2584,
+          "next_index": 2584
+        },
+        "parameters": {
+          "name": "canonical_lower_deletion2",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 60.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 2,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": true,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "canonical_lower_deletion3",
+        "finish": 198.1407167530788,
+        "elapsed": 5.447364857995126,
+        "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+        "statistics": {
+          "tried": 184280,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 184280,
+          "next_index": 184280
+        },
+        "parameters": {
+          "name": "canonical_lower_deletion3",
+          "source": "/tmp/ccsr-trained-12h-20260914/canonical_neighborhood_source.route",
+          "seconds": 60.0,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 3,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": true,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      }
+    ]
+  },
+  "worker_batch_benchmark": [
+    {
+      "batch": 3,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 3.046915429,
+      "cpu_seconds": 5.132735,
+      "worker_occupancy": 0.736337208436951
+    },
+    {
+      "batch": 6,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 2.561082702,
+      "cpu_seconds": 5.048069,
+      "worker_occupancy": 0.84215849270142
+    },
+    {
+      "batch": 12,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 1.992980692,
+      "cpu_seconds": 4.873228,
+      "worker_occupancy": 0.910678448927659
+    },
+    {
+      "batch": 24,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 2.200959311,
+      "cpu_seconds": 5.083334,
+      "worker_occupancy": 0.961068358584178
+    },
+    {
+      "batch": 1000,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 1.794103247,
+      "cpu_seconds": 4.890601,
+      "worker_occupancy": 0.995726187620758
+    },
+    {
+      "batch": 3,
+      "workers": 3,
+      "tasks": 57,
+      "neighbors": 66558,
+      "checksum": 737952178210829871,
+      "elapsed": 2.933703957,
+      "cpu_seconds": 5.073576,
+      "worker_occupancy": 0.751588319857183
+    }
+  ],
+  "delay_rank_reversal": [
+    {
+      "name": "starting",
+      "zero_delay": 191.14922331900902,
+      "trained": 199.09071134697444,
+      "ordinary": 207.03219937493992,
+      "trained_delay_cost": 7.94148802796542
+    },
+    {
+      "name": "best",
+      "zero_delay": 188.72106124182216,
+      "trained": 198.1407167530788,
+      "ordinary": 207.5603722643354,
+      "trained_delay_cost": 9.41965551125665
+    }
+  ],
+  "near_tie_delay_sensitivity": [
+    {
+      "name": "session_best",
+      "errands": 19,
+      "actions": 29,
+      "times": [
+        {
+          "scale": 0,
+          "finish": 188.72106124182216
+        },
+        {
+          "scale": 0.25,
+          "finish": 193.43088899745044
+        },
+        {
+          "scale": 0.5,
+          "finish": 198.1407167530788
+        },
+        {
+          "scale": 0.75,
+          "finish": 202.8505445087071
+        },
+        {
+          "scale": 1,
+          "finish": 207.5603722643354
+        }
+      ]
+    },
+    {
+      "name": "prefetch_batch_3_locked",
+      "errands": 20,
+      "actions": 30,
+      "times": [
+        {
+          "scale": 0,
+          "finish": 188.27296680948123
+        },
+        {
+          "scale": 0.25,
+          "finish": 193.2085627504524
+        },
+        {
+          "scale": 0.5,
+          "finish": 198.14415869142354
+        },
+        {
+          "scale": 0.75,
+          "finish": 203.0797546323947
+        },
+        {
+          "scale": 1,
+          "finish": 208.01535057336585
+        }
+      ]
+    },
+    {
+      "name": "native_local_cool",
+      "errands": 20,
+      "actions": 28,
+      "times": [
+        {
+          "scale": 0,
+          "finish": 188.4755354727656
+        },
+        {
+          "scale": 0.25,
+          "finish": 193.31108596213204
+        },
+        {
+          "scale": 0.5,
+          "finish": 198.14663645149844
+        },
+        {
+          "scale": 0.75,
+          "finish": 202.98218694086484
+        },
+        {
+          "scale": 1,
+          "finish": 207.81773743023123
+        }
+      ]
+    },
+    {
+      "name": "policy_ensemble_bonuses_locked",
+      "errands": 20,
+      "actions": 28,
+      "times": [
+        {
+          "scale": 0,
+          "finish": 188.51032788160236
+        },
+        {
+          "scale": 0.25,
+          "finish": 193.34440806252277
+        },
+        {
+          "scale": 0.5,
+          "finish": 198.17848824344313
+        },
+        {
+          "scale": 0.75,
+          "finish": 203.0125684243635
+        },
+        {
+          "scale": 1,
+          "finish": 207.8466486052839
+        }
+      ]
+    }
+  ],
+  "long_beams": [
+    {
+      "name": "long_root_forecast",
+      "initial": 198.1407167530788,
+      "finish": 198.1407167530788,
+      "elapsed": 14400.768870271,
+      "cpu_seconds": 36920.514232,
+      "options": {
+        "workers": 3,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 750000,
+        "nodes": 6000000,
+        "compact": 1,
+        "harvest": 384,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 3,
+        "harvest-order-limit": 8,
+        "harvest-slack": 6,
+        "report-generated": 1,
+        "completion-cache": 200000,
+        "refresh-hints": 1,
+        "width": 2500,
+        "inner": 3000,
+        "pops": 10000,
+        "future-inventory": 0.03,
+        "rollout-keep": 320,
+        "rollout-raw": 80,
+        "shared-ruler": "/tmp/ccsr-trained-12h-20260914/shared_incumbent.seed"
+      },
+      "binary_sha256": "9f0a9bab6d386821682e68dde723da31925ad8f08ac1da227a32eb158d409d49",
+      "statistics": {
+        "expanded": 231958,
+        "generated": 62061223,
+        "termination": "wall_time_limit",
+        "improvements": 0,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "long_root_forecast",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 14400.0
+      },
+      "direct_finish": 198.1407167530788,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "long_wide_diverse",
+      "initial": 198.1407167530788,
+      "finish": 198.1407167530788,
+      "elapsed": 14400.776816404003,
+      "cpu_seconds": 37263.968793,
+      "options": {
+        "workers": 3,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 750000,
+        "nodes": 6000000,
+        "compact": 1,
+        "harvest": 384,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 3,
+        "harvest-order-limit": 8,
+        "harvest-slack": 6,
+        "report-generated": 1,
+        "completion-cache": 200000,
+        "refresh-hints": 1,
+        "width": 8000,
+        "inner": 6000,
+        "pops": 30000,
+        "future-inventory": 0.1,
+        "start-prefix": 4,
+        "strategy-bins": 2,
+        "rollout-keep": 320,
+        "rollout-raw": 80,
+        "rollout-diverse": 80,
+        "shared-ruler": "/tmp/ccsr-trained-12h-20260914/shared_incumbent.seed"
+      },
+      "binary_sha256": "9f0a9bab6d386821682e68dde723da31925ad8f08ac1da227a32eb158d409d49",
+      "statistics": {
+        "expanded": 71173,
+        "generated": 19136463,
+        "termination": "wall_time_limit",
+        "improvements": 0,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "long_wide_diverse",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 14400.0
+      },
+      "direct_finish": 198.1407167530788,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "long_upgrade_bonus",
+      "initial": 198.1407167530788,
+      "finish": 198.1407167530788,
+      "elapsed": 14400.778264734,
+      "cpu_seconds": 38194.684986,
+      "options": {
+        "workers": 3,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 0.98,
+        "prune": 0.85,
+        "heap": 750000,
+        "nodes": 6000000,
+        "compact": 1,
+        "harvest": 384,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 3,
+        "harvest-order-limit": 8,
+        "harvest-slack": 6,
+        "report-generated": 1,
+        "completion-cache": 200000,
+        "refresh-hints": 1,
+        "width": 3000,
+        "inner": 4000,
+        "pops": 15000,
+        "upgrade-bonus": 0.1,
+        "max-actions": 16,
+        "strategy-bins": 2,
+        "rollout-keep": 480,
+        "rollout-raw": 120,
+        "rollout-diverse": 80,
+        "shared-ruler": "/tmp/ccsr-trained-12h-20260914/shared_incumbent.seed"
+      },
+      "binary_sha256": "9f0a9bab6d386821682e68dde723da31925ad8f08ac1da227a32eb158d409d49",
+      "statistics": {
+        "expanded": 127000,
+        "generated": 56250614,
+        "termination": "wall_time_limit",
+        "improvements": 0,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "long_upgrade_bonus",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 14400.0
+      },
+      "direct_finish": 199.01238897134246,
+      "direct_finish_evidence": "Recorded generated_best event; older summary omitted this field."
+    },
+    {
+      "name": "long_inventory_restricted",
+      "initial": 198.1407167530788,
+      "finish": 198.1407167530788,
+      "direct_finish": 198.1407167530788,
+      "elapsed": 10800.737173365,
+      "cpu_seconds": 10653.874178999999,
+      "options": {
+        "workers": 1,
+        "horizon": 0,
+        "anchor": 4,
+        "macro": 1,
+        "order": 1,
+        "prune": 0.9,
+        "heap": 750000,
+        "nodes": 6000000,
+        "compact": 1,
+        "harvest": 384,
+        "future-mask": 32768,
+        "canonical-partials": 1,
+        "quantity-children": 4,
+        "age-bound": 1,
+        "seed-prefixes": 0,
+        "persistent-workers": 1,
+        "stage-balance": 1,
+        "hand-dominance": 1,
+        "rollout-weight": 0.5,
+        "hint-slack": 1.5,
+        "target-rollout": 1,
+        "retain-closed": 1,
+        "harvest-strategy": 3,
+        "harvest-order-limit": 8,
+        "harvest-slack": 6,
+        "report-generated": 1,
+        "completion-cache": 200000,
+        "refresh-hints": 1,
+        "width": 2500,
+        "inner": 3000,
+        "pops": 10000,
+        "future-inventory": 0.03,
+        "inventory-cap": 0,
+        "rollout-keep": 320,
+        "rollout-raw": 80,
+        "shared-ruler": "/tmp/ccsr-trained-12h-20260914/shared_incumbent.seed"
+      },
+      "binary_sha256": "a2913ef99ba1fa5fc6e1cb751fb90cd60ff9b76b4c0b366d326a04f7a3fe00a7",
+      "statistics": {
+        "expanded": 86379,
+        "generated": 23444828,
+        "termination": "wall_time_limit",
+        "improvements": 0,
+        "external_adoptions": 0
+      },
+      "parameters": {
+        "name": "long_inventory_restricted",
+        "source": "/tmp/ccsr-trained-12h-20260914/session_best.route",
+        "seconds": 10800.0
+      }
+    }
+  ],
+  "policy_ensembles": [
+    {
+      "name": "policy_ensemble_bonuses",
+      "greedy": {
+        "name": "policy_ensemble_bonuses",
+        "finish": 199.72296827442182,
+        "elapsed": 748.3641790460024,
+        "options": {
+          "pool": 1200,
+          "inner": 1500,
+          "pops": 5000,
+          "mode": 2,
+          "rollout-width": 40,
+          "rollout-inner": 100,
+          "rollout-pops": 300,
+          "rollout-bonuses": "0,0.05,0.1,0.2"
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "locked": {
+        "name": "policy_ensemble_bonuses_locked",
+        "finish": 198.17848824344313,
+        "elapsed": 180.05746071300382,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5721633,
+          "computed": 4371044,
+          "cache_hits": 1350591,
+          "improvements": 39
+        },
+        "parameters": {
+          "name": "policy_ensemble_bonuses_locked",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_bonuses.route",
+          "seconds": 180.0,
+          "seed": 21001,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      },
+      "open": {
+        "name": "policy_ensemble_bonuses_open",
+        "finish": 198.14663645149844,
+        "elapsed": 180.02634685900557,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5366318,
+          "computed": 4818511,
+          "cache_hits": 547809,
+          "improvements": 44
+        },
+        "parameters": {
+          "name": "policy_ensemble_bonuses_open",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_bonuses.route",
+          "seconds": 180.0,
+          "seed": 21000,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      }
+    },
+    {
+      "name": "policy_ensemble_outer_bonus",
+      "greedy": {
+        "name": "policy_ensemble_outer_bonus",
+        "finish": 199.72296827442182,
+        "elapsed": 802.5609566569983,
+        "options": {
+          "pool": 1200,
+          "inner": 1500,
+          "pops": 5000,
+          "mode": 2,
+          "upgrade-bonus": 0.1,
+          "rollout-width": 40,
+          "rollout-inner": 100,
+          "rollout-pops": 300,
+          "rollout-bonuses": "0,0.05,0.1,0.2"
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "locked": {
+        "name": "policy_ensemble_outer_bonus_locked",
+        "finish": 198.17848824344313,
+        "elapsed": 180.06975499499822,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5208650,
+          "computed": 3977062,
+          "cache_hits": 1231590,
+          "improvements": 33
+        },
+        "parameters": {
+          "name": "policy_ensemble_outer_bonus_locked",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_outer_bonus.route",
+          "seconds": 180.0,
+          "seed": 21005,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      },
+      "open": {
+        "name": "policy_ensemble_outer_bonus_open",
+        "finish": 198.14663645149844,
+        "elapsed": 180.02553099999932,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5148689,
+          "computed": 4618763,
+          "cache_hits": 529928,
+          "improvements": 58
+        },
+        "parameters": {
+          "name": "policy_ensemble_outer_bonus_open",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_outer_bonus.route",
+          "seconds": 180.0,
+          "seed": 21004,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      }
+    },
+    {
+      "name": "policy_ensemble_wide",
+      "greedy": {
+        "name": "policy_ensemble_wide",
+        "finish": 199.74059221941607,
+        "elapsed": 1800.1569176039993,
+        "options": {
+          "pool": 3000,
+          "inner": 4000,
+          "pops": 15000,
+          "mode": 2,
+          "rollout-width": 80,
+          "rollout-inner": 200,
+          "rollout-pops": 600,
+          "rollout-bonuses": "0,0.1"
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "locked": {
+        "name": "policy_ensemble_wide_locked",
+        "finish": 198.1689494961042,
+        "elapsed": 180.0579088979939,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5863501,
+          "computed": 4266761,
+          "cache_hits": 1596742,
+          "improvements": 64
+        },
+        "parameters": {
+          "name": "policy_ensemble_wide_locked",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_wide.route",
+          "seconds": 180.0,
+          "seed": 21003,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      },
+      "open": {
+        "name": "policy_ensemble_wide_open",
+        "finish": 198.14663645149844,
+        "elapsed": 180.06904531799955,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5232941,
+          "computed": 4699200,
+          "cache_hits": 533743,
+          "improvements": 41
+        },
+        "parameters": {
+          "name": "policy_ensemble_wide_open",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_wide.route",
+          "seconds": 180.0,
+          "seed": 21002,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      }
+    },
+    {
+      "name": "policy_ensemble_strong_rollout",
+      "greedy": {
+        "name": "policy_ensemble_strong_rollout",
+        "finish": 200.01739533983124,
+        "elapsed": 1800.1057583620059,
+        "options": {
+          "pool": 1600,
+          "inner": 2000,
+          "pops": 8000,
+          "mode": 2,
+          "rollout-width": 160,
+          "rollout-inner": 400,
+          "rollout-pops": 1200,
+          "rollout-bonuses": "0,0.1"
+        },
+        "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+        "statistics": {}
+      },
+      "locked": {
+        "name": "policy_ensemble_strong_rollout_locked",
+        "finish": 198.17848824344313,
+        "elapsed": 180.0208973839981,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5789970,
+          "computed": 4405465,
+          "cache_hits": 1384507,
+          "improvements": 37
+        },
+        "parameters": {
+          "name": "policy_ensemble_strong_rollout_locked",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_strong_rollout.route",
+          "seconds": 180.0,
+          "seed": 21007,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": true,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      },
+      "open": {
+        "name": "policy_ensemble_strong_rollout_open",
+        "finish": 198.14663645149844,
+        "elapsed": 180.02843585600203,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 5379720,
+          "computed": 4832134,
+          "cache_hits": 547588,
+          "improvements": 49
+        },
+        "parameters": {
+          "name": "policy_ensemble_strong_rollout_open",
+          "source": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_strong_rollout.route",
+          "seconds": 180.0,
+          "seed": 21006,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 20000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null
+        }
+      }
+    }
+  ],
+  "quantity_coverage": {
+    "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+    "order": 5,
+    "partition_width": 4,
+    "total_combinations": 365395212,
+    "completed": [
+      {
+        "name": "quantity_scan_best_5",
+        "start": 0,
+        "end": 239479000,
+        "finish": 198.1407167530788
+      },
+      {
+        "name": "quantity_tail_5",
+        "start": 275000000,
+        "end": 315001000,
+        "finish": 198.1407167530788
+      },
+      {
+        "name": "quantity_prefix_fast_5",
+        "start": 239479000,
+        "end": 275000000,
+        "finish": 198.1407167530788
+      },
+      {
+        "name": "quantity_tail_fast_5",
+        "start": 315001000,
+        "end": 365395212,
+        "finish": 198.1407167530788
+      }
+    ],
+    "remaining": [],
+    "complete": true,
+    "covered": 365395212,
+    "positive_orders_one_through_five": 381517281
+  },
+  "deletion_scans": [
+    {
+      "name": "deletion_smoke_order3",
+      "finish": 198.1407167530788,
+      "elapsed": 5.08185357000184,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 184280,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 0,
+        "range_end": 184280,
+        "next_index": 184280
+      },
+      "parameters": {
+        "name": "deletion_smoke_order3",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 120.0,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 3,
+        "partition_age_bound": false,
+        "quantity_start": null,
+        "quantity_deletions": true,
+        "quantity_end": null
+      }
+    },
+    {
+      "name": "deletion_order1",
+      "finish": 198.1407167530788,
+      "elapsed": 0.009983069001464173,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 17,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 0,
+        "range_end": 17,
+        "next_index": 17
+      },
+      "parameters": {
+        "name": "deletion_order1",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 10759.32274889946,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 1,
+        "partition_age_bound": false,
+        "quantity_start": 0,
+        "quantity_deletions": true,
+        "quantity_end": 18446744073709551615
+      }
+    },
+    {
+      "name": "deletion_order2",
+      "finish": 198.1407167530788,
+      "elapsed": 0.09949212100036675,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 2584,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 0,
+        "range_end": 2584,
+        "next_index": 2584
+      },
+      "parameters": {
+        "name": "deletion_order2",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 10759.156811952591,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 2,
+        "partition_age_bound": false,
+        "quantity_start": 0,
+        "quantity_deletions": true,
+        "quantity_end": 18446744073709551615
+      }
+    },
+    {
+      "name": "deletion_order4",
+      "finish": 198.1407167530788,
+      "elapsed": 197.18674422000186,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 8184820,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 0,
+        "range_end": 8184820,
+        "next_index": 8184820
+      },
+      "parameters": {
+        "name": "deletion_order4",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 10758.939279317856,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 4,
+        "partition_age_bound": false,
+        "quantity_start": 0,
+        "quantity_deletions": true,
+        "quantity_end": 18446744073709551615
+      }
+    },
+    {
+      "name": "deletion_order5_a",
+      "finish": 198.1407167530788,
+      "elapsed": 1927.3309215619956,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 126702394,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 0,
+        "range_end": 126702394,
+        "next_index": 126702394
+      },
+      "parameters": {
+        "name": "deletion_order5_a",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 10561.643817901611,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 5,
+        "partition_age_bound": false,
+        "quantity_start": 0,
+        "quantity_deletions": true,
+        "quantity_end": 126702394
+      }
+    },
+    {
+      "name": "deletion_order5_b",
+      "finish": 198.1407167530788,
+      "elapsed": 645.0180743450037,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 23908000,
+        "improvements": 0,
+        "range_finished": 0,
+        "range_start": 126702394,
+        "range_end": 253404788,
+        "next_index": 150610394
+      },
+      "parameters": {
+        "name": "deletion_order5_b",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 8630.640991687775,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 5,
+        "partition_age_bound": false,
+        "quantity_start": 126702394,
+        "quantity_deletions": true,
+        "quantity_end": 253404788
+      }
+    },
+    {
+      "name": "deletion_order5_resume_a",
+      "finish": 198.1407167530788,
+      "elapsed": 1494.9418079440002,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 51397197,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 150610394,
+        "range_end": 202007591,
+        "next_index": 202007591
+      },
+      "parameters": {
+        "name": "deletion_order5_resume_a",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 7985.520894527435,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 5,
+        "partition_age_bound": false,
+        "quantity_start": 150610394,
+        "quantity_deletions": true,
+        "quantity_end": 202007591
+      }
+    },
+    {
+      "name": "deletion_order5_resume_b",
+      "finish": 198.1407167530788,
+      "elapsed": 1605.4159579849947,
+      "binary_sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9",
+      "statistics": {
+        "tried": 51397197,
+        "improvements": 0,
+        "range_finished": 1,
+        "range_start": 202007591,
+        "range_end": 253404788,
+        "next_index": 253404788
+      },
+      "parameters": {
+        "name": "deletion_order5_resume_b",
+        "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+        "seconds": 7985.520143270493,
+        "seed": 101,
+        "width": 4,
+        "max_size": 16,
+        "tmax": 3,
+        "tmin": 0.03,
+        "cycle": 1500,
+        "errand_bias": 0,
+        "action_bias": 0,
+        "extra_source": [],
+        "extra_directory": [],
+        "expand": false,
+        "blocks": false,
+        "canonical_partition": false,
+        "canonical_partials": false,
+        "aggregate_partition": false,
+        "lock_upgrades": false,
+        "restart_best": 0.75,
+        "cache_size": 0,
+        "trials": 0,
+        "quantity_order": 5,
+        "partition_age_bound": false,
+        "quantity_start": 202007591,
+        "quantity_deletions": true,
+        "quantity_end": 253404788
+      }
+    }
+  ],
+  "quantity_source_alignment": {
+    "identical_initial_routes": true,
+    "rows": [
+      {
+        "name": "quantity_scan_best_3",
+        "finish": 198.1407167530788,
+        "tried": 495720,
+        "width": 4,
+        "initial": [
+          [
+            1
+          ],
+          [
+            256
+          ],
+          [
+            257
+          ],
+          [
+            10,
+            258
+          ],
+          [
+            26,
+            26,
+            261,
+            260,
+            37,
+            8
+          ],
+          [
+            271
+          ],
+          [
+            263,
+            36
+          ],
+          [
+            49,
+            35
+          ],
+          [
+            264
+          ],
+          [
+            36
+          ],
+          [
+            268
+          ],
+          [
+            25
+          ],
+          [
+            262,
+            7
+          ],
+          [
+            259
+          ],
+          [
+            21,
+            10
+          ],
+          [
+            37
+          ],
+          [
+            53
+          ],
+          [
+            266
+          ],
+          [
+            51
+          ]
+        ]
+      },
+      {
+        "name": "quantity_scan_best_4",
+        "finish": 198.1407167530788,
+        "tried": 15615180,
+        "width": 4,
+        "initial": [
+          [
+            1
+          ],
+          [
+            256
+          ],
+          [
+            257
+          ],
+          [
+            10,
+            258
+          ],
+          [
+            26,
+            26,
+            261,
+            260,
+            37,
+            8
+          ],
+          [
+            271
+          ],
+          [
+            263,
+            36
+          ],
+          [
+            49,
+            35
+          ],
+          [
+            264
+          ],
+          [
+            36
+          ],
+          [
+            268
+          ],
+          [
+            25
+          ],
+          [
+            262,
+            7
+          ],
+          [
+            259
+          ],
+          [
+            21,
+            10
+          ],
+          [
+            37
+          ],
+          [
+            53
+          ],
+          [
+            266
+          ],
+          [
+            51
+          ]
+        ]
+      },
+      {
+        "name": "quantity_scan_best_5",
+        "finish": 198.1407167530788,
+        "tried": 239479000,
+        "width": 4,
+        "initial": [
+          [
+            1
+          ],
+          [
+            256
+          ],
+          [
+            257
+          ],
+          [
+            10,
+            258
+          ],
+          [
+            26,
+            26,
+            261,
+            260,
+            37,
+            8
+          ],
+          [
+            271
+          ],
+          [
+            263,
+            36
+          ],
+          [
+            49,
+            35
+          ],
+          [
+            264
+          ],
+          [
+            36
+          ],
+          [
+            268
+          ],
+          [
+            25
+          ],
+          [
+            262,
+            7
+          ],
+          [
+            259
+          ],
+          [
+            21,
+            10
+          ],
+          [
+            37
+          ],
+          [
+            53
+          ],
+          [
+            266
+          ],
+          [
+            51
+          ]
+        ]
+      },
+      {
+        "name": "quantity_certificate_order1",
+        "finish": 198.1407167530788,
+        "tried": 153,
+        "width": 4,
+        "initial": [
+          [
+            1
+          ],
+          [
+            256
+          ],
+          [
+            257
+          ],
+          [
+            10,
+            258
+          ],
+          [
+            26,
+            26,
+            261,
+            260,
+            37,
+            8
+          ],
+          [
+            271
+          ],
+          [
+            263,
+            36
+          ],
+          [
+            49,
+            35
+          ],
+          [
+            264
+          ],
+          [
+            36
+          ],
+          [
+            268
+          ],
+          [
+            25
+          ],
+          [
+            262,
+            7
+          ],
+          [
+            259
+          ],
+          [
+            21,
+            10
+          ],
+          [
+            37
+          ],
+          [
+            53
+          ],
+          [
+            266
+          ],
+          [
+            51
+          ]
+        ]
+      },
+      {
+        "name": "quantity_certificate_order2",
+        "finish": 198.1407167530788,
+        "tried": 11016,
+        "width": 4,
+        "initial": [
+          [
+            1
+          ],
+          [
+            256
+          ],
+          [
+            257
+          ],
+          [
+            10,
+            258
+          ],
+          [
+            26,
+            26,
+            261,
+            260,
+            37,
+            8
+          ],
+          [
+            271
+          ],
+          [
+            263,
+            36
+          ],
+          [
+            49,
+            35
+          ],
+          [
+            264
+          ],
+          [
+            36
+          ],
+          [
+            268
+          ],
+          [
+            25
+          ],
+          [
+            262,
+            7
+          ],
+          [
+            259
+          ],
+          [
+            21,
+            10
+          ],
+          [
+            37
+          ],
+          [
+            53
+          ],
+          [
+            266
+          ],
+          [
+            51
+          ]
+        ]
+      }
+    ]
+  },
+  "combined_neighborhood_coverage": {
+    "source_codes": [
+      1,
+      256,
+      257,
+      10,
+      258,
+      26,
+      26,
+      261,
+      260,
+      37,
+      8,
+      271,
+      263,
+      36,
+      49,
+      35,
+      264,
+      36,
+      268,
+      25,
+      262,
+      7,
+      259,
+      21,
+      10,
+      37,
+      53,
+      266,
+      51
+    ],
+    "building_actions": 17,
+    "partition_width": 4,
+    "max_errand_actions": 16,
+    "action_order_fixed": true,
+    "baseline": 198.140716753079,
+    "best": 198.1407167530788,
+    "expected_changed_vectors": 643293770,
+    "examined_changed_vectors": 643293770,
+    "complete": true,
+    "neighborhoods": [
+      {
+        "deletion_only": false,
+        "order": 1,
+        "expected": 153,
+        "covered": 153,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            153
+          ]
+        ]
+      },
+      {
+        "deletion_only": false,
+        "order": 2,
+        "expected": 11016,
+        "covered": 11016,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            11016
+          ]
+        ]
+      },
+      {
+        "deletion_only": false,
+        "order": 3,
+        "expected": 495720,
+        "covered": 495720,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            495720
+          ]
+        ]
+      },
+      {
+        "deletion_only": false,
+        "order": 4,
+        "expected": 15615180,
+        "covered": 15615180,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            15615180
+          ]
+        ]
+      },
+      {
+        "deletion_only": false,
+        "order": 5,
+        "expected": 365395212,
+        "covered": 365395212,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            239479000
+          ],
+          [
+            275000000,
+            315001000
+          ],
+          [
+            239479000,
+            275000000
+          ],
+          [
+            315001000,
+            365395212
+          ]
+        ]
+      },
+      {
+        "deletion_only": true,
+        "order": 1,
+        "expected": 17,
+        "covered": 17,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            17
+          ]
+        ]
+      },
+      {
+        "deletion_only": true,
+        "order": 2,
+        "expected": 2584,
+        "covered": 2584,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            2584
+          ]
+        ]
+      },
+      {
+        "deletion_only": true,
+        "order": 3,
+        "expected": 184280,
+        "covered": 184280,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            184280
+          ]
+        ]
+      },
+      {
+        "deletion_only": true,
+        "order": 4,
+        "expected": 8184820,
+        "covered": 8184820,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            8184820
+          ]
+        ]
+      },
+      {
+        "deletion_only": true,
+        "order": 5,
+        "expected": 253404788,
+        "covered": 253404788,
+        "complete": true,
+        "ranges": [
+          [
+            0,
+            126702394
+          ],
+          [
+            126702394,
+            150610394
+          ],
+          [
+            150610394,
+            202007591
+          ],
+          [
+            202007591,
+            253404788
+          ]
+        ]
+      }
+    ],
+    "limitation": "Distinct quantity vectors, not necessarily distinct routes; finite partition width and fixed action order remain restrictions."
+  },
+  "extended_neighborhood_coverage": {
+    "complete": true,
+    "source_codes": [
+      1,
+      256,
+      257,
+      10,
+      258,
+      26,
+      26,
+      261,
+      260,
+      37,
+      8,
+      271,
+      263,
+      36,
+      49,
+      35,
+      264,
+      36,
+      268,
+      25,
+      262,
+      7,
+      259,
+      21,
+      10,
+      37,
+      53,
+      266,
+      51
+    ],
+    "quantity_coefficients": [
+      1,
+      30,
+      422,
+      3696,
+      22569,
+      101946,
+      352664,
+      954096,
+      2043184,
+      3482336,
+      4722432,
+      5065216,
+      4243200,
+      2717184,
+      1284096,
+      421888,
+      86016,
+      8192
+    ],
+    "sparse_changed_vectors": 643293770,
+    "dense_changed_vectors": 25380504,
+    "total_changed_vectors": 668674274,
+    "source_sequences_identical": true,
+    "neighborhoods_disjoint": true,
+    "partition_width": 4,
+    "best": 198.1407167530788,
+    "limitation": "Fixed action order and bounded partition width; distinct vectors can produce identical routes. No global optimality certificate."
+  },
+  "canonical_coverage_verification": {
+    "source": "canonical_neighborhood_source.route",
+    "up_to_four": 24493770,
+    "dense_at_least_six": 25380504,
+    "order_five_intervals": [
+      [
+        180000000,
+        185201000
+      ],
+      [
+        250000000,
+        313324000
+      ],
+      [
+        313324000,
+        315000000
+      ],
+      [
+        315000000,
+        365395212
+      ]
+    ],
+    "total": 170470486,
+    "scope": "Distinct vectors within this fixed representation only; overlaps the original representation.",
+    "verified": true
+  },
+  "dense_quantity_neighborhood": {
+    "finished_utc": "2026-09-14T12:33:58.565493+00:00",
+    "total": 25380504,
+    "covered": 25380504,
+    "complete": true,
+    "scope": "Fixed original sequence; quantities within one of original, at least six changes, width four",
+    "trials": [
+      {
+        "name": "quantity_cube_00",
+        "finish": 198.1407167530788,
+        "elapsed": 6.483866183996724,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 0,
+          "range_end": 3172563,
+          "next_index": 3172563
+        },
+        "parameters": {
+          "name": "quantity_cube_00",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6375.300331354141,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 0,
+          "quantity_deletions": false,
+          "quantity_end": 3172563,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_01",
+        "finish": 198.1407167530788,
+        "elapsed": 6.713236444003996,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 3172563,
+          "range_end": 6345126,
+          "next_index": 6345126
+        },
+        "parameters": {
+          "name": "quantity_cube_01",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6375.299516201019,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 3172563,
+          "quantity_deletions": false,
+          "quantity_end": 6345126,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_02",
+        "finish": 198.1407167530788,
+        "elapsed": 37.05696111600264,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 6345126,
+          "range_end": 9517689,
+          "next_index": 9517689
+        },
+        "parameters": {
+          "name": "quantity_cube_02",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6368.702975034714,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 6345126,
+          "quantity_deletions": false,
+          "quantity_end": 9517689,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_03",
+        "finish": 198.1407167530788,
+        "elapsed": 105.15664161399764,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 9517689,
+          "range_end": 12690252,
+          "next_index": 12690252
+        },
+        "parameters": {
+          "name": "quantity_cube_03",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6368.474771738052,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 9517689,
+          "quantity_deletions": false,
+          "quantity_end": 12690252,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_04",
+        "finish": 198.1407167530788,
+        "elapsed": 107.2676133720015,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 12690252,
+          "range_end": 15862815,
+          "next_index": 15862815
+        },
+        "parameters": {
+          "name": "quantity_cube_04",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6331.565571546555,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 12690252,
+          "quantity_deletions": false,
+          "quantity_end": 15862815,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_05",
+        "finish": 198.1407167530788,
+        "elapsed": 107.63298710500385,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 15862815,
+          "range_end": 19035378,
+          "next_index": 19035378
+        },
+        "parameters": {
+          "name": "quantity_cube_05",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6263.219933986664,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 15862815,
+          "quantity_deletions": false,
+          "quantity_end": 19035378,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_06",
+        "finish": 198.1407167530788,
+        "elapsed": 103.14238334100082,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 19035378,
+          "range_end": 22207941,
+          "next_index": 22207941
+        },
+        "parameters": {
+          "name": "quantity_cube_06",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6224.210669755936,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 19035378,
+          "quantity_deletions": false,
+          "quantity_end": 22207941,
+          "quantity_cube_minimum": 6
+        }
+      },
+      {
+        "name": "quantity_cube_07",
+        "finish": 198.1407167530788,
+        "elapsed": 93.96109805299784,
+        "binary_sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db",
+        "statistics": {
+          "tried": 3172563,
+          "improvements": 0,
+          "range_finished": 1,
+          "range_start": 22207941,
+          "range_end": 25380504,
+          "next_index": 25380504
+        },
+        "parameters": {
+          "name": "quantity_cube_07",
+          "source": "/tmp/ccsr-trained-12h-20260914/quantity_scan_best_5_source.route",
+          "seconds": 6155.499904155731,
+          "seed": 101,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 3,
+          "tmin": 0.03,
+          "cycle": 1500,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [],
+          "expand": false,
+          "blocks": false,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.75,
+          "cache_size": 0,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": 22207941,
+          "quantity_deletions": false,
+          "quantity_end": 25380504,
+          "quantity_cube_minimum": 6
+        }
+      }
+    ]
+  },
+  "partition_parent_verification": {
+    "sequences": 1200,
+    "python_replays": 300,
+    "identical": true
+  },
+  "partition_width_audit": {
+    "trials": 20000,
+    "seeds": 67,
+    "widths": [
+      1,
+      4,
+      16,
+      32
+    ],
+    "finishes_below_205": 1878,
+    "elapsed": 7.084280942995974,
+    "comparisons_to_width4": {
+      "1": {
+        "better": 0,
+        "worse": 0,
+        "equal": 20000,
+        "max_gain": 0
+      },
+      "16": {
+        "better": 0,
+        "worse": 0,
+        "equal": 20000,
+        "max_gain": 0
+      },
+      "32": {
+        "better": 0,
+        "worse": 0,
+        "equal": 20000,
+        "max_gain": 0
+      }
+    },
+    "examples": [],
+    "best": 198.1407167530788
+  },
+  "validated_build": {
+    "build_directory": "/tmp/ccsr-trained-session-final-build",
+    "repository_tests": 73,
+    "experimental_tests": 18,
+    "binaries": [
+      {
+        "name": "native_search.so",
+        "sha256": "16351dba2b5d87770a1b88507538c4010a16717fc213ad298c7b3a7e62077cb0"
+      },
+      {
+        "name": "native_beam",
+        "sha256": "9b8e7b1d5f137de9e668973c71c9b6c48f8c9336d336f8cd1a79bd2f9e72f3ac"
+      },
+      {
+        "name": "native_anneal",
+        "sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9"
+      },
+      {
+        "name": "native_quantity_scan",
+        "sha256": "7a90805a2fb3b66303dc4f6189d0fe9d30c9a03c1b6a4b0af501e5b91253d62c"
+      },
+      {
+        "name": "native_quantity_range",
+        "sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9"
+      },
+      {
+        "name": "native_policy",
+        "sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4"
+      }
+    ]
+  },
+  "delivery_build": {
+    "build_directory": "/tmp/ccsr-trained-final-delivery",
+    "verified_utc": "2026-09-14T12:24:32.649324+00:00",
+    "repository_tests": 73,
+    "experimental_tests": 21,
+    "binaries": [
+      {
+        "name": "native_anneal",
+        "sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9"
+      },
+      {
+        "name": "native_beam",
+        "sha256": "9b8e7b1d5f137de9e668973c71c9b6c48f8c9336d336f8cd1a79bd2f9e72f3ac"
+      },
+      {
+        "name": "native_policy",
+        "sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4"
+      },
+      {
+        "name": "native_quantity_cube",
+        "sha256": "36ae6855284b3894b4be41af60f91e5b7ed1f4763029eab08760cf69aed951db"
+      },
+      {
+        "name": "native_quantity_range",
+        "sha256": "73e655d9b65f1d8331be1b24d2eb5f391ba880105853440fc5cba52dab5a92e9"
+      },
+      {
+        "name": "native_quantity_scan",
+        "sha256": "7a90805a2fb3b66303dc4f6189d0fe9d30c9a03c1b6a4b0af501e5b91253d62c"
+      },
+      {
+        "name": "native_search.so",
+        "sha256": "16351dba2b5d87770a1b88507538c4010a16717fc213ad298c7b3a7e62077cb0"
+      }
+    ],
+    "source_hashes": {
+      "experiments/trained_250cps_search/audit_aggregate_partition.cpp": "a61a018a8ea3b771b5a8e9a2428e4ff67d38adbb31d6f63925d99118fb1a3f44",
+      "experiments/trained_250cps_search/audit_inventory_cap.cpp": "6f99c0cc739e76fcac08071a036c62d9022786a9f39a2e243e51998f3f88385d",
+      "experiments/trained_250cps_search/audit_latest_forecasts.cpp": "cd89b758f82901bccf2fa0642193a462b46b756c7f7918556d87876d2f2fc378",
+      "experiments/trained_250cps_search/audit_quantity_reachability.cpp": "4bbee88e6391d0f7303c5c40ed24892c0828ce586325d62bd98d21d904839c7d",
+      "experiments/trained_250cps_search/audit_ruler_selection.cpp": "b571edcc315b349713ceb7c443d97062774f9d9cc639ec935d3cba5242b1261f",
+      "experiments/trained_250cps_search/audit_selection_diversity.cpp": "90f07a1760fe7b3ba1905b4b9a3321ff3f92eedb14693829e557908144364ae5",
+      "experiments/trained_250cps_search/benchmark_age_bound.cpp": "35d1b55e56e2d013921f06abf833b8f625ee75d081273cbab45e813d2334485d",
+      "experiments/trained_250cps_search/benchmark_completion_cache.cpp": "083e54a085734fbc63b0e92bfde388043742799d05a4057311cd6f14fed30cee",
+      "experiments/trained_250cps_search/benchmark_worker_batches.cpp": "c2254759b96a5b2d0ed04af92915742d129398faa79b1df40b071ff0e36261e7",
+      "experiments/trained_250cps_search/native_anneal.cpp": "b7603baf1a9f07656c425a4a3499194504fb645a12484c0f31a44ec2e0260cac",
+      "experiments/trained_250cps_search/native_beam.cpp": "440765219dc3bf706f72a92b1da0c23d49a814630d0d15d36cec8f788ae26c92",
+      "experiments/trained_250cps_search/native_core.hpp": "dff27624bdf5cd9373cb9349122f6c9f7e9e0b404f80e9cdfc92422e8a51b49b",
+      "experiments/trained_250cps_search/native_generator.hpp": "68a8ac40b88573960b7dd8f89487816a48f612dc41a55abd5fd20166732fadad",
+      "experiments/trained_250cps_search/native_guided.hpp": "3c581f76971fd09bfe07c15936fbd63be1ddfd5becc68bdb2333547ef6482fa6",
+      "experiments/trained_250cps_search/native_hand_frontier.hpp": "9d2a5995a7e4ae1e8fe86ca9a6336df600efef95fb67c8a1b3917f257fbd4e11",
+      "experiments/trained_250cps_search/native_library.cpp": "b5c4d3227b408d8e3de50f186ead0e530bcf990959a5e1aa68edee5fc6789b4e",
+      "experiments/trained_250cps_search/native_model_data.hpp": "a54ce326e07d20fa3b405ca89c9fff4094d035466458a0f60dc683c74fbc8458",
+      "experiments/trained_250cps_search/native_partition.hpp": "2bacc516ddca950a14d3d8f178cc0b40eb8f266e5b12a3b4713ed5b14b5ba6c2",
+      "experiments/trained_250cps_search/native_policy.cpp": "04d743a9fee6de107000ac8e61474120d557f76255c1c72f15181872bff53d73",
+      "experiments/trained_250cps_search/native_quantity_cube.cpp": "c29b101b4b405e7e3f6b7a046e8815b6b7b04bb23b7ae1528c9b4db3d7619df2",
+      "experiments/trained_250cps_search/native_quantity_range.cpp": "220abfa41d8879d463eb2445521378552ca54215876dbe6f53181bf3ab66f58e",
+      "experiments/trained_250cps_search/native_quantity_scan.cpp": "bb772f819e6990a4453bca64d07e47978e72afe1c42a2448989c9abd603301f4",
+      "experiments/trained_250cps_search/test_basket_prefixes.cpp": "5edae6c540e2dc7e57226ca479d659b9fd630f6817f299fcb9926d4148df74a0",
+      "experiments/trained_250cps_search/test_hand_frontier.cpp": "8468d68a6a30c2a61adf1386f31f0b62261ec96013f06729b61306c0a56ddd49"
+    }
+  },
+  "canonical_exports": {
+    "profile": "million-250cps",
+    "written": true,
+    "routes": [
+      {
+        "path": "routes/million-250cps/generated_greedy.route",
+        "source_file": "/tmp/ccsr-trained-12h-20260914/policy_ensemble_bonuses.route",
+        "finish": 199.72296827442182,
+        "errands": 18,
+        "actions": 34,
+        "original_route_text": "# Greedy policy improvement from the initial state; independently replayed.\nname = policy_ensemble_bonuses\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_policy_greedy\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nerrand_queue_depth = 5000\nerrand_search_width = 1500\nmax_errand_actions = 12\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\nbuy Grandma\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Cursor x10\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Farm x6\nbuy Grandma x4\n\nerrand\nupgrade Cheap hoes\nbuy Farm x3\nbuy Grandma x3\n\nerrand\nupgrade Plastic mouse\n\nerrand\nbuy Farm x4\nbuy Grandma x2\n\nerrand\nbuy Mine x2\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\nbuy Grandma x5\n\nerrand\nupgrade Lubricated dentures\nbuy Grandma x5\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\n\nerrand\nbuy Mine x4\n\nerrand\nbuy Farm x4\nbuy Grandma x2\n\nerrand\nbuy Mine x2\nbuy Grandma x3\nbuy Cursor x4\n\nerrand\nupgrade Sugar gas\n",
+        "trial": {
+          "name": "policy_ensemble_bonuses",
+          "finish": 199.72296827442182,
+          "elapsed": 748.3641790460024,
+          "options": {
+            "pool": 1200,
+            "inner": 1500,
+            "pops": 5000,
+            "mode": 2,
+            "rollout-width": 40,
+            "rollout-inner": 100,
+            "rollout-pops": 300,
+            "rollout-bonuses": "0,0.05,0.1,0.2"
+          },
+          "binary": "/tmp/ccsr-trained-12h-20260914/snapshots/policy_ensemble_bonuses/native_policy",
+          "binary_sha256": "68502cbab867ae153539e991a5efa099fe2a939c04bbdb3e5254ee101ac0cef4",
+          "last": {
+            "event": "complete",
+            "finish": 199.722968274422,
+            "elapsed": 748.22884347,
+            "checked": 21555,
+            "prefix": 18,
+            "route": [
+              [
+                1
+              ],
+              [
+                256
+              ],
+              [
+                257,
+                17
+              ],
+              [
+                10,
+                258
+              ],
+              [
+                10,
+                26,
+                260,
+                261,
+                38,
+                20
+              ],
+              [
+                263,
+                35,
+                19
+              ],
+              [
+                271
+              ],
+              [
+                36,
+                18
+              ],
+              [
+                50
+              ],
+              [
+                264
+              ],
+              [
+                36
+              ],
+              [
+                268,
+                21
+              ],
+              [
+                262,
+                21
+              ],
+              [
+                10,
+                259
+              ],
+              [
+                52
+              ],
+              [
+                36,
+                18
+              ],
+              [
+                50,
+                19,
+                4
+              ],
+              [
+                266
+              ]
+            ],
+            "python_finish": 199.72296827442182,
+            "replay_verified": true
+          }
+        },
+        "supplied_route_text": null,
+        "direct_generation_event": null
+      },
+      {
+        "path": "routes/million-250cps/generated_beam.route",
+        "source_file": "/tmp/ccsr-trained-12h-20260914/inventory_cap_none_generated.route",
+        "finish": 198.1407167530788,
+        "errands": 19,
+        "actions": 29,
+        "original_route_text": "# Best directly generated completion, excluding ruler-suffix rollouts.\nname = inventory_cap_none\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_native_beam\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nerrand_queue_depth = 6000\nmax_errand_size = 16\nbeam_width = 1200\nruler_scale = 0.9\nruler_route = /tmp/ccsr-trained-12h-20260914/inventory_cap_none_source.route\nerrand_search_width = 2000\nmax_errand_actions = 12\nerrand_state_width = 4\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Farm x5\nbuy Cursor x8\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Cheap hoes\nbuy Farm x4\n\nerrand\nbuy Mine\nbuy Farm x3\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x9\n\nerrand\nupgrade Lubricated dentures\nbuy Cursor x7\n\nerrand\nupgrade Thousand fingers\n\nerrand\nbuy Cursor x10\nbuy Grandma x5\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x5\n\nerrand\nupgrade Sugar gas\n\nerrand\nbuy Mine x3\n",
+        "trial": {
+          "name": "inventory_cap_none",
+          "finish": 198.1407167530788,
+          "initial": 198.1407167530788,
+          "elapsed": 300.45614408099937,
+          "cpu_seconds": 535.041699,
+          "parameters": {
+            "name": "inventory_cap_none",
+            "source": "/tmp/ccsr-trained-12h-20260914/inventory_cap_comparison_source.route",
+            "seconds": 300.0,
+            "options_json": "{\"width\": 1200, \"inner\": 2000, \"pops\": 6000, \"workers\": 2, \"horizon\": 0, \"anchor\": 4, \"macro\": 1, \"order\": 1, \"prune\": 0.9, \"heap\": 300000, \"nodes\": 3000000, \"compact\": 1, \"harvest\": 192, \"future-mask\": 32768, \"future-inventory\": 0.03, \"canonical-partials\": 1, \"quantity-children\": 4, \"age-bound\": 1, \"seed-prefixes\": 0, \"persistent-workers\": 1, \"stage-balance\": 1, \"hand-dominance\": 1, \"rollout-weight\": 0.5, \"hint-slack\": 1.5, \"target-rollout\": 1, \"retain-closed\": 1, \"harvest-strategy\": 3, \"harvest-order-limit\": 4, \"harvest-slack\": 4, \"report-generated\": 1, \"rollout-keep\": 320, \"rollout-raw\": 80, \"completion-cache\": 100000, \"refresh-hints\": 1, \"inventory-cap\": -1, \"upgrade-cap\": 0}"
+          },
+          "options": {
+            "width": 1200,
+            "inner": 2000,
+            "pops": 6000,
+            "workers": 2,
+            "horizon": 0,
+            "anchor": 4,
+            "macro": 1,
+            "order": 1,
+            "prune": 0.9,
+            "heap": 300000,
+            "nodes": 3000000,
+            "compact": 1,
+            "harvest": 192,
+            "future-mask": 32768,
+            "future-inventory": 0.03,
+            "canonical-partials": 1,
+            "quantity-children": 4,
+            "age-bound": 1,
+            "seed-prefixes": 0,
+            "persistent-workers": 1,
+            "stage-balance": 1,
+            "hand-dominance": 1,
+            "rollout-weight": 0.5,
+            "hint-slack": 1.5,
+            "target-rollout": 1,
+            "retain-closed": 1,
+            "harvest-strategy": 3,
+            "harvest-order-limit": 4,
+            "harvest-slack": 4,
+            "report-generated": 1,
+            "rollout-keep": 320,
+            "rollout-raw": 80,
+            "completion-cache": 100000,
+            "refresh-hints": 1,
+            "inventory-cap": -1,
+            "upgrade-cap": 0
+          },
+          "binary": "/tmp/ccsr-trained-12h-20260914/snapshots/inventory_cap_none/native_beam",
+          "binary_sha256": "226d82d7340abf41872d4e11ab7d4b630f30f1524bcf9b5e8e3634fdacf5b470",
+          "last": {
+            "event": "complete",
+            "finish": 198.140716753079,
+            "elapsed": 300.095123574,
+            "expanded": 5523,
+            "generated": 1571357,
+            "nodes": 177680,
+            "improvements": 0,
+            "external_adoptions": 0,
+            "compactions": 0,
+            "hand_rejected": 12315,
+            "hand_invalidated": 25,
+            "termination": "wall_time_limit",
+            "expanded_by_baked": [
+              5,
+              612,
+              613,
+              612,
+              614,
+              613,
+              613,
+              613,
+              614,
+              614
+            ],
+            "route": [
+              [
+                1
+              ],
+              [
+                256
+              ],
+              [
+                257
+              ],
+              [
+                10,
+                258
+              ],
+              [
+                26,
+                26,
+                261,
+                260,
+                37,
+                8
+              ],
+              [
+                271
+              ],
+              [
+                263,
+                36
+              ],
+              [
+                49,
+                35
+              ],
+              [
+                264
+              ],
+              [
+                36
+              ],
+              [
+                268
+              ],
+              [
+                25
+              ],
+              [
+                262,
+                7
+              ],
+              [
+                259
+              ],
+              [
+                21,
+                10
+              ],
+              [
+                37
+              ],
+              [
+                53
+              ],
+              [
+                266
+              ],
+              [
+                51
+              ]
+            ],
+            "python_finish": 198.1407167530788,
+            "replay_verified": true
+          },
+          "route": "/tmp/ccsr-trained-12h-20260914/inventory_cap_none.route"
+        },
+        "supplied_route_text": "name = new_order_005\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = experimental_native_partition_search\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nmax_errand_size = 16\nmax_errand_actions = 16\nerrand_state_width = 4\n\nerrand\nbuy Cursor\n\nerrand\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nbuy Cursor x10\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nbuy Grandma x10\nupgrade Steel-plated rolling pins\nupgrade Forwards from grandma\nbuy Farm x5\nbuy Cursor x8\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Cheap hoes\nbuy Farm x4\n\nerrand\nbuy Mine\nbuy Farm x3\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x4\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x9\n\nerrand\nupgrade Lubricated dentures\nbuy Cursor x7\n\nerrand\nupgrade Thousand fingers\n\nerrand\nbuy Grandma x5\nbuy Cursor x10\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x5\n\nerrand\nupgrade Sugar gas\n\nerrand\nbuy Mine x3\n",
+        "direct_generation_event": {
+          "event": "generated_best",
+          "finish": 198.140716753079,
+          "elapsed": 300.095115494,
+          "route": [
+            [
+              1
+            ],
+            [
+              256
+            ],
+            [
+              257
+            ],
+            [
+              10,
+              258
+            ],
+            [
+              26,
+              26,
+              260,
+              261,
+              37,
+              8
+            ],
+            [
+              271
+            ],
+            [
+              263,
+              36
+            ],
+            [
+              49,
+              35
+            ],
+            [
+              264
+            ],
+            [
+              36
+            ],
+            [
+              268
+            ],
+            [
+              25
+            ],
+            [
+              262,
+              7
+            ],
+            [
+              259
+            ],
+            [
+              10,
+              21
+            ],
+            [
+              37
+            ],
+            [
+              53
+            ],
+            [
+              266
+            ],
+            [
+              51
+            ]
+          ],
+          "python_finish": 198.1407167530788,
+          "replay_verified": true,
+          "generated_path": "/tmp/ccsr-trained-12h-20260914/inventory_cap_none_generated.route"
+        }
+      }
+    ],
+    "original_snapshots": [
+      {
+        "name": "generated_beam.route",
+        "text": "# Trained 250 CPS trial; 300.46s computation. Search retained its supplied ruler without improvement. Four workers; wall-clock cap 300s; details in docs/million-250cps-trained-search-2026-09-13.md.\nname = generated_beam\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = beam_search_router\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nprice_horizon_multiplier = 16\nerrand_queue_depth = 100\nbeam_width = 20\nruler_scale = 0.97\nruler_route = /tmp/ccsr-trained-250cps-20260914/beam_long_ruler.route\nbeam_max_expansions = 10000000\nerrand_search_width = 40\nmax_errand_actions = 100\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nbuy Farm x10\nupgrade Cheap hoes\nbuy Cursor x9\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Steel-plated rolling pins\nbuy Mine\nbuy Grandma x9\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x6\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x10\n\nerrand\nupgrade Lubricated dentures\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\n\nerrand\nbuy Grandma x6\nbuy Cursor x8\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x6\n\nerrand\nupgrade Sugar gas\n"
+      },
+      {
+        "name": "generated_beam_quick.route",
+        "text": "# Trained 250 CPS trial; 45.06s computation. Search retained its supplied ruler without improvement. Four workers; wall-clock cap 45s; details in docs/million-250cps-trained-search-2026-09-13.md.\nname = generated_beam_quick\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = beam_search_router\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nprice_horizon_multiplier = 16\nerrand_queue_depth = 30\nbeam_width = 5\nruler_scale = 0.99\nruler_route = /tmp/ccsr-trained-250cps-20260914/beam_quick_ruler.route\nbeam_max_expansions = 10000000\nerrand_search_width = 10\nmax_errand_actions = 100\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Farm x3\nbuy Cursor x7\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Grandma x10\nupgrade Plastic mouse\nbuy Mine x2\nbuy Farm x3\nbuy Cursor x4\n\nerrand\nupgrade Cheap hoes\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Fertilizer\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Farmer grandmas\nbuy Grandma x5\n\nerrand\nupgrade Lubricated dentures\nbuy Grandma x3\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\nbuy Grandma\n\nerrand\nbuy Farm x2\nbuy Grandma x2\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Farm\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nupgrade Sugar gas\nbuy Mine x2\n"
+      },
+      {
+        "name": "generated_beam_refined.route",
+        "text": "# Temporary local refinement of beam-search candidates. Provenance: /tmp/ccsr-million-250cps-20260914/iterated_refinement2.route. See docs/million-250cps-search-2026-09-13.md.\nname = generated_beam_refined\nsource = this codebase\ngoal = one_million\nplayer_profile = default_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = temporary_local_refinement\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.8\naction_delay = 0.2\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nbuy Farm x10\nupgrade Cheap hoes\nbuy Cursor x9\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Steel-plated rolling pins\nbuy Mine\nbuy Grandma x9\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x6\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x10\n\nerrand\nupgrade Lubricated dentures\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\n\nerrand\nbuy Grandma x6\nbuy Cursor x8\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x6\n\nerrand\nupgrade Sugar gas\n"
+      },
+      {
+        "name": "generated_greedy.route",
+        "text": "# Trained 250 CPS trial; 10.76s computation.\nname = generated_greedy\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = greedy_router\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nprice_horizon_multiplier = 16\nerrand_queue_depth = 100\nmax_errand_actions = 100\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Farm x3\nbuy Cursor x7\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Grandma x10\nupgrade Plastic mouse\nbuy Mine x2\nbuy Farm x3\nbuy Cursor x4\n\nerrand\nupgrade Cheap hoes\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Fertilizer\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Farmer grandmas\nbuy Grandma x5\n\nerrand\nupgrade Lubricated dentures\nbuy Grandma x3\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\nbuy Grandma\n\nerrand\nbuy Farm x2\nbuy Grandma x2\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Farm\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nupgrade Sugar gas\nbuy Mine x2\n"
+      }
+    ],
+    "removed": [
+      {
+        "path": "routes/million-250cps/generated_beam_quick.route",
+        "text": "# Trained 250 CPS trial; 45.06s computation. Search retained its supplied ruler without improvement. Four workers; wall-clock cap 45s; details in docs/million-250cps-trained-search-2026-09-13.md.\nname = generated_beam_quick\nsource = this codebase\ngoal = one_million\nplayer_profile = trained_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = beam_search_router\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.4\naction_delay = 0.1\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\nprice_horizon_multiplier = 16\nerrand_queue_depth = 30\nbeam_width = 5\nruler_scale = 0.99\nruler_route = /tmp/ccsr-trained-250cps-20260914/beam_quick_ruler.route\nbeam_max_expansions = 10000000\nerrand_search_width = 10\nmax_errand_actions = 100\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Farm x3\nbuy Cursor x7\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nupgrade Steel-plated rolling pins\nbuy Grandma x10\nupgrade Plastic mouse\nbuy Mine x2\nbuy Farm x3\nbuy Cursor x4\n\nerrand\nupgrade Cheap hoes\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Fertilizer\nbuy Farm x2\n\nerrand\nbuy Farm x2\n\nerrand\nupgrade Farmer grandmas\nbuy Grandma x5\n\nerrand\nupgrade Lubricated dentures\nbuy Grandma x3\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\nbuy Grandma\n\nerrand\nbuy Farm x2\nbuy Grandma x2\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nbuy Farm\nbuy Grandma\nbuy Cursor x3\n\nerrand\nbuy Mine\nbuy Grandma\n\nerrand\nbuy Farm\nbuy Grandma\n\nerrand\nbuy Mine\nbuy Farm\n\nerrand\nupgrade Sugar gas\nbuy Mine x2\n"
+      },
+      {
+        "path": "routes/million-250cps/generated_beam_refined.route",
+        "text": "# Temporary local refinement of beam-search candidates. Provenance: /tmp/ccsr-million-250cps-20260914/iterated_refinement2.route. See docs/million-250cps-search-2026-09-13.md.\nname = generated_beam_refined\nsource = this codebase\ngoal = one_million\nplayer_profile = default_250_cps\nversion = 2.031\ntarget = 1000000\nclick_rate = 250\ninitial_state = fresh\nalgorithm = temporary_local_refinement\nupgrades_enabled = true\nfor_quickster = false\nroute_profile = million-250cps\nachievement_curve = none\nerrand_delay = 0.8\naction_delay = 0.2\nerrand_model = fixed_bulk_v1\nerrand_profile = bulk10_no_selling\nbulk_size = 10\nselling_allowed = false\n\nerrand\nbuy Cursor x10\nupgrade Reinforced index finger\n\nerrand\nupgrade Carpal tunnel prevention cream\n\nerrand\nupgrade Ambidextrous\n\nerrand\nbuy Grandma x10\nupgrade Forwards from grandma\nbuy Farm x10\nupgrade Cheap hoes\nbuy Cursor x9\n\nerrand\nupgrade Plastic mouse\n\nerrand\nupgrade Steel-plated rolling pins\nbuy Mine\nbuy Grandma x9\n\nerrand\nupgrade Fertilizer\n\nerrand\nbuy Farm x6\n\nerrand\nupgrade Farmer grandmas\n\nerrand\nbuy Grandma x10\n\nerrand\nupgrade Lubricated dentures\n\nerrand\nbuy Cursor x10\nupgrade Thousand fingers\n\nerrand\nbuy Grandma x6\nbuy Cursor x8\n\nerrand\nbuy Farm x5\n\nerrand\nbuy Mine x6\n\nerrand\nupgrade Sugar gas\n"
+      }
+    ]
+  },
+  "partition_parent_performance": [
+    {
+      "name": "default",
+      "identical": true,
+      "cpu_seconds": {
+        "reference": 1.7295820000000015,
+        "parents": 1.1869199999999993
+      }
+    },
+    {
+      "name": "wide",
+      "identical": true,
+      "cpu_seconds": {
+        "reference": 0.8681910000000015,
+        "parents": 0.6945640000000004
+      }
+    },
+    {
+      "name": "aggregate_flat",
+      "identical": true,
+      "cpu_seconds": {
+        "reference": 2.3734149999999996,
+        "parents": 2.3255260000000026
+      }
+    },
+    {
+      "name": "aggregate_units",
+      "identical": true,
+      "cpu_seconds": {
+        "reference": 10.056937,
+        "parents": 10.188059999999997
+      }
+    }
+  ],
+  "upgrade_factor_prototype": {
+    "promoted": false,
+    "masks": 65536,
+    "states_per_mask": 32,
+    "rows": [
+      {
+        "name": "typical",
+        "cpu_seconds": {
+          "reference": [
+            0.2378406480000002,
+            0.23382461099999996,
+            0.23095972199999992
+          ],
+          "factors": [
+            0.22677273500000006,
+            0.22453113199999997,
+            0.22203045999999982
+          ]
+        },
+        "sha256": "b2e04a0ef5802c8b2fbcdb3398141c7f668dac4a4704b8fb4e958b4485d97327",
+        "identical": true
+      },
+      {
+        "name": "wide",
+        "cpu_seconds": {
+          "reference": [
+            1.4308521540000008,
+            1.4251537900000013,
+            1.5227018939999928
+          ],
+          "factors": [
+            1.386916397000001,
+            1.4691590740000002,
+            1.4539260070000042
+          ]
+        },
+        "sha256": "eb5dc8cc6c33fee5b7cdff9d24b1e43611cd4aff2f8bb5731e69b67e77d1ac2e",
+        "identical": true
+      },
+      {
+        "name": "action_children",
+        "cpu_seconds": {
+          "reference": [
+            0.4534004199999977,
+            0.45866587900000333,
+            0.44624166200000026
+          ],
+          "factors": [
+            0.43840517400000323,
+            0.43593876399999765,
+            0.4253270559999951
+          ]
+        },
+        "sha256": "b2e04a0ef5802c8b2fbcdb3398141c7f668dac4a4704b8fb4e958b4485d97327",
+        "identical": true
+      },
+      {
+        "name": "diverse",
+        "cpu_seconds": {
+          "reference": [
+            0.44771002499999923,
+            0.45277038899999233,
+            0.4306288390000006
+          ],
+          "factors": [
+            0.44177145799999273,
+            0.4413519269999995,
+            0.41920735799999953
+          ]
+        },
+        "sha256": "b2e04a0ef5802c8b2fbcdb3398141c7f668dac4a4704b8fb4e958b4485d97327",
+        "identical": true
+      },
+      {
+        "name": "inventory_forecast",
+        "cpu_seconds": {
+          "reference": [
+            0.24656796899999556,
+            0.24992392100000416,
+            0.24885712599999366
+          ],
+          "factors": [
+            0.23122606900000342,
+            0.2348220089999984,
+            0.23417304799999172
+          ]
+        },
+        "sha256": "34db22c8183e7d5eb831ab72157a9f9dc6a7760dac11806646107a6062ed30d5",
+        "identical": true
+      },
+      {
+        "name": "negative_virtual_counts",
+        "cpu_seconds": {
+          "reference": [
+            0.24601637200000326,
+            0.24232007200000538,
+            0.23873122200000196
+          ],
+          "factors": [
+            0.23353409400001013,
+            0.22867015700000692,
+            0.22562755700000992
+          ]
+        },
+        "sha256": "afdc9d23eccee5ec944ef66d804066086b539d47166dbd1e2b806823ce1e4188",
+        "identical": true
+      },
+      {
+        "name": "no_forecast",
+        "cpu_seconds": {
+          "reference": [
+            0.22308155300000365,
+            0.22578634499998884,
+            0.2280223329999913
+          ],
+          "factors": [
+            0.21653107799998494,
+            0.2187706690000013,
+            0.21858986100000877
+          ]
+        },
+        "sha256": "dc2044802873834ebcc7b2ee8835f24d071399ff0db8ca698093f8c4929543fa",
+        "identical": true
+      },
+      {
+        "name": "mixed_bonus",
+        "cpu_seconds": {
+          "reference": [
+            0.2240534130000107,
+            0.23789318199998988,
+            0.21065677500000746
+          ],
+          "factors": [
+            0.21697844300000924,
+            0.22786285999999834,
+            0.202997917999987
+          ]
+        },
+        "sha256": "d7d329ca86741dcc79ed6293fb1835a0eada0a49fc7baf3ab3b20899f8b0f1ec",
+        "identical": true
+      }
+    ]
+  },
+  "final_archive_refinement": {
+    "observed": 1536,
+    "unique": 1014,
+    "previously_refined": 24,
+    "seconds_per_refinement": 17,
+    "finished_utc": "2026-09-14T13:40:53.129134+00:00",
+    "runs": 2028,
+    "trials": 1017725179,
+    "finish": 198.1407167530788
+  },
+  "final_crossovers": {
+    "metadata": {
+      "started_utc": "2026-09-14T13:41:02.305901+00:00",
+      "deadline_utc": "2026-09-14T14:20:00+00:00",
+      "pool": 1516,
+      "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+      "configurations": [
+        {
+          "tmax": 0.2,
+          "cycle": 200000,
+          "restart_best": 0.2
+        },
+        {
+          "tmax": 0.8,
+          "cycle": 200000,
+          "restart_best": 0
+        },
+        {
+          "tmax": 2,
+          "cycle": 500000,
+          "restart_best": 0
+        },
+        {
+          "tmax": 4,
+          "cycle": 1000000,
+          "restart_best": 0
+        },
+        {
+          "tmax": 0.8,
+          "cycle": 200000,
+          "restart_best": 0.2,
+          "errand_bias": 0.05,
+          "action_bias": 0.02
+        },
+        {
+          "tmax": 0.8,
+          "cycle": 200000,
+          "restart_best": 0.2,
+          "errand_bias": -0.05,
+          "action_bias": -0.02
+        },
+        {
+          "tmax": 0.8,
+          "cycle": 200000,
+          "restart_best": 0.2,
+          "aggregate_partition": true,
+          "max_size": 64
+        },
+        {
+          "tmax": 0.4,
+          "cycle": 100000,
+          "restart_best": 0.2,
+          "aggregate_partition": true,
+          "expand": true,
+          "max_size": 128
+        }
+      ]
+    },
+    "finished_utc": "2026-09-14T14:19:41.497402+00:00",
+    "runs": [
+      {
+        "name": "final_crossover_01",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.712002774002,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 62743493,
+          "computed": 55003758,
+          "cache_hits": 7741253,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_01",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6931488513947,
+          "seed": 81001,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 200000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.0,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_00",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.725501271001,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 63891974,
+          "computed": 51555168,
+          "cache_hits": 12338324,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_00",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6935670375824,
+          "seed": 81000,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.2,
+          "tmin": 0.001,
+          "cycle": 200000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.2,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_07",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.720765252998,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 1487130,
+          "computed": 1140150,
+          "cache_hits": 348498,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_07",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6910524368286,
+          "seed": 81007,
+          "width": 4,
+          "max_size": 128,
+          "tmax": 0.4,
+          "tmin": 0.001,
+          "cycle": 100000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": true,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": true,
+          "lock_upgrades": false,
+          "restart_best": 0.2,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_03",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.7299093269976,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 63660030,
+          "computed": 57272773,
+          "cache_hits": 6388775,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_03",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6926035881042,
+          "seed": 81003,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 4.0,
+          "tmin": 0.001,
+          "cycle": 1000000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.0,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_05",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.736941914998,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 76945525,
+          "computed": 67381045,
+          "cache_hits": 9565998,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_05",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6915764808655,
+          "seed": 81005,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 200000,
+          "errand_bias": -0.05,
+          "action_bias": -0.02,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.2,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_04",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.7307497650036,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 68066535,
+          "computed": 59580115,
+          "cache_hits": 8487938,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_04",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.692281484604,
+          "seed": 81004,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 200000,
+          "errand_bias": 0.05,
+          "action_bias": 0.02,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.2,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_02",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.7340136290004,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 63161423,
+          "computed": 56282096,
+          "cache_hits": 6880845,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_02",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6928770542145,
+          "seed": 81002,
+          "width": 4,
+          "max_size": 16,
+          "tmax": 2.0,
+          "tmin": 0.001,
+          "cycle": 500000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": false,
+          "lock_upgrades": false,
+          "restart_best": 0.0,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      },
+      {
+        "name": "final_crossover_06",
+        "finish": 198.1407167530788,
+        "elapsed": 2317.734258304001,
+        "binary_sha256": "941352650e32b0517675e671fcf2819a3ac6d69df188fc6469e7b0837452e9d9",
+        "statistics": {
+          "tried": 22102287,
+          "computed": 17573858,
+          "cache_hits": 4529947,
+          "improvements": 0
+        },
+        "parameters": {
+          "name": "final_crossover_06",
+          "source": "/tmp/ccsr-trained-12h-20260914/final_crossover_source.route",
+          "seconds": 2317.6913392543793,
+          "seed": 81006,
+          "width": 4,
+          "max_size": 64,
+          "tmax": 0.8,
+          "tmin": 0.001,
+          "cycle": 200000,
+          "errand_bias": 0,
+          "action_bias": 0,
+          "extra_source": [],
+          "extra_directory": [
+            "/tmp/ccsr-trained-12h-20260914/final_crossover_seeds"
+          ],
+          "expand": false,
+          "blocks": true,
+          "canonical_partition": false,
+          "canonical_partials": false,
+          "aggregate_partition": true,
+          "lock_upgrades": false,
+          "restart_best": 0.2,
+          "cache_size": 100000,
+          "trials": 0,
+          "quantity_order": 0,
+          "partition_age_bound": false,
+          "quantity_start": null,
+          "quantity_deletions": false,
+          "quantity_end": null,
+          "quantity_cube_minimum": null
+        }
+      }
+    ]
+  },
+  "file_relocation": {
+    "original_experiment_directory": "experiments/trained_250cps_search",
+    "current_experiment_directory": "experiments/million_trained_250cps_12hour_search",
+    "current_scripts_directory": "experiments/million_trained_250cps_12hour_search/scripts",
+    "current_docs_directory": "experiments/million_trained_250cps_12hour_search/docs",
+    "note": "Archived parameters, source-hash keys and embedded route snapshots preserve their original paths. Executable scripts and current documentation use the new layout."
+  }
+}

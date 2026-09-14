@@ -15,6 +15,7 @@ class PlayerProfile:
     click_rate: float
     errand_delay: float
     action_delay: float
+    initial_state: str = "fresh"
 
     @property
     def item_delay(self):
@@ -52,6 +53,13 @@ def load_player_profile(name, profile_directory=PLAYER_PROFILE_DIRECTORY):
             key = "action_delay"
         if not separator or not key or not value:
             raise ValueError(f"{path}:{line_number}: expected key = value")
+        if key == "initial_state":
+            if key in values:
+                raise ValueError(f"{path}:{line_number}: duplicate setting: {key}")
+            if value not in {"fresh", "neverclick"}:
+                raise ValueError(f"{path}:{line_number}: unknown initial_state: {value}")
+            values[key] = value
+            continue
         if key not in PARSERS:
             raise ValueError(f"{path}:{line_number}: unknown setting: {key}")
         if key in values:
@@ -64,7 +72,10 @@ def load_player_profile(name, profile_directory=PLAYER_PROFILE_DIRECTORY):
     missing = sorted(set(PARSERS) - values.keys())
     if missing:
         raise ValueError(f"{path}: missing settings: {', '.join(missing)}")
-    for key, value in values.items():
+    for key in PARSERS:
+        value = values[key]
         if not isfinite(value) or value < 0:
             raise ValueError(f"{path}: {key} cannot be negative")
+    if values.get("initial_state") == "neverclick" and values["click_rate"] != 0:
+        raise ValueError(f"{path}: the neverclick initial state requires click_rate = 0")
     return PlayerProfile(name=name, **values)

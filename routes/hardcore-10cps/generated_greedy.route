@@ -1,0 +1,523 @@
+name = default
+source = this codebase
+goal = one_billion
+player_profile = default_10_cps
+version = 1.0466
+target = 1000000000
+click_rate = 10
+initial_state = fresh
+algorithm = greedy_router
+upgrades_enabled = false
+for_quickster = false
+route_profile = hardcore-10cps
+achievement_curve = none
+errand_delay = 0.8
+action_delay = 0.2
+price_horizon_multiplier = 2
+errand_queue_depth = 100
+
+errand
+buy Farm
+
+errand
+buy Farm
+
+errand
+buy Farm
+
+errand
+buy Cursor
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Farm
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Factory
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Shipment
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Shipment
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Farm
+
+errand
+buy Shipment
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Alchemy Lab
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Alchemy Lab
+
+errand
+buy Grandma
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Farm
+
+errand
+buy Alchemy Lab
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Portal
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Portal
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Alchemy Lab
+
+errand
+buy Time Machine
+
+errand
+buy Time Machine
+
+errand
+buy Time Machine
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Time Machine
+
+errand
+buy Portal
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Time Machine
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Portal
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+buy Grandma
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+buy Cursor
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+buy Cursor
+buy Grandma
+
+errand
+buy Mine
+
+errand
+buy Farm
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Farm
+buy Grandma
+
+errand
+buy Mine
+
+errand
+buy Factory
+
+errand
+buy Shipment
+
+errand
+buy Cursor
+buy Grandma
+buy Mine
+
+errand
+buy Factory
+buy Farm
+
+errand
+buy Shipment

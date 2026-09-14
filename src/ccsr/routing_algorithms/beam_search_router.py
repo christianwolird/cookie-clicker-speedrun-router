@@ -7,10 +7,10 @@ from time import monotonic
 
 from ..errands.generator import (
     DEFAULT_BEAM_WIDTH, DEFAULT_QUEUE_EXPANSIONS, DEFAULT_MAX_ERRAND_ACTIONS,
-    generate_neighbors,
 )
 from .greedy_router import find_route as find_greedy_route
 from .route_ruler import DEFAULT_RULER_SCALE, RouteRuler
+from .parallel_neighbors import NeighborExecutor
 
 
 DEFAULT_MAX_EXPANSIONS = 10_000
@@ -127,8 +127,11 @@ def find_route(
     errand_search_width=None,
     errand_queue_expansions=DEFAULT_QUEUE_EXPANSIONS,
     max_errand_actions=DEFAULT_MAX_ERRAND_ACTIONS,
+    workers=1,
 ):
     """Search inventories with a supplied or temporary greedy Ruler route."""
+    if workers <= 0:
+        raise ValueError("workers must be greater than zero")
     if beam_width <= 0:
         raise ValueError("beam_width must be greater than zero")
     if (errand_search_width is not None and errand_search_width <= 0) or (
@@ -201,71 +204,75 @@ def find_route(
         best_finish = ruler_route.final_gamestate
     termination = "queue_exhausted"
 
-    while queue:
-        now = monotonic()
-        if on_progress is not None and now >= next_progress:
-            on_progress(
-                BeamSearchProgress(
-                    elapsed_seconds=now - started_at,
-                    expanded=expanded,
-                    generated=generated,
-                    relaxed=relaxed,
-                    stale_skipped=stale_skipped,
-                    queue_size=len(queue),
-                    maximum_queue_size=maximum_queue_size,
-                    best_finish_age=best_finish.age,
-                    frontier=_frontier_candidates(
-                        queue,
-                        best_state_by_inventory,
-                        came_from,
-                    ),
+    with NeighborExecutor(workers, target, dict(
+        width=beam_width,
+        price_horizon_multiplier=price_horizon_multiplier,
+        singleton_only=for_quickster,
+        search_width=errand_search_width,
+        queue_expansions=errand_queue_expansions,
+        max_errand_actions=max_errand_actions,
+    )) as executor:
+        while queue:
+            now = monotonic()
+            if on_progress is not None and now >= next_progress:
+                on_progress(
+                    BeamSearchProgress(
+                        elapsed_seconds=now - started_at,
+                        expanded=expanded,
+                        generated=generated,
+                        relaxed=relaxed,
+                        stale_skipped=stale_skipped,
+                        queue_size=len(queue),
+                        maximum_queue_size=maximum_queue_size,
+                        best_finish_age=best_finish.age,
+                        frontier=_frontier_candidates(
+                            queue,
+                            best_state_by_inventory,
+                            came_from,
+                        ),
+                    )
                 )
+                next_progress = now + progress_interval
+
+            executor.prefetch(
+                queue,
+                lambda state: best_state_by_inventory.get(inventory_key(state)) is state,
+                best_finish.age,
             )
-            next_progress = now + progress_interval
-
-        estimated_finish, _, gamestate = heappop(queue)
-        key = inventory_key(gamestate)
-        if best_state_by_inventory.get(key) is not gamestate:
-            stale_skipped += 1
-            continue
-        if estimated_finish >= best_finish.age:
-            termination = "heuristic_bound"
-            break
-        if max_expansions is not None and expanded >= max_expansions:
-            termination = "expansion_limit"
-            break
-
-        expanded += 1
-        neighbors = generate_neighbors(
-            gamestate,
-            target,
-            width=beam_width,
-            price_horizon_multiplier=price_horizon_multiplier,
-            singleton_only=for_quickster,
-            search_width=errand_search_width,
-            queue_expansions=errand_queue_expansions,
-            max_errand_actions=max_errand_actions,
-        )
-        generated += len(neighbors)
-
-        for neighbor in neighbors:
-            child = neighbor.gamestate
-            if child.cps() <= 0:
+            estimated_finish, _, gamestate = heappop(queue)
+            key = inventory_key(gamestate)
+            if best_state_by_inventory.get(key) is not gamestate:
+                stale_skipped += 1
                 continue
-            child_key = inventory_key(child)
-            previous = best_state_by_inventory.get(child_key)
-            if previous is not None and previous.age <= child.age:
-                continue
+            if estimated_finish >= best_finish.age:
+                termination = "heuristic_bound"
+                break
+            if max_expansions is not None and expanded >= max_expansions:
+                termination = "expansion_limit"
+                break
 
-            best_state_by_inventory[child_key] = child
-            came_from[child] = (gamestate, neighbor.purchases)
-            relaxed += 1
-            finished = child.finish(target)
-            if finished.age < best_finish.age:
-                best_finish = finished
-                best_goal_source = child
-            heappush(queue, (priority(child), next(serial), child))
-            maximum_queue_size = max(maximum_queue_size, len(queue))
+            expanded += 1
+            neighbors = executor.neighbors(gamestate)
+            generated += len(neighbors)
+
+            for neighbor in neighbors:
+                child = neighbor.gamestate
+                if child.cps() <= 0:
+                    continue
+                child_key = inventory_key(child)
+                previous = best_state_by_inventory.get(child_key)
+                if previous is not None and previous.age <= child.age:
+                    continue
+
+                best_state_by_inventory[child_key] = child
+                came_from[child] = (gamestate, neighbor.purchases)
+                relaxed += 1
+                finished = child.finish(target)
+                if finished.age < best_finish.age:
+                    best_finish = finished
+                    best_goal_source = child
+                heappush(queue, (priority(child), next(serial), child))
+                maximum_queue_size = max(maximum_queue_size, len(queue))
 
     errands = (
         ruler_route.errands if best_goal_source is None

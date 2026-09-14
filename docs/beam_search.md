@@ -11,14 +11,28 @@ state age + scaled Ruler estimate of remaining time
 ```
 
 Inventory identity contains building quantities and purchased upgrades.
-Lifetime cookies remain on the gamestate but are deliberately excluded from
-the identity used for dominance.
+Legacy routes without sales use that inventory alone. Fixed-bulk routes also
+include banked, lifetime, and handmade cookies and the shop settings, since
+these can affect affordability and unlocks.
 
 ## Neighbor generation
 
 For normal human-delay searches, the errand generator uses a bounded inner
-queue and returns at most `beam_width` neighbors. The same width bounds the
-inner queue and the returned roster.
+queue and returns at most `beam_width` neighbors. `--errand-search-width`
+controls the inner queue independently, defaulting to the beam width.
+
+## Parallel errand generation
+
+Use `--workers 4` to generate errands in four worker processes. The coordinator
+speculatively evaluates states near the front of the heap, then consumes their
+results in the same order as the serial search. Workers do not modify the
+shared route queue. For a fixed expansion limit, results and search counts
+match the serial implementation; speculative work can be discarded when new
+states take priority.
+
+The default is one worker. Processes allow CPU-bound Python code to run on
+multiple cores; threads would contend for the interpreter lock. Speedups depend
+on how often speculative results are used and on process communication costs.
 
 For Quickster searches, the candidate space is every valid single-item errand
 with zero errand and item delay. Those candidates are scored and the best
@@ -41,7 +55,7 @@ and Quickster setting. The Ruler scale defaults to 0.9:
 
 ```sh
 python3 tools/beam_search_router.py \
-  --category one_million_v2 \
+  --route-profile million-15cps \
   --player casual \
   --beam-width 20 \
   --ruler-scale 0.9

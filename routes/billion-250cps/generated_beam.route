@@ -1,0 +1,259 @@
+# Best cheap beam result: trial 7; see docs/billion-250cps-beam-search-2026-09-27.json.
+name = generated_beam
+source = this codebase
+goal = one_billion
+player_profile = trained_250_cps
+version = 1.0466
+target = 1000000000
+click_rate = 250
+initial_state = fresh
+algorithm = beam_search_router
+upgrades_enabled = true
+for_quickster = false
+route_profile = billion-250cps
+achievement_curve = heavenly_chip_estimate
+errand_delay = 0.4
+action_delay = 0.1
+errand_model = fixed_bulk_v1
+errand_profile = bulk10_no_selling
+bulk_size = 10
+selling_allowed = false
+price_horizon_multiplier = 2
+errand_queue_depth = 40
+beam_width = 10
+ruler_scale = 0.999
+ruler_route = routes/billion-250cps/generated_greedy.route
+beam_max_expansions = 600
+errand_search_width = 20
+max_errand_actions = 100
+
+errand
+buy Cursor x10
+upgrade Reinforced index finger
+
+errand
+upgrade Carpal tunnel prevention cream
+
+errand
+buy Farm x2
+
+errand
+buy Farm x3
+
+errand
+upgrade Cheap hoes
+buy Farm x2
+
+errand
+upgrade Ambidextrous
+
+errand
+buy Farm x2
+buy Cursor x8
+
+errand
+upgrade Plastic mouse
+
+errand
+buy Mine
+buy Farm
+
+errand
+buy Mine
+buy Farm
+
+errand
+buy Mine
+buy Factory
+buy Farm
+
+errand
+buy Mine
+buy Factory
+buy Farm
+
+errand
+buy Shipment
+buy Grandma x10
+upgrade Forwards from grandma
+
+errand
+buy Mine
+buy Factory
+buy Farm
+buy Cursor x5
+
+errand
+upgrade Fertilizer
+buy Farm x4
+
+errand
+buy Farm x2
+
+errand
+buy Shipment
+
+errand
+buy Mine
+buy Factory
+
+errand
+upgrade Sugar gas
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Mine
+
+errand
+buy Shipment
+
+errand
+buy Alchemy Lab
+
+errand
+buy Mine
+buy Farm
+
+errand
+buy Shipment
+buy Factory x2
+
+errand
+upgrade Sturdier conveyor belts
+buy Factory x3
+
+errand
+buy Alchemy Lab
+
+errand
+buy Factory x2
+buy Farm
+
+errand
+buy Mine
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+upgrade Iron mouse
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+upgrade Ancient tablet
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+buy Alchemy Lab x2
+
+errand
+buy Portal
+upgrade Megadrill
+buy Mine x7
+
+errand
+buy Portal
+upgrade Thousand fingers
+buy Alchemy Lab x2
+buy Shipment x4
+
+errand
+upgrade Antimony
+buy Alchemy Lab x4
+upgrade Vanilla nebulae
+
+errand
+buy Shipment x6
+buy Cursor x10
+
+errand
+buy Alchemy Lab x3
+buy Cursor x10
+buy Grandma x10
+buy Farm x10
+upgrade Cookie trees
+upgrade Farmer grandmas
+buy Grandma x10
+buy Grandma x10
+
+errand
+upgrade Insane oatling workers
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Portal
+
+errand
+buy Time Machine
+
+errand
+buy Portal
+
+errand
+buy Time Machine
+
+errand
+buy Portal
+upgrade Wormholes
+buy Shipment x7
+
+errand
+buy Time Machine

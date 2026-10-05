@@ -1,0 +1,367 @@
+{
+  "profile": "billion-250cps",
+  "version": "1.0466",
+  "player": "trained_250_cps",
+  "achievement_curve": "heavenly_chip_estimate",
+  "greedy_finish_seconds": 1082.4683047114877,
+  "greedy_generation_wall_seconds": 36.71,
+  "trials": [
+    {
+      "trial": 1,
+      "settings": {
+        "tail": 0,
+        "width": 1,
+        "inner": 10,
+        "pops": 20,
+        "expansions": 500,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 0,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 0.8645259949998945,
+        "expanded": 52,
+        "generated": 52,
+        "relaxed": 52,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 53,
+        "maximum_queue_size": 1,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "heuristic_bound"
+      },
+      "status": "complete",
+      "wall_seconds": 0.9468919050000295
+    },
+    {
+      "trial": 2,
+      "settings": {
+        "tail": 0,
+        "width": 5,
+        "inner": 10,
+        "pops": 20,
+        "expansions": 1000,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 0,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 28.18233269400025,
+        "expanded": 1000,
+        "generated": 5000,
+        "relaxed": 5000,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 5001,
+        "maximum_queue_size": 4001,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 28.270990983000047
+    },
+    {
+      "trial": 3,
+      "settings": {
+        "tail": 8,
+        "width": 5,
+        "inner": 10,
+        "pops": 30,
+        "expansions": 600,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 56,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 57.14003958000012,
+        "expanded": 600,
+        "generated": 3000,
+        "relaxed": 3000,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 3001,
+        "maximum_queue_size": 2401,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 57.229176679000375
+    },
+    {
+      "trial": 4,
+      "settings": {
+        "tail": 16,
+        "width": 5,
+        "inner": 10,
+        "pops": 30,
+        "expansions": 600,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 48,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 40.69545851000021,
+        "expanded": 600,
+        "generated": 3000,
+        "relaxed": 2964,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 2965,
+        "maximum_queue_size": 2365,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 40.78215548700018
+    },
+    {
+      "trial": 5,
+      "settings": {
+        "tail": 24,
+        "width": 5,
+        "inner": 10,
+        "pops": 30,
+        "expansions": 600,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 40,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 25.434468501000083,
+        "expanded": 600,
+        "generated": 3000,
+        "relaxed": 3000,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 3001,
+        "maximum_queue_size": 2401,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 25.52710626399994
+    },
+    {
+      "trial": 6,
+      "settings": {
+        "tail": 40,
+        "width": 5,
+        "inner": 10,
+        "pops": 30,
+        "expansions": 600,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 24,
+      "finish_seconds": 1082.4683047114877,
+      "stats": {
+        "elapsed_seconds": 19.855589896999845,
+        "expanded": 600,
+        "generated": 3000,
+        "relaxed": 3000,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 3001,
+        "maximum_queue_size": 2401,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 19.944674332999966
+    },
+    {
+      "trial": 7,
+      "settings": {
+        "tail": 8,
+        "width": 10,
+        "inner": 20,
+        "pops": 40,
+        "expansions": 600,
+        "scale": 0.999
+      },
+      "source": "routes/billion-250cps/generated_greedy.route",
+      "input_finish_seconds": 1082.4683047114877,
+      "fixed_prefix_errands": 56,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 17.928111086999706,
+        "expanded": 131,
+        "generated": 1310,
+        "relaxed": 1310,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 1311,
+        "maximum_queue_size": 1180,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4683047114877,
+        "termination": "heuristic_bound"
+      },
+      "status": "complete",
+      "saved_route": "routes/billion-250cps/generated_beam_trial_07.route",
+      "wall_seconds": 18.016589409000062
+    },
+    {
+      "trial": 8,
+      "settings": {
+        "tail": 16,
+        "width": 10,
+        "inner": 20,
+        "pops": 40,
+        "expansions": 600,
+        "scale": 0.999
+      },
+      "source": "routes/billion-250cps/generated_beam_trial_07.route",
+      "input_finish_seconds": 1082.4672480888046,
+      "fixed_prefix_errands": 48,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 68.88787152000032,
+        "expanded": 600,
+        "generated": 6000,
+        "relaxed": 5994,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 5995,
+        "maximum_queue_size": 5395,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4672480888046,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 68.9825807229995
+    },
+    {
+      "trial": 9,
+      "settings": {
+        "tail": 24,
+        "width": 10,
+        "inner": 20,
+        "pops": 40,
+        "expansions": 600,
+        "scale": 0.999
+      },
+      "source": "routes/billion-250cps/generated_beam_trial_07.route",
+      "input_finish_seconds": 1082.4672480888046,
+      "fixed_prefix_errands": 40,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 62.87277353300033,
+        "expanded": 600,
+        "generated": 6000,
+        "relaxed": 5974,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 5975,
+        "maximum_queue_size": 5375,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4672480888046,
+        "termination": "expansion_limit"
+      },
+      "status": "complete",
+      "wall_seconds": 62.9618558810007
+    },
+    {
+      "trial": 10,
+      "settings": {
+        "tail": 2,
+        "width": 20,
+        "inner": 30,
+        "pops": 50,
+        "expansions": 500,
+        "scale": 0.99
+      },
+      "source": "routes/billion-250cps/generated_beam_trial_07.route",
+      "input_finish_seconds": 1082.4672480888046,
+      "fixed_prefix_errands": 62,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 20.191085431999454,
+        "expanded": 83,
+        "generated": 1660,
+        "relaxed": 1580,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 1581,
+        "maximum_queue_size": 1498,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4672480888046,
+        "termination": "heuristic_bound"
+      },
+      "status": "complete",
+      "wall_seconds": 20.275867136999295
+    },
+    {
+      "trial": 11,
+      "settings": {
+        "tail": 4,
+        "width": 20,
+        "inner": 30,
+        "pops": 50,
+        "expansions": 500,
+        "scale": 0.999
+      },
+      "source": "routes/billion-250cps/generated_beam_trial_07.route",
+      "input_finish_seconds": 1082.4672480888046,
+      "fixed_prefix_errands": 60,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 4.888863893000234,
+        "expanded": 21,
+        "generated": 420,
+        "relaxed": 420,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 421,
+        "maximum_queue_size": 400,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4672480888046,
+        "termination": "heuristic_bound"
+      },
+      "status": "complete",
+      "wall_seconds": 4.9717299719995935
+    },
+    {
+      "trial": 12,
+      "settings": {
+        "tail": 6,
+        "width": 10,
+        "inner": 20,
+        "pops": 40,
+        "expansions": 600,
+        "scale": 0.999
+      },
+      "source": "routes/billion-250cps/generated_beam_trial_07.route",
+      "input_finish_seconds": 1082.4672480888046,
+      "fixed_prefix_errands": 58,
+      "finish_seconds": 1082.4672480888046,
+      "stats": {
+        "elapsed_seconds": 7.2623750580005435,
+        "expanded": 51,
+        "generated": 510,
+        "relaxed": 510,
+        "stale_skipped": 0,
+        "heuristic_evaluations": 511,
+        "maximum_queue_size": 460,
+        "ruler_generated": false,
+        "ruler_route_age": 1082.4672480888046,
+        "termination": "heuristic_bound"
+      },
+      "status": "complete",
+      "wall_seconds": 7.349624059999769
+    }
+  ],
+  "best_finish_seconds": 1082.4672480888046,
+  "beam_wall_seconds": 355.27108154600046,
+  "winning_trial": 7,
+  "beam_wall_seconds_note": "Includes all 12 measured passes; excludes restart downtime.",
+  "verified_replay": true,
+  "improvement_seconds": 0.0010566226831087988,
+  "total_expanded": 4938,
+  "total_generated": 32952
+}

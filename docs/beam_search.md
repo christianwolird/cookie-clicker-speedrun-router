@@ -54,7 +54,7 @@ generates a temporary Greedy route using the same category, player profile,
 and Quickster setting. The Ruler scale defaults to 0.9:
 
 ```sh
-python3 tools/beam_search_router.py \
+python3 scripts/beam_search_router.py \
   --route-profile million-15cps \
   --player casual \
   --beam-width 20 \

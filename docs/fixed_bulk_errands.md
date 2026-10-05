@@ -98,9 +98,9 @@ profile does not silently convert a sequence of x1 clicks into bulk clicks.
 Replay validates it and reports an error if the new mode buys different quantities.
 
 ```sh
-python3 tools/route_replayer.py ROUTE_FILE --verbose
-python3 tools/route_replayer.py ROUTE_FILE --errand-profile single_with_selling
-python3 tools/errandifier.py QUICKSTER_FILE OUTPUT_FILE \
+python3 scripts/replay_route.py ROUTE_FILE --verbose
+python3 scripts/replay_route.py ROUTE_FILE --errand-profile single_with_selling
+python3 scripts/errandifier.py QUICKSTER_FILE OUTPUT_FILE \
   --player default_250_cps --errand-profile bulk10_no_selling --state-width 10
 ```
 

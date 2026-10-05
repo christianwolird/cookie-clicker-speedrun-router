@@ -14,8 +14,8 @@ from ccsr.routes import RoutePlan, RouteAction, execute_route, load_route, write
 from ccsr.routes.catalog import (
     entry_details, inspect_route, matches_profile, profile_catalog, profile_details, scan_routes,
 )
-from tools import route_catalog, greedy_router, beam_search_router
-from tools.errandifier import _route_pairs
+from scripts import route_catalog, greedy_router, beam_search_router
+from scripts.errandifier import _route_pairs
 from ccsr.routes.layout import generated_route_path
 from unittest.mock import patch
 

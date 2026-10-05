@@ -9,10 +9,10 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import patch
 
-from tools.beam_search_router import _print_progress
-from tools import route_replayer
+from scripts.beam_search_router import _print_progress
+from scripts import replay_route
 from ccsr.config import load_player_profile
-from ccsr.routes import execute_route, load_route
+from ccsr.routes import RouteAction, RoutePlan, execute_route, load_route
 
 
 REPOSITORY = Path(__file__).resolve().parents[1]
@@ -42,7 +42,7 @@ class CliTests(unittest.TestCase):
         result = subprocess.run(
             [
                 sys.executable,
-                "tools/greedy_router.py",
+                "scripts/greedy_router.py",
                 "--route-profile",
                 "10k-10cps",
                 "--player",
@@ -63,7 +63,7 @@ class CliTests(unittest.TestCase):
         result = subprocess.run(
             [
                 sys.executable,
-                "tools/beam_search_router.py",
+                "scripts/beam_search_router.py",
                 "--route-profile",
                 "10k-10cps",
                 "--beam-width",
@@ -84,13 +84,13 @@ class CliTests(unittest.TestCase):
         self.assertIn("Ruler scale: 0.9", result.stdout)
         self.assertIn("Search:", result.stdout)
 
-    def test_route_replayer_uses_stored_profile(self):
+    def test_replay_route_uses_stored_profile(self):
         route = (
             REPOSITORY
             / "routes/neverclick-0cps/community_quickster_36champ.route"
         )
         result = subprocess.run(
-            [sys.executable, "tools/route_replayer.py", route],
+            [sys.executable, "scripts/replay_route.py", route],
             cwd=REPOSITORY,
             check=True,
             capture_output=True,
@@ -136,16 +136,16 @@ class CliTests(unittest.TestCase):
                 if player_name:
                     args.extend(("--player", player_name))
                 with (
-                    patch.object(route_replayer, "monotonic", side_effect=lambda: now),
-                    patch.object(route_replayer, "sleep", side_effect=fake_sleep),
-                    patch.object(route_replayer, "load_route", side_effect=slow_load),
-                    patch.object(route_replayer, "LiveRouteTable") as table_class,
+                    patch.object(replay_route, "monotonic", side_effect=lambda: now),
+                    patch.object(replay_route, "sleep", side_effect=fake_sleep),
+                    patch.object(replay_route, "load_route", side_effect=slow_load),
+                    patch.object(replay_route, "LiveRouteTable") as table_class,
                     redirect_stdout(io.StringIO()),
                 ):
                     table = table_class.return_value
                     table.print_errand.side_effect = record_errand
                     table.print_done.side_effect = record_done
-                    route_replayer.main(args)
+                    replay_route.main(args)
 
                 self.assertEqual(len(printed), len(expected.errands) + 1)
                 for (elapsed, errand), expected_errand in zip(printed, expected.errands):
@@ -156,11 +156,11 @@ class CliTests(unittest.TestCase):
 
     def test_realtime_replay_prints_overdue_events_without_sleeping(self):
         with (
-            patch.object(route_replayer, "monotonic", return_value=105),
-            patch.object(route_replayer, "sleep") as sleep,
+            patch.object(replay_route, "monotonic", return_value=105),
+            patch.object(replay_route, "sleep") as sleep,
         ):
-            route_replayer._wait_until(100, 3)
-            route_replayer._wait_until(100, 5)
+            replay_route._wait_until(100, 3)
+            replay_route._wait_until(100, 5)
         sleep.assert_not_called()
 
     def test_verbose_replay_does_not_wait_without_realtime(self):
@@ -169,11 +169,45 @@ class CliTests(unittest.TestCase):
             / "routes/neverclick-0cps/community_quickster_36champ.route"
         )
         output = io.StringIO()
-        with patch.object(route_replayer, "sleep") as sleep, redirect_stdout(output):
-            route_replayer.main([str(route), "--verbose"])
+        with patch.object(replay_route, "sleep") as sleep, redirect_stdout(output):
+            replay_route.main([str(route), "--verbose"])
         sleep.assert_not_called()
         self.assertIn("Errand cookies", output.getvalue())
         self.assertIn("Done!", output.getvalue())
+
+    def test_verbose_replay_prints_owned_building_total_after_purchase(self):
+        plan = RoutePlan(
+            name="building-totals", source="test", goal="one_billion",
+            player_profile="trained_250_cps", version="1.0466",
+            target=1_000_000_000, click_rate=250, initial_state="fresh",
+            algorithm="test", upgrades_enabled=False, for_quickster=False,
+            errands=(
+                (RouteAction("buy", "Farm"),),
+                (RouteAction("buy", "Farm"),),
+                (RouteAction("buy", "Farm", 2),),
+            ),
+            errand_delay=0.4, action_delay=0.1,
+            errand_profile="bulk10_no_selling", bulk_size=10,
+            selling_allowed=False,
+        )
+        output = io.StringIO()
+        with (
+            patch.object(replay_route, "load_route", return_value=plan),
+            redirect_stdout(output),
+        ):
+            replay_route.main(["example.route", "--verbose"])
+
+        purchase_lines = [
+            line for line in output.getvalue().splitlines() if "Farm x" in line
+        ]
+        self.assertEqual(len(purchase_lines), 3)
+        header = next(
+            line for line in output.getvalue().splitlines() if "Errand cookies" in line
+        )
+        total_start = header.index("Total")
+        time_start = header.index("Time (m:ss.s)")
+        self.assertEqual(purchase_lines[2][header.index("Item"):total_start].strip(), "Farm x2")
+        self.assertEqual(purchase_lines[2][total_start:time_start].strip(), "(4)")
 
     def test_errandifier_writes_human_route(self):
         route = (
@@ -185,7 +219,7 @@ class CliTests(unittest.TestCase):
             subprocess.run(
                 [
                     sys.executable,
-                    "tools/errandifier.py",
+                    "scripts/errandifier.py",
                     route,
                     output,
                     "--player",

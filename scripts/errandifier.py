@@ -80,7 +80,7 @@ def save_errandified_route(
     return write_route(
         destination,
         errandified,
-        comment="Grouped by tools/errandifier.py.",
+        comment="Grouped by scripts/errandifier.py.",
         overwrite=overwrite,
     )
 

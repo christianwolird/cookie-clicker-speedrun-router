@@ -6,7 +6,7 @@ Cookie Clicker speedruns. The project exposes five primary tools:
 - `greedy_router.py` repeatedly executes the best locally scored errand.
 - `beam_search_router.py` searches inventory states with a route-based Ruler.
 - `errandifier.py` groups a Quickster purchase order into human errands.
-- `route_replayer.py` deterministically replays an existing route.
+- `replay_route.py` deterministically replays an existing route.
 - `route_catalog.py` browses saved routes and named route types.
 
 Python 3.10 or newer is sufficient.
@@ -16,12 +16,12 @@ Python 3.10 or newer is sufficient.
 Choose a named route type, configured in `config/route_profiles/`:
 
 ```sh
-python3 tools/route_catalog.py profiles
-python3 tools/route_catalog.py list --route-type hardcore-10cps
-python3 tools/route_catalog.py list --goal one_million --version 2.031
+python3 scripts/route_catalog.py profiles
+python3 scripts/route_catalog.py list --route-type hardcore-10cps
+python3 scripts/route_catalog.py list --goal one_million --version 2.031
 
-python3 tools/greedy_router.py --route-profile million-250cps --save
-python3 tools/beam_search_router.py --route-profile million-25cps --beam-width 10 --save
+python3 scripts/greedy_router.py --route-profile million-250cps --save
+python3 scripts/beam_search_router.py --route-profile million-25cps --beam-width 10 --save
 ```
 
 A route profile combines a goal, game version, player profile, and errand
@@ -36,7 +36,9 @@ that profile when a better setup is established.
 | `million-250cps` | One million | 2.031 | 250 CPS | x10, no selling |
 | `million-25cps` | One million | 2.031 | 25 CPS | x1, no selling |
 | `neverclick-0cps` | One million | 2.031 | No ongoing clicks | x1, selling |
-| `hardcore-250cps` | One billion, no upgrades | 2.031 | 250 CPS | x10, no selling |
+| `hardcore-250cps` | One billion, no upgrades | 1.0466 | 250 CPS | x1, no selling |
+| `billion-250cps` | One billion, upgrades allowed | 1.0466 | Trained 250 CPS | x10, no selling |
+| `heavenly-chip-250cps` | One heavenly chip (one trillion) | 1.0466 | Trained 250 CPS | x10, no selling |
 
 Community comparison types preserve the source workbooks' settings:
 `hardcore-10cps`, `heavenly-chip-15cps`, `million-10cps`,
@@ -122,7 +124,7 @@ those assumptions do not hold exactly.
 Its main controls are:
 
 ```sh
-python3 tools/greedy_router.py \
+python3 scripts/greedy_router.py \
   --route-profile million-25cps \
   --player casual \
   --queue-expansions 100 \
@@ -141,7 +143,7 @@ The estimate comes from a Ruler route. Supply an existing route with
 `--ruler-route`:
 
 ```sh
-python3 tools/beam_search_router.py \
+python3 scripts/beam_search_router.py \
   --route-profile million-25cps \
   --player casual \
   --beam-width 20 \
@@ -163,14 +165,19 @@ route from an empty game. These experiments require a C++17 compiler and target
 that specific game/player/shop configuration; the ordinary Python tools remain
 independent of them.
 
+The [Hardcore terminal-cap experiment](experiments/hardcore_250cps_terminal_cap_search/README.md)
+uses recursive building-count limits to correct greedy's finite-run terminal
+inventory. Its replay-verified x1 route improves both unrestricted greedy and
+the DHA comparison route under matched 250 CPS player timing.
+
 ## Quickster mode
 
 Quickster versus human execution is independent of routing algorithm. Both
 routers accept `--quickster`:
 
 ```sh
-python3 tools/greedy_router.py --route-profile 10k-10cps --player default_25_cps --quickster
-python3 tools/beam_search_router.py --route-profile 10k-10cps --player default_25_cps --quickster
+python3 scripts/greedy_router.py --route-profile 10k-10cps --player default_25_cps --quickster
+python3 scripts/beam_search_router.py --route-profile 10k-10cps --player default_25_cps --quickster
 ```
 
 Quickster mode offers only single-click errands and applies zero errand and action
@@ -186,7 +193,7 @@ comparison.
 Group a Quickster route for a selected player:
 
 ```sh
-python3 tools/errandifier.py \
+python3 scripts/errandifier.py \
   routes/million-15cps/community_quickster_dha.route \
   routes/million-15cps/community_errandified_dha.route \
   --player casual
@@ -195,13 +202,13 @@ python3 tools/errandifier.py \
 Replay with the route's recorded timing or another player profile:
 
 ```sh
-python3 tools/route_replayer.py \
+python3 scripts/replay_route.py \
   routes/million-10cps/community_quickster_iwer_sonsch.route
 
-python3 tools/route_replayer.py ROUTE_FILE --player casual
+python3 scripts/replay_route.py ROUTE_FILE --player casual
 
 # Print purchases at their simulated times, measured from command startup.
-python3 tools/route_replayer.py ROUTE_FILE --realtime
+python3 scripts/replay_route.py ROUTE_FILE --realtime
 ```
 
 `--realtime` automatically shows purchase rows and waits until the target time
@@ -216,7 +223,7 @@ zero.
 ## Repository layout
 
 ```text
-tools/                                  routers, replay, errandification, catalog
+scripts/                                  routers, replay, errandification, catalog
 src/ccsr/
 ├── game/                               simulator and versioned game data
 ├── config/                             goals and profile loaders

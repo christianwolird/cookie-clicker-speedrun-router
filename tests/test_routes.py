@@ -4,7 +4,7 @@ from pathlib import Path
 from dataclasses import replace
 
 from community_spreadsheets.extract_routes_from_spreadsheet import extract_routes
-from tools.errandifier import (
+from scripts.errandifier import (
     _default_output,
     errandify_plan,
     save_errandified_route,
@@ -171,6 +171,7 @@ class RouteTests(unittest.TestCase):
             {
                 "10k-10cps", "100k-10cps", "million-25cps", "million-250cps",
                 "neverclick-0cps", "hardcore-250cps", "hardcore-10cps", "heavenly-chip-15cps",
+                "heavenly-chip-250cps", "billion-250cps",
                 "million-10cps", "million-15cps", "million-200cps",
             },
         )

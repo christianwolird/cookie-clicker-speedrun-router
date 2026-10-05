@@ -63,15 +63,13 @@ def main(argv=None):
     print(f"Replaying {plan.goal} route for {active_profile}...", flush=True)
     print(f"Game version: {args.version or plan.version}", flush=True)
     print(f"Errand profile: {args.errand_profile or plan.errand_profile or 'legacy x1'}", flush=True)
-    table = (
-        LiveRouteTable(
-            initial_gamestate(
-                plan, player=player, version=args.version, errand_profile=errand_profile,
-            ).lifetime_cookies
+    if args.verbose or args.realtime:
+        initial = initial_gamestate(
+            plan, player=player, version=args.version, errand_profile=errand_profile,
         )
-        if args.verbose or args.realtime
-        else None
-    )
+        table = LiveRouteTable(initial.lifetime_cookies, initial.building_counts)
+    else:
+        table = None
 
     def print_errand(errand):
         if args.realtime:

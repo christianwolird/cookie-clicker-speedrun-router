@@ -65,12 +65,12 @@ The catalog scans `.route` files and replays them using their stored settings.
 It does not create a database or rewrite route files.
 
 ```sh
-python3 tools/route_catalog.py profiles
-python3 tools/route_catalog.py list --route-type hardcore-10cps
-python3 tools/route_catalog.py list --goal one_million --version 2.031
-python3 tools/route_catalog.py list --mode human --origin generated
-python3 tools/route_catalog.py show hardcore-10cps/community_quickster_dha.route
-python3 tools/route_catalog.py list --json
+python3 scripts/route_catalog.py profiles
+python3 scripts/route_catalog.py list --route-type hardcore-10cps
+python3 scripts/route_catalog.py list --goal one_million --version 2.031
+python3 scripts/route_catalog.py list --mode human --origin generated
+python3 scripts/route_catalog.py show hardcore-10cps/community_quickster_dha.route
+python3 scripts/route_catalog.py list --json
 ```
 
 The table shows goal, version, player/CPS, errand profile or legacy model,
@@ -92,9 +92,9 @@ valid entries are still displayed. JSON includes a separate `errors` list.
 ## Generate and adapt
 
 ```sh
-python3 tools/greedy_router.py --route-profile million-250cps --save
-python3 tools/beam_search_router.py --route-profile million-15cps --save experiment.route
-python3 tools/errandifier.py routes/hardcore-10cps
+python3 scripts/greedy_router.py --route-profile million-250cps --save
+python3 scripts/beam_search_router.py --route-profile million-15cps --save experiment.route
+python3 scripts/errandifier.py routes/hardcore-10cps
 ```
 
 The router examples save to

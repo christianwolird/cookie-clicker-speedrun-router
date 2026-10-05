@@ -96,6 +96,21 @@ class AlgorithmTests(unittest.TestCase):
         self.assertEqual(quickster.final_gamestate.errand_delay, 0)
         self.assertEqual(quickster.final_gamestate.item_delay, 0)
 
+    def test_greedy_respects_building_caps(self):
+        caps = {name: 0 for name in self.gamestate.building_catalog}
+
+        result = find_greedy(self.gamestate, 1_000, building_caps=caps)
+
+        self.assertFalse(result.errands)
+        self.assertEqual(result.final_gamestate.lifetime_cookies, 1_000)
+        self.assertFalse(any(result.final_gamestate.building_counts.values()))
+
+    def test_neighbor_generation_rejects_invalid_building_caps(self):
+        with self.assertRaisesRegex(ValueError, "Unknown capped building"):
+            generate_neighbors(
+                self.gamestate, 1_000, building_caps={"Not a building": 0},
+            )
+
     def test_beam_generates_a_greedy_ruler_by_default(self):
         result = find_beam(self.gamestate, 1_000, beam_width=3)
 

@@ -16,6 +16,7 @@ def find_route(
     queue_expansions=DEFAULT_QUEUE_EXPANSIONS,
     for_quickster=False,
     max_errand_actions=DEFAULT_MAX_ERRAND_ACTIONS,
+    building_caps=None,
 ):
     gamestate = initial_gamestate.copy()
     if for_quickster:
@@ -31,6 +32,7 @@ def find_route(
             queue_expansions,
             singleton_only=for_quickster,
             max_errand_actions=max_errand_actions,
+            building_caps=building_caps,
         )
         if neighbor is None:
             break

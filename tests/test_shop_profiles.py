@@ -238,7 +238,7 @@ class ShopProfileTests(unittest.TestCase):
             ("beam_search_router.py", ["--beam-width", "3", "--errand-search-width", "4", "--errand-queue-expansions", "8", "--max-expansions", "20"]),
         ):
             output = subprocess.run(
-                [sys.executable, f"tools/{tool}", "--route-profile", "10k-10cps", "--player", "default_250_cps", "--errand-profile", "bulk10_no_selling", "--verbose", *options],
+                [sys.executable, f"scripts/{tool}", "--route-profile", "10k-10cps", "--player", "default_250_cps", "--errand-profile", "bulk10_no_selling", "--verbose", *options],
                 cwd=repository, text=True, capture_output=True, check=True,
             ).stdout
             self.assertIn("Errand profile: bulk10_no_selling (x10)", output)
@@ -247,10 +247,10 @@ class ShopProfileTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             path = write_route(Path(directory) / "bulk.route", plan)
             output = subprocess.run(
-                [sys.executable, "tools/route_replayer.py", str(path), "--verbose"],
+                [sys.executable, "scripts/replay_route.py", str(path), "--verbose"],
                 cwd=repository, text=True, capture_output=True, check=True,
             ).stdout
-        self.assertIn("Cursor ×10", output)
+        self.assertRegex(output, r"Cursor x10\s+\(10\)")
         self.assertIn("recorded-settings", output)
 
     def test_errandifier_compiles_bulk_clicks_and_rejects_impossible_order(self):

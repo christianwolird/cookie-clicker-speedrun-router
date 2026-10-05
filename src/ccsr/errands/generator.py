@@ -16,6 +16,35 @@ DEFAULT_BEAM_WIDTH = 10
 DEFAULT_MAX_ERRAND_ACTIONS = 100
 
 
+def _validate_building_caps(gamestate, building_caps):
+    if building_caps is None:
+        return
+    unknown = set(building_caps) - set(gamestate.building_catalog)
+    if unknown:
+        raise ValueError(f"Unknown capped building: {sorted(unknown)[0]}")
+    for name, maximum in building_caps.items():
+        if not isinstance(maximum, int) or maximum < 0:
+            raise ValueError("Building caps must be nonnegative integers")
+        if maximum < gamestate.building_counts[name]:
+            raise ValueError(f"Building cap is below owned count: {name}")
+
+
+def _exceeds_building_caps(gamestate, errand, building_caps):
+    if not building_caps:
+        return False
+    sales = errand.sales or (0,) * len(errand.building_quantities)
+    return any(
+        name in building_caps
+        and owned + bought - sold > building_caps[name]
+        for name, owned, bought, sold in zip(
+            gamestate.building_catalog,
+            gamestate.building_counts.values(),
+            errand.building_quantities,
+            sales,
+        )
+    )
+
+
 def _building_quantities(gamestate, errand):
     return {
         name: quantity
@@ -161,7 +190,11 @@ def added_purchase_errands(gamestate, errand):
             )
 
 
-def _evaluate(ancestor, target, errand, price_horizon_multiplier):
+def _evaluate(
+    ancestor, target, errand, price_horizon_multiplier, building_caps=None,
+):
+    if _exceeds_building_caps(ancestor, errand, building_caps):
+        return None
     price = errand_price(ancestor, errand)
     if price > price_horizon(ancestor, price_horizon_multiplier):
         return None
@@ -196,10 +229,12 @@ def best_errand(
     queue_expansions=DEFAULT_QUEUE_EXPANSIONS,
     singleton_only=False,
     max_errand_actions=DEFAULT_MAX_ERRAND_ACTIONS,
+    building_caps=None,
 ):
     """Return the best age-scored errand found within the search budget."""
     if queue_expansions <= 0 or max_errand_actions <= 0:
         raise ValueError("Errand search limits must be greater than zero")
+    _validate_building_caps(ancestor, building_caps)
     finish_without_errand = ancestor.finish(target).age
     seen = set()
     serial = count()
@@ -218,6 +253,7 @@ def best_errand(
             target,
             errand,
             price_horizon_multiplier,
+            building_caps,
         )
         if neighbor is None:
             return None
@@ -265,6 +301,7 @@ def generate_neighbors(
     search_width=None,
     queue_expansions=DEFAULT_QUEUE_EXPANSIONS,
     max_errand_actions=DEFAULT_MAX_ERRAND_ACTIONS,
+    building_caps=None,
 ):
     """Return up to ``width`` promising outgoing errand neighbors.
 
@@ -275,6 +312,7 @@ def generate_neighbors(
     """
     if width <= 0:
         raise ValueError("width must be greater than zero")
+    _validate_building_caps(ancestor, building_caps)
     search_width = width if search_width is None else search_width
     if search_width <= 0 or queue_expansions <= 0 or max_errand_actions <= 0:
         raise ValueError("Errand search limits must be greater than zero")
@@ -293,6 +331,7 @@ def generate_neighbors(
                     target,
                     errand,
                     price_horizon_multiplier,
+                    building_caps,
                 )
             )
             is not None
@@ -315,6 +354,7 @@ def generate_neighbors(
             target,
             errand,
             price_horizon_multiplier,
+            building_caps,
         )
 
     def push_bounded(neighbor):
